@@ -27,8 +27,7 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - && \
     ln -s /usr/bin/nodejs /usr/local/bin/node && \
     ln -s /usr/bin/npm /usr/local/bin/npm
 
-# s6-overlay
-ADD https://github.com/just-containers/s6-overlay/releases/download/v1.11.0.1/s6-overlay-amd64.tar.gz /tmp/
-RUN tar xzf /tmp/s6-overlay-amd64.tar.gz -C /
-
-ENTRYPOINT ["/init"]
+# creates composer / npm user
+RUN useradd --create-home --shell /bin/bash custom_user \
+    && echo 'custom_user:admin' | chpasswd \
+    && adduser custom_user sudo

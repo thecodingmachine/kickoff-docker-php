@@ -6,6 +6,7 @@ ROOT=${DIR}/..
 if [ "$1" == "dev" ] || [ "$1" == "testing" ] || [ "$1" == "prod" ]
 then
     docker-compose -f ${ROOT}/docker-compose-$1.yml up
+    docker exec -ti yourproject_php_apache_engine_$1 bash -c "cd /etc/services.d/apache; sh run;"
 elif [ "$1" == "nginx" ]
 then
     docker-compose -f ${ROOT}/docker-compose-nginx-proxy-dist.yml up
