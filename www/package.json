@@ -5,7 +5,6 @@
   "author": "TheCodingMachine",
   "private": true,
   "scripts": {},
-  "devDependencies": {
-    "gulp": "^3.9.1"
-  }
+  "dependencies": {},
+  "devDependencies": {}
 }

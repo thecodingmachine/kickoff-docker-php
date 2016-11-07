@@ -1,12 +1,5 @@
 {
-  "require": {
-    "mouf/mouf": "~2.0.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "YourProject\\": "YourProject"
-    }
-  },
+  "require": {},
   "minimum-stability": "dev",
   "prefer-stable": true
 }
