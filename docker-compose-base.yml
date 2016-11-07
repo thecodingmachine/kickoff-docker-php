@@ -1,0 +1,29 @@
+# docker-compose-base.yml: others docker-compose files must extends this file!
+version: '2'
+
+services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./docker/conf/shared/nginx-proxy/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: unless-stopped
+
+  php-apache-engine:
+    volumes:
+      # main volume
+      - ./www:/var/www/html:rw
+      # others
+      - ./docker/conf/shared/php-apache-engine/ext-apcu.ini:/usr/local/etc/php/conf.d/ext-acpu.ini:ro
+      - ./docker/conf/shared/php-apache-engine/run:/etc/services.d/apache/run:rw
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - ./docker/conf/shared/mysql/custom-my.cnf:/etc/mysql/my.cnf:ro
+    restart: unless-stopped

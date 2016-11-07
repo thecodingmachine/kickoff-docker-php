@@ -1,0 +1,41 @@
+# docker-compose-prod.yml: for prod environment only!
+version: '2'
+
+services:
+
+  php-apache-engine:
+    extends:
+      file: docker-compose-base.yml
+      service: php-apache-engine
+    build: ./docker/conf/dist/php-apache-engine
+    container_name: yourproject_php_apache_engine_prod
+    volumes:
+      - ./docker/conf/dist/php-apache-engine/php.ini:/usr/local/etc/php/php.ini:ro
+    environment:
+      - VIRTUAL_HOST=www.yourproject.com
+    networks:
+      - prod
+    depends_on:
+      - mysql
+
+  mysql:
+    extends:
+      file: docker-compose-base.yml
+      service: mysql
+    container_name: yourproject_mysql_prod
+    volumes:
+      # prod only!
+      - ./docker/volumes/prod/mysql:/var/lib/mysql:rw
+    environment:
+      MYSQL_ROOT_PASSWORD: admin
+      MYSQL_DATABASE: database_name
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin
+    networks:
+      - prod
+
+volumes:
+  mysql: {}
+
+networks:
+  prod: {}

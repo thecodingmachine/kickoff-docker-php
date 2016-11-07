@@ -1,0 +1,11 @@
+{
+  "name": "yourpoject",
+  "version": "1.0.0",
+  "description": "Your project description.",
+  "author": "TheCodingMachine",
+  "private": true,
+  "scripts": {},
+  "devDependencies": {
+    "gulp": "^3.9.1"
+  }
+}

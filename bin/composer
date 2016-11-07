@@ -1,0 +1,4 @@
+#!/bin/bash
+
+docker exec --user="custom_user" -ti yourproject_php_apache_engine_$1 composer $2
+docker exec -ti yourproject_php_apache_engine_$1 chgrp -R www-data vendor > /dev/null 2>&1

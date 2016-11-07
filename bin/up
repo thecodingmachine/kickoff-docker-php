@@ -1,0 +1,12 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT=${DIR}/..
+
+if [ "$1" == "dev" ] || [ "$1" == "testing" ] || [ "$1" == "prod" ]
+then
+    docker-compose -f ${ROOT}/docker-compose-$1.yml up
+elif [ "$1" == "nginx" ]
+then
+    docker-compose -f ${ROOT}/docker-compose-nginx-proxy-dist.yml up
+fi

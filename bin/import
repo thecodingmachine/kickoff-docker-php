@@ -1,0 +1,18 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT=${DIR}/..
+
+stty -echo
+printf "MySQL root password: "
+read rootpass
+stty echo
+printf "\n"
+
+databaseName=database_name
+containerName=yourproject_mysql_$1
+
+docker exec -i ${containerName} mysql --verbose -uroot -p${rootpass} -e "drop database ${databaseName}"
+docker exec -i ${containerName} mysql --verbose -uroot -p${rootpass} -e "create database ${databaseName} character set utf8 collate utf8_unicode_ci"
+cat ${ROOT}/dumps/${databaseName}.sql | docker exec -i ${containerName} mysql --verbose -uroot -p${rootpass} ${databaseName}
+
