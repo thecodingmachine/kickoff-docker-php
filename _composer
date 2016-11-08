@@ -1,0 +1,56 @@
+#!/bin/bash
+
+APACHE_CONTAINER='';
+CMD='';
+
+usage()
+{
+    echo "Usage:";
+    echo "sh _composer --apache_container yourapachecontainername --command [install|update|...]";
+    exit 0;
+}
+
+missing_arg()
+{
+    echo "ERROR: Missing argument $1."
+    exit 1;
+}
+
+composer()
+{
+    echo "Running composer command...";
+
+    docker exec --user="custom_user" -ti ${APACHE_CONTAINER} composer ${CMD};
+
+    echo "Changing group of vendor directory...";
+
+    docker exec -ti ${APACHE_CONTAINER} chgrp -R www-data /var/www/html/vendor;
+
+    echo "Done :)";
+}
+
+# checking parameters
+if [ "$#" -eq 0 ]; then
+    usage;
+    exit 1;
+fi
+
+while [ "$1" != "" ]; do
+    case $1 in
+        --apache_container ) shift
+            if [ -z $1 ]; then
+                missing_arg --apache_container;
+            fi;
+            APACHE_CONTAINER=$1 ;;
+        --command ) shift
+            if [ -z $1 ]; then
+                missing_arg --command;
+            fi;
+            CMD=$1 ;;
+    esac
+    shift
+done
+
+composer;
+
+exit 0;

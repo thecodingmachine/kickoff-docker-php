@@ -1,0 +1,63 @@
+# @IgnoreInspection BashAddShebang
+
+# kickoff-docker-php makefile
+
+PROJECT_NAME=yourproject
+DATABASE_NAME=database_name
+ENV=dev
+ENV_DOMAIN_NAME=dev.yourproject.com
+WITH_XDEBUG=1
+
+APACHE_CONTAINER=${PROJECT_NAME}_php_apache_engine_${ENV}
+MYSQL_CONTAINER=${PROJECT_NAME}_mysql_${ENV}
+
+# UTILS
+#------------------------------------------------------
+shell:
+	docker exec -ti ${APACHE_CONTAINER} bash;
+
+shell-mysql:
+	docker exec -ti ${MYSQL_CONTAINER} bash;
+
+mysql-cli:
+	docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p;
+
+dtail:
+	docker logs -f ${APACHE_CONTAINER};
+
+dtail-mysql:
+	docker logs -f ${MYSQL_CONTAINER};
+
+tail-e:
+	docker exec -ti ${APACHE_CONTAINER} tail -f /var/log/apache2/error.log;
+
+tail-a:
+	docker exec -ti ${APACHE_CONTAINER} tail -f /var/log/apache2/access.log;
+
+export:
+	sh _export --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
+
+import:
+	sh _import --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
+
+# BUILDING
+#------------------------------------------------------
+prepare:
+	sh _prepare --project_name ${PROJECT_NAME} --database_name ${DATABASE_NAME} --env ${ENV} --env_domain_name ${ENV_DOMAIN_NAME} --with_xdebug ${WITH_XDEBUG};
+
+build:
+	docker-compose -f docker-compose.yml build;
+
+composer:
+	sh _composer --apache_container ${APACHE_CONTAINER} --command $(cmd);
+
+npm:
+	docker exec --user="custom_user" -ti ${APACHE_CONTAINER} npm $(cmd);
+
+down:
+	sh _down;
+
+up: down
+	docker-compose -f docker-compose.yml up -d;
+
+kickoff: prepare build up

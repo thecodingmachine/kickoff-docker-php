@@ -1,8 +1,0 @@
-#!/bin/bash
-
-cd /var/www;
-chgrp www-data html > /dev/null 2>&1;
-cd html;
-chgrp -R www-data * > /dev/null 2>&1;
-chmod g+rw -R $(ls | awk '{if($1 != "vendor"){ print $1 }}');
-exec /usr/sbin/apachectl -DFOREGROUND;

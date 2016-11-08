@@ -1,0 +1,90 @@
+#!/bin/bash
+
+PROJECT_NAME='';
+DATABASE_NAME='';
+ENV='';
+ENV_DOMAIN_NAME='';
+WITH_XDEBUG=0;
+
+usage()
+{
+    echo "Usage:";
+    echo "sh _prepare --project_name yourproject --database_name yourdatabasename --env [dev|testing|prod|...] --env_domain_name [dev.yourdomain.com|www.yourdomain.com|...] --with_xdebug [0|1]";
+    exit 0;
+}
+
+missing_arg()
+{
+    echo "ERROR: Missing argument $1."
+    exit 1;
+}
+
+sedi()
+{
+    sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@";
+}
+
+prepare()
+{
+    echo "Filling templates...";
+
+    # filling docker-composer.yml template
+    cp docker-compose.yml.template docker-compose.yml;
+    sedi "s/{PROJECT_NAME}/$PROJECT_NAME/g" docker-compose.yml;
+    sedi "s/{DATABASE_NAME}/$DATABASE_NAME/g" docker-compose.yml;
+    sedi "s/{ENV}/$ENV/g" docker-compose.yml;
+    sedi "s/{ENV_DOMAIN_NAME}/$ENV_DOMAIN_NAME/g" docker-compose.yml;
+
+    # filling Dockerfile template for apache container
+    cp ./apache/Dockerfile.template ./apache/Dockerfile;
+    if [ ${WITH_XDEBUG} = 1 ]; then
+        sedi "s/{ADD_XDEBUG_INI}/ADD ext-xdebug.ini \/usr\/local\/etc\/php\/conf.d\/ext-xdebug.ini/g" ./apache/Dockerfile;
+        sedi "s/{PECL_XDEBUG}/RUN pecl install xdebug-2.4.0/g" ./apache/Dockerfile;
+    else
+        sedi "s/{ADD_XDEBUG_INI}//g" ./apache/Dockerfile;
+        sedi "s/{PECL_XDEBUG}//g" ./apache/Dockerfile;
+    fi;
+
+    echo "Done :)";
+}
+
+# checking parameters
+if [ "$#" -eq 0 ]; then
+    usage;
+    exit 1;
+fi
+
+while [ "$1" != "" ]; do
+    case $1 in
+        --project_name ) shift
+            if [ -z $1 ]; then
+                missing_arg --project_name;
+            fi;
+            PROJECT_NAME=$1 ;;
+        --database_name ) shift
+            if [ -z $1 ]; then
+                missing_arg --database_name;
+            fi;
+            DATABASE_NAME=$1 ;;
+        --env ) shift
+            if [ -z $1 ]; then
+                missing_arg --env;
+            fi;
+            ENV=$1 ;;
+        --env_domain_name ) shift
+            if [ -z $1 ]; then
+                missing_arg --env_domain_name;
+            fi;
+            ENV_DOMAIN_NAME=$1 ;;
+        --with_xdebug ) shift
+            if [ -z $1 ]; then
+                missing_arg --with_xdebug;
+            fi;
+            WITH_XDEBUG=$1 ;;
+    esac
+    shift
+done
+
+prepare;
+
+exit 0;

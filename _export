@@ -1,0 +1,62 @@
+#!/bin/bash
+
+MYSQL_CONTAINER='';
+DATABASE_NAME='';
+
+usage()
+{
+    echo "Usage:";
+    echo "sh _export --mysql_container yourmysqlcontainername --databasename yourdatabasename";
+    exit 0;
+}
+
+missing_arg()
+{
+    echo "ERROR: Missing argument $1."
+    exit 1;
+}
+
+exportDatabase()
+{
+    stty -echo;
+    printf "MySQL root password: ";
+    read rootpass;
+    stty echo;
+    printf "\n";
+
+    echo "Renaming previous SQL file...";
+
+    mv ./mysql/dumps/${DATABASE_NAME}.sql ./mysql/dumps/${DATABASE_NAME}.old.sql;
+
+    echo "Dumping database into a new SQL file...";
+
+    docker exec ${MYSQL_CONTAINER} mysqldump --opt -uroot -p${rootpass} ${DATABASE_NAME} > ./mysql/dumps/${DATABASE_NAME}.sql;
+
+    echo "Done :)";
+}
+
+# checking parameters
+if [ "$#" -eq 0 ]; then
+    usage;
+    exit 1;
+fi
+
+while [ "$1" != "" ]; do
+    case $1 in
+        --mysql_container ) shift
+            if [ -z $1 ]; then
+                missing_arg --mysql_container;
+            fi;
+            MYSQL_CONTAINER=$1 ;;
+        --database_name ) shift
+            if [ -z $1 ]; then
+                missing_arg --database_name;
+            fi;
+            DATABASE_NAME=$1 ;;
+    esac
+    shift
+done
+
+exportDatabase;
+
+exit 0;

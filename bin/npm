@@ -1,8 +1,0 @@
-#!/bin/bash
-
-if [ "$2" == "do" ]
-then
-    docker exec --user="custom_user" yourproject_php_apache_engine_$1 bash -c "/var/www/html/node_modules/.bin/$3"
-else
-    docker exec --user="custom_user" -ti yourproject_php_apache_engine_$1 npm $2
-fi

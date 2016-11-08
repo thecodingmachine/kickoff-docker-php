@@ -1,6 +1,10 @@
 .idea
 .DS_STORE
-/docker/volumes
-/dumps/*.sql
-/www/node_modules
-/www/vendor
+/apache/volume/node_modules
+/apache/Dockerfile
+/mysql/dumps/*.sql
+/apache/volume/vendor
+/apache/volume/npm-debug.log
+/mysql/volume
+docker-compose.yml
+Makefile

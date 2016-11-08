@@ -1,0 +1,81 @@
+#!/bin/bash
+
+MYSQL_CONTAINER='';
+DATABASE_NAME='';
+
+usage()
+{
+    echo "Usage:";
+    echo "sh _import --mysql_container yourmysqlcontainername --databasename yourdatabasename";
+    exit 0;
+}
+
+missing_arg()
+{
+    echo "ERROR: Missing argument $1."
+    exit 1;
+}
+
+importDatabase()
+{
+    stty -echo;
+    printf "MySQL root password: ";
+    read rootpass;
+    stty echo;
+    printf "\n";
+
+    echo "Dropping database...";
+
+    docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} -e "drop database $DATABASE_NAME";
+
+    echo "Creating database...";
+
+    docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} -e "create database $DATABASE_NAME character set utf8 collate utf8_unicode_ci";
+
+    echo "Importing database using the SQL file...";
+
+    cat ./mysql/dumps/${DATABASE_NAME}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} ${DATABASE_NAME};
+
+    echo "Done :)";
+}
+
+# checking parameters
+if [ "$#" -eq 0 ]; then
+    usage;
+    exit 1;
+fi
+
+while [ "$1" != "" ]; do
+    case $1 in
+        --mysql_container ) shift
+            if [ -z $1 ]; then
+                missing_arg --mysql_container;
+            fi;
+            MYSQL_CONTAINER=$1 ;;
+        --database_name ) shift
+            if [ -z $1 ]; then
+                missing_arg --database_name;
+            fi;
+            DATABASE_NAME=$1 ;;
+    esac
+    shift
+done
+
+importDatabase;
+
+exit 0;
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+ROOT=${DIR}/..
+
+stty -echo
+printf "MySQL root password: "
+read rootpass
+stty echo
+printf "\n"
+
+DATABASE_NAME=database_name
+MYSQL_CONTAINER=yourproject_mysql_$1
+
+
+
