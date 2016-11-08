@@ -8,6 +8,7 @@ ENV=dev
 ENV_DOMAIN_NAME=dev.yourproject.com
 WITH_XDEBUG=1
 
+NGINX_CONTAINER=${PROJECT_NAME}_nginx_proxy_${ENV}
 APACHE_CONTAINER=${PROJECT_NAME}_php_apache_engine_${ENV}
 MYSQL_CONTAINER=${PROJECT_NAME}_mysql_${ENV}
 
@@ -16,23 +17,29 @@ MYSQL_CONTAINER=${PROJECT_NAME}_mysql_${ENV}
 shell:
 	docker exec -ti ${APACHE_CONTAINER} bash;
 
+shell-nginx:
+	docker exec -ti ${NGINX_CONTAINER} bash;
+
 shell-mysql:
 	docker exec -ti ${MYSQL_CONTAINER} bash;
 
 mysql-cli:
 	docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p;
 
-dtail:
+tail:
 	docker logs -f ${APACHE_CONTAINER};
-
-dtail-mysql:
-	docker logs -f ${MYSQL_CONTAINER};
 
 tail-e:
 	docker exec -ti ${APACHE_CONTAINER} tail -f /var/log/apache2/error.log;
 
 tail-a:
 	docker exec -ti ${APACHE_CONTAINER} tail -f /var/log/apache2/access.log;
+
+tail-nginx:
+	docker logs -f ${NGINX_CONTAINER};
+
+tail-mysql:
+	docker logs -f ${MYSQL_CONTAINER};
 
 export:
 	sh _export --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};

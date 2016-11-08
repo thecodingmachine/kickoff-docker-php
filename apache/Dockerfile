@@ -3,11 +3,10 @@ FROM php:7-apache
 # Adds configuration files
 ADD php.ini /usr/local/etc/php/php.ini
 ADD ext-apcu.ini /usr/local/etc/php/conf.d/ext-acpu.ini
-{ADD_XDEBUG_INI}
 
 # installs missing php dependencies
-RUN pecl install apcu-5.1.5
-{PECL_XDEBUG}
+RUN pecl install apcu-5.1.5 \
+    && pecl install xdebug-2.4.0
 
 RUN apt-get update \
     && apt-get install -y zlib1g-dev # dependency for php zip extension

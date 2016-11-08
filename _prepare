@@ -26,7 +26,7 @@ sedi()
 
 prepare()
 {
-    echo "Filling templates...";
+    echo "Filling docker-compose.yml template...";
 
     # filling docker-composer.yml template
     cp docker-compose.yml.template docker-compose.yml;
@@ -35,14 +35,10 @@ prepare()
     sedi "s/{ENV}/$ENV/g" docker-compose.yml;
     sedi "s/{ENV_DOMAIN_NAME}/$ENV_DOMAIN_NAME/g" docker-compose.yml;
 
-    # filling Dockerfile template for apache container
-    cp ./apache/Dockerfile.template ./apache/Dockerfile;
     if [ ${WITH_XDEBUG} = 1 ]; then
-        sedi "s/{ADD_XDEBUG_INI}/ADD ext-xdebug.ini \/usr\/local\/etc\/php\/conf.d\/ext-xdebug.ini/g" ./apache/Dockerfile;
-        sedi "s/{PECL_XDEBUG}/RUN pecl install xdebug-2.4.0/g" ./apache/Dockerfile;
+        sedi "s/{XDEBUG_INI}/- .\/apache\/ext-xdebug.ini:\/usr\/local\/etc\/php\/conf.d\/ext-xdebug.ini:ro/g" docker-compose.yml;
     else
-        sedi "s/{ADD_XDEBUG_INI}//g" ./apache/Dockerfile;
-        sedi "s/{PECL_XDEBUG}//g" ./apache/Dockerfile;
+        sedi "s/{XDEBUG_INI}//g" docker-compose.yml;
     fi;
 
     echo "Done :)";

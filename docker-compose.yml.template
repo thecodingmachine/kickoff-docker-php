@@ -1,4 +1,4 @@
-# docker-compose-dev.yml: for {ENV} environment only!
+# docker-compose.yml: for {ENV} environment only!
 version: '2'
 
 services:
@@ -9,7 +9,7 @@ services:
       - 80:80
       - 443:443
     volumes:
-      - ./docker/shared/nginx-proxy/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
+      - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: unless-stopped
     container_name: {PROJECT_NAME}_nginx_proxy_{ENV}
@@ -19,6 +19,7 @@ services:
   php-apache-engine:
     volumes:
       - ./apache/volume:/var/www/html:rw
+      {XDEBUG_INI}
     restart: unless-stopped
     build: ./apache
     container_name: {PROJECT_NAME}_php_apache_engine_{ENV}
