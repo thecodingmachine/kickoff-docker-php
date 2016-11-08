@@ -1,12 +1,14 @@
+![alt tag](https://img.shields.io/badge/PHP-7.0.8-green.svg) ![alt tag](https://img.shields.io/badge/Composer-1.2.2-green.svg) ![alt tag](https://img.shields.io/badge/MySQL-5.7.13-green.svg) ![alt tag](https://img.shields.io/badge/Node.js-4.6.1-orange.svg) ![alt tag](https://img.shields.io/badge/npm-2.15.9-orange.svg)
+
 # Goal
 
 This project will help you starting a PHP project with Docker, thanks to some useful make commands.
 
 # Prerequisites
 
-Install Docker (**>= 1.10**) for MacOSX / Linux following the official instructions: https://docs.docker.com/engine/installation/
+Install Docker (**>= 1.10**) for MacOSX / Linux following the official instructions: https://docs.docker.com/engine/installation
 
-Install docker-compose (**>= 1.8.0**) for MacOSX / Linux following the official instructions: https://docs.docker.com/compose/install/
+Install docker-compose (**>= 1.8.0**) for MacOSX / Linux following the official instructions: https://docs.docker.com/compose/install
 
 **Important: for now, we do not recommend using Windows.**
 
@@ -50,4 +52,4 @@ make kickoff
 
 The installation might take some time, so go for a coffee break! :coffee: 
 
-Once everything has been installed, open your favorite web browser and copy / paste http://dev.yourproject.com/ and check if everything is OK!
+Once everything has been installed, open your favorite web browser and copy / paste http://dev.yourproject.com and check if everything is OK!

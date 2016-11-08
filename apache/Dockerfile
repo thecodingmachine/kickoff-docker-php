@@ -25,7 +25,7 @@ RUN curl -sS https://getcomposer.org/installer \
 RUN apt-get update \
     && apt-get -y install git
 
-# installs nodejs and npm
+# installs Node.js and npm
 RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - \
     && apt-get update \
     && apt-get install -y nodejs \
