@@ -47,6 +47,12 @@ export:
 import:
 	sh _import --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
 
+composer:
+	sh _composer --apache_container ${APACHE_CONTAINER} --command $(cmd);
+
+npm:
+	docker exec --user="custom_user" -ti ${APACHE_CONTAINER} npm $(cmd);
+
 # BUILDING
 #------------------------------------------------------
 prepare:
@@ -54,12 +60,6 @@ prepare:
 
 build:
 	docker-compose -f docker-compose.yml build;
-
-composer:
-	sh _composer --apache_container ${APACHE_CONTAINER} --command $(cmd);
-
-npm:
-	docker exec --user="custom_user" -ti ${APACHE_CONTAINER} npm $(cmd);
 
 down:
 	sh _down;

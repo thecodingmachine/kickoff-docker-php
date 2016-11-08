@@ -44,7 +44,7 @@ Good? Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the f
  
 We're now done with the configuration! :metal:
 
-Last but not least, shutdown your local apache or anything which could use your 80 and 443 ports, and run:
+Last but not least, shutdown your local Apache or anything which could use your 80 and 443 ports, and run:
 
 ```
 make kickoff
@@ -53,3 +53,27 @@ make kickoff
 The installation might take some time, so go for a coffee break! :coffee: 
 
 Once everything has been installed, open your favorite web browser and copy / paste http://dev.yourproject.com and check if everything is OK!
+
+# Make commands
+
+| Command                         | Description                                                                                                                                                                                |
+| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| prepare                         | Creates the `docker-compose.yml` file using the environment variables specified in the `Makefile`.                                                                                         |
+| build                           | Builds the containers.                                                                                                                                                                     |
+| down                            | Stops the containers, delete their network and clean the docker cache.                                                                                                                     |
+| up                              | Stops the containers if they're running and then re-up them.                                                                                                                               |
+| kickoff                         | Combo of prepare, build, and up commands.                                                                                                                                                  |
+| composer cmd=*yourcommand*      | Allows you to run a composer command.                                                                                                                                                      |
+| npm cmd=*yourcommand*           | Allows you to run an npm command.                                                                                                                                                          |
+| export                          | This command will dump the database into a SQL file located at `mysql/dumps`! If there is a pre-existing `yourdatabasename.sql` file, it will rename it to `yourdatabasename.old.sql`!     |
+| import                          | This command will drop the database, recreate it and then run the `yourdatabasename.sql` file.                                                                                             |
+| shell                           | Opens a shell to the Apache container.                                                                                                                                                     |
+| shell-nginx                     | Opens a shell to the NGINX container.                                                                                                                                                      |
+| shell-mysql                     | Opens a shell to the MySQL container.                                                                                                                                                      |
+| mysql-cli                       | Opens a shell with the MySQL cli.                                                                                                                                                          |
+| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                        |
+| tail-e                          | Displays the error log of Apache.                                                                                                                                                          |
+| tail-a                          | Displays the access log of Apache.                                                                                                                                                         |
+| tail-nginx                      | Displays the docker's logs of the NGINX container.                                                                                                                                         |
+| tail-mysql                      | Displays the docker's logs of the MySQL container.                                                                                                                                         |
+
