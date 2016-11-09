@@ -8,7 +8,7 @@ Create a new `PHP Web Application` configuration and add a new server configurat
 
 <img src="images/xdebug2.png" alt="Add a new server configuration" />
 
-**Important:** check `Using path mappings` and maps the `apache/volume` folder with `/var/www/html`.
+**Important:** check `Using path mappings` and map the `apache/volume` folder with `/var/www/html`.
 
 Last but not least, fill the form of the Run/Debug configuration:
 
