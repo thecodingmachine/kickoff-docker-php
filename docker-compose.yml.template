@@ -10,6 +10,7 @@ services:
       - 443:443
     volumes:
       - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
+      #- /the/path/to/certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: unless-stopped
     container_name: {PROJECT_NAME}_nginx_proxy_{ENV}

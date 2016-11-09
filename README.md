@@ -77,3 +77,17 @@ Once everything has been installed, open your favorite web browser and copy / pa
 | tail-nginx                      | Displays the docker's logs of the NGINX container.                                                                                                                                         |
 | tail-mysql                      | Displays the docker's logs of the MySQL container.                                                                                                                                         |
 
+# SSL support
+
+In order to enable SSL, uncomment and update the following line in your `docker-compose.yml` file:
+
+```
+volumes:
+      - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
+      #- /the/path/to/certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+```
+
+You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
+
+Also, if you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
