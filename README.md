@@ -144,7 +144,7 @@ networks:
 
 **Note:** the name of an external network have to follow this format: `{projectfoldername}_{env}`. The `{env}` value must match the value specified in the considered `Makefile` and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
 
-You're structure now looks like:
+You're structure now looks like this:
 
 ```
 - nginx-custom.conf
@@ -157,4 +157,4 @@ You're structure now looks like:
     | ...
 ```
 
-You are now able to run `docker-compose -f docker-composer-nginx.yml` in order to make the proxy working.
+In order to make the proxy working, just run `docker-compose -f docker-composer-nginx.yml`.
