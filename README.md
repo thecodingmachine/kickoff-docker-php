@@ -169,6 +169,7 @@ In order to make the proxy working, just run `docker-compose -f docker-compose-n
 * [Use Xdebug with PhpStorm](docs/xdebug.md)
 * [Use MySQL Workbench to manage your database](docs/mysql_workbench.md)
 * [Use a Postfix container](docs/postfix.md)
+* [Use Gulp](docs/gulp.md)
 * [Install Mouf framework](docs/mouf_framework.md) 
 
 # Known issues
