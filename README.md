@@ -1,4 +1,4 @@
-![alt tag](https://img.shields.io/badge/PHP-7.0-green.svg) ![alt tag](https://img.shields.io/badge/MySQL-5.7-green.svg) ![alt tag](https://img.shields.io/badge/Node.js-4.6.1-orange.svg) ![alt tag](https://img.shields.io/badge/npm-2.15.9-orange.svg)
+![alt tag](https://img.shields.io/badge/PHP-7.0-green.svg) ![alt tag](https://img.shields.io/badge/Composer-latest-green.svg) ![alt tag](https://img.shields.io/badge/MySQL-5.7-green.svg) ![alt tag](https://img.shields.io/badge/Node.js-4.6.1-orange.svg) ![alt tag](https://img.shields.io/badge/npm-2.15.9-orange.svg)
 
 # Goal
 
