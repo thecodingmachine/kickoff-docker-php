@@ -3,6 +3,7 @@
 [![MySQL 5.7](https://img.shields.io/badge/MySQL-5.7-green.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/docker-compose.yml.template#L35)
 [![Node.js 4.x](https://img.shields.io/badge/Node.js-4.x-orange.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/apache/Dockerfile#L29)
 [![npm 2.x](https://img.shields.io/badge/npm-2.x-orange.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/apache/Dockerfile#L29)
+[![License](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/LICENSE)
 
 # Goal
 
@@ -161,4 +162,4 @@ You're structure now looks like this:
     | ...
 ```
 
-In order to make the proxy working, just run `docker-compose -f docker-compose-nginx.yml`.
+In order to make the proxy working, just run `docker-compose -f docker-compose-nginx.yml up -d`.
