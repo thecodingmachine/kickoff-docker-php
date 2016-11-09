@@ -83,11 +83,78 @@ In order to enable SSL, uncomment and update the following line in your `docker-
 
 ```
 volumes:
-      - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
-      #- /the/path/to/certs:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
+  - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
+  #- /the/path/to/certs:/etc/nginx/certs:ro
+  - /var/run/docker.sock:/tmp/docker.sock:ro
 ```
 
 You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
 
 Also, if you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
+
+# Multiple environments on the same host
+
+Let's say you need your testing and production environments to be on the same host.
+
+Here is your current structure:
+
+```
+| testing.myproject
+    | apache
+    | ...
+| www.myproject
+    | apache
+    | ...
+```
+
+You have two folders, one for your testing environment (`testing.myproject`) and another one for your production environment (`www.myproject`), each containing the source code of your project.
+
+But the problem is that you can't use two `nginx-proxy` at the same time.
+
+So just remove the `nginx-proxy` service in each `docker-compose.yml` files and create a new `docker-compose-nginx.yml` elsewhere containing:
+
+```
+version: '2'
+
+services:
+
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
+      - /the/path/to/certs:/etc/nginx/certs:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    restart: unless-stopped
+    container_name: nginx_proxy
+    networks:
+       - testing
+       - prod
+
+networks:
+  testing:
+    external:
+      name: testingmyproject_testing
+  prod:
+    external:
+      name: wwwmyproject_prod
+```
+
+**Note:** the name of an external network have to follow this format: `{projectfoldername}_{env}`. The `{env}` value must match the value specified in the considered `Makefile` and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
+
+You're structure now looks like:
+
+```
+- nginx-custom.conf
+- docker-composer-nginx.yml
+| testing.myproject
+    | apache
+    | ...
+| www.myproject
+    | apache
+    | ...
+```
+
+You are now able to run `docker-compose -f docker-composer-nginx.yml` in order to make the proxy working.
