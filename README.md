@@ -164,6 +164,13 @@ You're structure now looks like this:
 
 In order to make the proxy working, just run `docker-compose -f docker-compose-nginx.yml up -d`.
 
+# Dive in
+
+* [Use Xdebug with PhpStorm](docs/xdebug.md)
+* [Use MySQL Workbench to manage your database](docs/mysql_workbench.md)
+* [Use a Postfix container](docs/postfix.md)
+* [Install Mouf framework](docs/mouf_framework.md) 
+
 # Known issues
 
 *A make command failed to run entirely*
