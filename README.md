@@ -68,8 +68,8 @@ Once everything has been installed, open your favorite web browser and copy / pa
 | down                            | Stops the containers, deletes their network and cleans the docker cache.                                                                                                                   |
 | up                              | Stops the containers if they're running and then up them.                                                                                                                                  |
 | kickoff                         | Combo of prepare, build, and up commands.                                                                                                                                                  |
-| composer cmd=*yourcommand*      | Allows you to run a composer command.                                                                                                                                                      |
-| npm cmd=*yourcommand*           | Allows you to run a npm command.                                                                                                                                                           |
+| composer cmd=*yourcommand*      | Allows you to run a composer command. Ex: `make composer cmd=install`, `make composer cmd=update`, ...                                                                                     |
+| npm cmd=*yourcommand*           | Allows you to run a npm command. Ex: `make npm cmd=install`, `make npm cmd="install --save-dev gulp"`, ...                                                                                 |
 | export                          | This command will dump the database into a SQL file located at `mysql/dumps`. If there is a pre-existing `yourdatabasename.sql` file, it will rename it to `yourdatabasename.old.sql`.     |
 | import                          | This command will drop the database, recreate it and then run the `yourdatabasename.sql` file.                                                                                             |
 | shell                           | Connects through bash to the Apache container.                                                                                                                                             |
@@ -170,7 +170,7 @@ In order to make the proxy working, just run `docker-compose -f docker-compose-n
 
 Sometimes, you need to re-run a make command, especially the commands `make build`, `make kickoff`, `make composer cmd=install`, `make import`.
 
-*docker-compose failed to parse my yml file*
+*docker-compose failed to parse my yaml file*
 
 Make sure that you're file's indents are corrects!
 
