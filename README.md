@@ -184,3 +184,7 @@ Make sure that you're file's indents are corrects!
 *I've added a make command, but it's not working*
 
 Make sure that your `Makefile` use tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.
+
+*My web application is not really fast while developing on MacOS*
+
+Yep, this seems to be a current limitation of Docker on MacOS. But don't worry, it will be way faster on a Linux distribution (like your production server).
