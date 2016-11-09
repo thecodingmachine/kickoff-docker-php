@@ -66,18 +66,3 @@ done
 importDatabase;
 
 exit 0;
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-ROOT=${DIR}/..
-
-stty -echo
-printf "MySQL root password: "
-read rootpass
-stty echo
-printf "\n"
-
-DATABASE_NAME=database_name
-MYSQL_CONTAINER=yourproject_mysql_$1
-
-
-
