@@ -7,7 +7,7 @@ ports:
   - 3307:3306
 ```
 
-Then, download the last version of MySQL Workbench following the official instructions: https://www.mysql.fr/products/workbench/
+Then, download and install the last version of MySQL Workbench following the official instructions: https://www.mysql.fr/products/workbench/
 
 Run the application and click on the `+` button next to `MySQL Connections` to setup a new connection:
 
