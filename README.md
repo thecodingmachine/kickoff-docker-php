@@ -45,7 +45,7 @@ Good? Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the f
 127.0.0.1   dev.yourproject.com
 ```
 
-**Note:** please make sure that the domain name matches the value defined for `ENV_DOMAIN_NAME`.
+**Note:** make sure that the domain name matches the value defined for `ENV_DOMAIN_NAME`.
  
 We're now done with the configuration! :metal:
 
