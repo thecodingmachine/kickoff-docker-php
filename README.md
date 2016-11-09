@@ -7,7 +7,7 @@
 
 # Goal
 
-This project will help you starting a PHP project with Docker, thanks to some useful make commands.
+This project will help you to start a PHP project with Docker, thanks to some useful make commands.
 
 # Prerequisites
 
