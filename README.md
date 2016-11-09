@@ -157,4 +157,4 @@ You're structure now looks like this:
     | ...
 ```
 
-In order to make the proxy working, just run `docker-compose -f docker-composer-nginx.yml`.
+In order to make the proxy working, just run `docker-compose -f docker-compose-nginx.yml`.
