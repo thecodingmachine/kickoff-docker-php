@@ -1,4 +1,4 @@
-# Use a Postfix container
+# Install a Postfix container
 
 It's always nice to have a Postfix somewhere for sending `no-reply` e-mails!
 

@@ -1,4 +1,4 @@
-# Use Gulp
+# Install Gulp
 
 First, launch your environment with `Make kickoff` and install gulp with `make npm cmd="install --save-dev gulp"`.
 
