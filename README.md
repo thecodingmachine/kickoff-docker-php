@@ -1,4 +1,8 @@
-![alt tag](https://img.shields.io/badge/PHP-7.0-green.svg) ![alt tag](https://img.shields.io/badge/Composer-latest-green.svg) ![alt tag](https://img.shields.io/badge/MySQL-5.7-green.svg) ![alt tag](https://img.shields.io/badge/Node.js-4.6.1-orange.svg) ![alt tag](https://img.shields.io/badge/npm-2.15.9-orange.svg)
+[![PHP 7.0](https://img.shields.io/badge/PHP-7.0-green.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/apache/Dockerfile#L1)
+[![Composer latest](https://img.shields.io/badge/Composer-latest-green.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/apache/Dockerfile#L21)
+[![MySQL 5.7](https://img.shields.io/badge/MySQL-5.7-green.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/docker-compose.yml.template#L35)
+[![Node.js 4.x](https://img.shields.io/badge/Node.js-4.x-orange.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/apache/Dockerfile#L29)
+[![npm 2.x](https://img.shields.io/badge/npm-2.x-orange.svg)](https://github.com/thecodingmachine/kickoff-docker-php/blob/master/apache/Dockerfile#L29)
 
 # Goal
 
