@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# this scripts run a composer command inside the container.
+
 APACHE_CONTAINER='';
 CMD='';
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# creates a .sql file in ./mysql/dumps containing the data of your database. If there is a pre-existing .sql file, this script will rename it to yourdatabasename.old.sql.
+
 MYSQL_CONTAINER='';
 DATABASE_NAME='';
 

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# generates the docker-compose.yml. This script should be called using the command "make prepare".
+
 PROJECT_NAME='';
 DATABASE_NAME='';
 ENV='';

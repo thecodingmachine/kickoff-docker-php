@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# drops the database, recreates it and then imports data contained in the .sql file located at ./mysql/dumps.
+
 MYSQL_CONTAINER='';
 DATABASE_NAME='';
 
