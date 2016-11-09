@@ -2,6 +2,9 @@
 
 # drops the database, recreates it and then imports data contained in the .sql file located at ./mysql/dumps.
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
 MYSQL_CONTAINER='';
 DATABASE_NAME='';
 
@@ -36,7 +39,7 @@ importDatabase()
 
     echo "Importing database using the SQL file...";
 
-    cat ./mysql/dumps/${DATABASE_NAME}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} ${DATABASE_NAME};
+    cat ${ROOT}/mysql/dumps/${DATABASE_NAME}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} ${DATABASE_NAME};
 
     echo "Done :)";
 }

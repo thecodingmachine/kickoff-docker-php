@@ -2,6 +2,9 @@
 
 # generates the docker-compose.yml. This script should be called using the command "make prepare".
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
 PROJECT_NAME='';
 DATABASE_NAME='';
 ENV='';
@@ -31,16 +34,16 @@ prepare()
     echo "Filling docker-compose.yml template...";
 
     # filling docker-composer.yml template
-    cp docker-compose.yml.template docker-compose.yml;
-    sedi "s/{PROJECT_NAME}/$PROJECT_NAME/g" docker-compose.yml;
-    sedi "s/{DATABASE_NAME}/$DATABASE_NAME/g" docker-compose.yml;
-    sedi "s/{ENV}/$ENV/g" docker-compose.yml;
-    sedi "s/{ENV_DOMAIN_NAME}/$ENV_DOMAIN_NAME/g" docker-compose.yml;
+    cp ${ROOT}/docker-compose.yml.template ${ROOT}/docker-compose.yml;
+    sedi "s/{PROJECT_NAME}/$PROJECT_NAME/g" ${ROOT}/docker-compose.yml;
+    sedi "s/{DATABASE_NAME}/$DATABASE_NAME/g" ${ROOT}/docker-compose.yml;
+    sedi "s/{ENV}/$ENV/g" ${ROOT}/docker-compose.yml;
+    sedi "s/{ENV_DOMAIN_NAME}/$ENV_DOMAIN_NAME/g" ${ROOT}/docker-compose.yml;
 
     if [ ${WITH_XDEBUG} = 1 ]; then
-        sedi "s/{XDEBUG_INI}/- .\/apache\/ext-xdebug.ini:\/usr\/local\/etc\/php\/conf.d\/ext-xdebug.ini:ro/g" docker-compose.yml;
+        sedi "s/{XDEBUG_INI}/- .\/apache\/ext-xdebug.ini:\/usr\/local\/etc\/php\/conf.d\/ext-xdebug.ini:ro/g" ${ROOT}/docker-compose.yml;
     else
-        sedi "s/{XDEBUG_INI}//g" docker-compose.yml;
+        sedi "s/{XDEBUG_INI}//g" ${ROOT}/docker-compose.yml;
     fi;
 
     echo "Done :)";

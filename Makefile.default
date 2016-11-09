@@ -42,13 +42,13 @@ tail-mysql:
 	docker logs -f ${MYSQL_CONTAINER};
 
 export:
-	sh _export --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
+	sh ./bin/_export --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
 
 import:
-	sh _import --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
+	sh ./bin/_import --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
 
 composer:
-	sh _composer --apache_container ${APACHE_CONTAINER} --command $(cmd);
+	sh ./bin/_composer --apache_container ${APACHE_CONTAINER} --command $(cmd);
 
 npm:
 	docker exec --user="custom_user" -ti ${APACHE_CONTAINER} npm $(cmd);
@@ -56,13 +56,13 @@ npm:
 # BUILDING
 #------------------------------------------------------
 prepare:
-	sh _prepare --project_name ${PROJECT_NAME} --database_name ${DATABASE_NAME} --env ${ENV} --env_domain_name ${ENV_DOMAIN_NAME} --with_xdebug ${WITH_XDEBUG};
+	sh ./bin/_prepare --project_name ${PROJECT_NAME} --database_name ${DATABASE_NAME} --env ${ENV} --env_domain_name ${ENV_DOMAIN_NAME} --with_xdebug ${WITH_XDEBUG};
 
 build:
 	docker-compose -f docker-compose.yml build;
 
 down:
-	sh _down;
+	sh ./bin/_down;
 
 up: down
 	docker-compose -f docker-compose.yml up -d;

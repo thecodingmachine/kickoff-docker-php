@@ -5,6 +5,9 @@
 MYSQL_CONTAINER='';
 DATABASE_NAME='';
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
 usage()
 {
     echo "Usage:";
@@ -28,11 +31,11 @@ exportDatabase()
 
     echo "Renaming previous SQL file...";
 
-    mv ./mysql/dumps/${DATABASE_NAME}.sql ./mysql/dumps/${DATABASE_NAME}.old.sql;
+    mv ${ROOT}/mysql/dumps/${DATABASE_NAME}.sql ${ROOT}/mysql/dumps/${DATABASE_NAME}.old.sql;
 
     echo "Dumping database into a new SQL file...";
 
-    docker exec ${MYSQL_CONTAINER} mysqldump --opt -uroot -p${rootpass} ${DATABASE_NAME} > ./mysql/dumps/${DATABASE_NAME}.sql;
+    docker exec ${MYSQL_CONTAINER} mysqldump --opt -uroot -p${rootpass} ${DATABASE_NAME} > ${ROOT}/mysql/dumps/${DATABASE_NAME}.sql;
 
     echo "Done :)";
 }

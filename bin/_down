@@ -2,7 +2,10 @@
 
 # stops the containers, removes their network and cleans the docker cache.
 
-docker-compose -f docker-compose.yml down;
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+docker-compose -f ${ROOT}/docker-compose.yml down;
 docker rm -v $(docker ps -a -q -f status=exited);
 docker rmi $(docker images -f "dangling=true" -q);
 docker run -v /var/run/docker.sock:/var/run/docker.sock -v /var/lib/docker:/var/lib/docker --rm martin/docker-cleanup-volumes;
