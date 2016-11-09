@@ -26,7 +26,7 @@ composer()
 
     echo "Changing group of vendor directory...";
 
-    docker exec -ti ${APACHE_CONTAINER} chgrp -R www-data /var/www/html/vendor;
+    docker exec -ti ${APACHE_CONTAINER} chgrp -R www-data /var/www/html/vendor > /dev/null 2>&1;
 
     echo "Done :)";
 }
