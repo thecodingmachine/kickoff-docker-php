@@ -163,3 +163,17 @@ You're structure now looks like this:
 ```
 
 In order to make the proxy working, just run `docker-compose -f docker-compose-nginx.yml up -d`.
+
+# Known issues
+
+*A make command failed to run entirely*
+
+Sometimes, you need to re-run a make command, especially the commands `make build`, `make kickoff`, `make composer cmd=install`, `make import`.
+
+*docker-compose failed to parse my yml file*
+
+Make sure that you're file's indents are corrects!
+
+*I've added a make command, but it's not working*
+
+Make sure that your `Makefile` use tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.
