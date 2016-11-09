@@ -149,7 +149,7 @@ networks:
 
 **Note:** the name of an external network have to follow this format: `{projectfoldername}_{env}`. The `{env}` value must match the value specified in the considered `Makefile` and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
 
-You're structure now looks like this:
+Your structure should now look like this:
 
 ```
 - nginx-custom.conf
