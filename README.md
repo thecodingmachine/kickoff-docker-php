@@ -147,7 +147,7 @@ networks:
       name: wwwmyproject_prod
 ```
 
-**Note:** the name of an external network have to follow this format: `{projectfoldername}_{env}`. The `{env}` value must match the value specified in the considered `Makefile` and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
+**Note:** the name of an external network has to follow this format: `{projectfoldername}_{env}`. The `{env}` value must match the value specified in the considered `Makefile` and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
 
 Your structure should now look like this:
 
@@ -179,11 +179,11 @@ Sometimes, you need to re-run a make command, especially the commands `make buil
 
 *docker-compose failed to parse my yaml file*
 
-Make sure that you're file's indents are corrects!
+Make sure that your file's indents are corrects!
 
 *I've added a make command, but it's not working*
 
-Make sure that your `Makefile` use tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.
+Make sure that your `Makefile` uses tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.
 
 *My web application is not really fast while developing on MacOS*
 
