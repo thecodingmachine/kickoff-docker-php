@@ -39,7 +39,7 @@ WITH_XDEBUG=0
 
 **Note:** if `WITH_XDEBUG=1`, it will enable Xdebug on the apache container. We also recommend to enable it only for your development environment!
 
-Good? Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the following line at the end of the file:
+Good :smiley:? Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the following line at the end of the file:
 
 ```
 127.0.0.1   dev.yourproject.com

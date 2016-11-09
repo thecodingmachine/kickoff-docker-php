@@ -33,7 +33,9 @@ First update your `composer.json` file located at `apache/volume`:
 
 Then run `make kickoff`.
 
-Once everything has been installed, open your favorite web browser, copy / paste http://dev.yourproject.com/vendor/mouf/mouf/ and create the user you will use to connect to Mouf UI.
+Once everything has been installed and you're sure that your apache container is running (`make tail`), use `make composer cmd=install` in order to install PHP dependencies.
+
+Good :smiley:? Now open your favorite web browser, copy / paste http://dev.yourproject.com/vendor/mouf/mouf/ and create the user you will use to connect to Mouf UI.
 
 If you connect to Mouf UI, you should see the following:
 
