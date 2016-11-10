@@ -141,13 +141,13 @@ services:
 networks:
   scope_testing:
     external:
-      name: testingmyproject_testing
+      name: testingmyproject_scope_testing
   scope_prod:
     external:
-      name: wwwmyproject_prod
+      name: wwwmyproject_scope_prod
 ```
 
-**Note:** the name of an external network has to follow this format: `{projectfoldername}_{env}`. The `{env}` value must match the value specified in the considered `Makefile` and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
+**Note:** the name of an external network has to follow this format: `{projectfoldername}_scope_{env}`. The `{env}` value must match the value specified in the considered `Makefile` and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
 
 Your structure should now look like this:
 
