@@ -153,7 +153,7 @@ Your structure should now look like this:
 
 ```
 - nginx-custom.conf
-- docker-composer-nginx.yml
+- docker-compose-nginx.yml
 | testing.myproject
     | apache
     | ...
