@@ -43,7 +43,7 @@ prepare()
     sedi "s/container_name: .*_php_apache_engine_.*/container_name: ${PROJECT_NAME}_php_apache_engine_${ENV}/g" ${ROOT}/docker-compose.yml;
     sedi "s/container_name: .*_mysql_.*/container_name: ${PROJECT_NAME}_mysql_${ENV}/g" ${ROOT}/docker-compose.yml;
     sedi "s/- VIRTUAL_HOST=.*/- VIRTUAL_HOST=$ENV_DOMAIN_NAME/g" ${ROOT}/docker-compose.yml;
-    sedi "s/MYSQL_DATABASE: .*/MYSQL_DATABASE: $DATABASE_NAME/g" ${ROOT}/docker-compose.yml;
+    sedi "s/MYSQL_DATABASE:.*/MYSQL_DATABASE: $DATABASE_NAME/g" ${ROOT}/docker-compose.yml;
 
     sedi "s/#- .\/apache\/ext-xdebug.ini/- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
     if [ ${WITH_XDEBUG} = 0 ]; then
