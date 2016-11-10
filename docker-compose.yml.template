@@ -27,7 +27,7 @@ services:
     environment:
       - VIRTUAL_HOST=
     networks:
-      - scope_{ENV}
+      - scope_
     depends_on:
       - mysql
 
