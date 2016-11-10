@@ -19,7 +19,11 @@ Install docker-compose (**>= 1.8.0**) for MacOSX / Linux following the official 
 
 # Quick start
 
-First, fork this project and clone it.
+First, fork this project and clone it or download the tarball using:
+
+```
+curl -L https://github.com/thecodingmachine/kickoff-docker-php/archive/master.tar.gz > kickoff-docker-php.tar.gz
+```
 
 Once done, move to the root directory of this project and run:
 
