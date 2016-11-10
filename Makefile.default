@@ -64,7 +64,7 @@ build:
 down:
 	sh ./bin/_down;
 
-up: down
+up:
 	docker-compose -f docker-compose.yml up -d;
 
-kickoff: prepare build up
+kickoff: down prepare build up

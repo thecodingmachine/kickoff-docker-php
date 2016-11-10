@@ -33,17 +33,21 @@ prepare()
 {
     echo "Filling docker-compose.yml template...";
 
-    # filling docker-composer.yml template
-    cp ${ROOT}/docker-compose.yml.template ${ROOT}/docker-compose.yml;
-    sedi "s/{PROJECT_NAME}/$PROJECT_NAME/g" ${ROOT}/docker-compose.yml;
-    sedi "s/{DATABASE_NAME}/$DATABASE_NAME/g" ${ROOT}/docker-compose.yml;
-    sedi "s/{ENV}/$ENV/g" ${ROOT}/docker-compose.yml;
-    sedi "s/{ENV_DOMAIN_NAME}/$ENV_DOMAIN_NAME/g" ${ROOT}/docker-compose.yml;
+    if [ ! -f ${ROOT}/docker-compose.yml ]; then
+        cp ${ROOT}/docker-compose.yml.template ${ROOT}/docker-compose.yml;
+    fi;
 
-    if [ ${WITH_XDEBUG} = 1 ]; then
-        sedi "s/{XDEBUG_INI}/- .\/apache\/ext-xdebug.ini:\/usr\/local\/etc\/php\/conf.d\/ext-xdebug.ini:ro/g" ${ROOT}/docker-compose.yml;
-    else
-        sedi "s/{XDEBUG_INI}//g" ${ROOT}/docker-compose.yml;
+    sedi "s/- scope_.*$/- scope_$ENV/g" ${ROOT}/docker-compose.yml;
+    sedi "s/scope_.*: {}/scope_$ENV: {}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/container_name: .*_nginx_proxy_.*/container_name: ${PROJECT_NAME}_nginx_proxy_${ENV}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/container_name: .*_php_apache_engine_.*/container_name: ${PROJECT_NAME}_php_apache_engine_${ENV}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/container_name: .*_mysql_.*/container_name: ${PROJECT_NAME}_mysql_${ENV}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/- VIRTUAL_HOST=.*/- VIRTUAL_HOST=$ENV_DOMAIN_NAME/g" ${ROOT}/docker-compose.yml;
+    sedi "s/MYSQL_DATABASE: .*/MYSQL_DATABASE: $DATABASE_NAME/g" ${ROOT}/docker-compose.yml;
+
+    sedi "s/#- .\/apache\/ext-xdebug.ini/- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
+    if [ ${WITH_XDEBUG} = 0 ]; then
+        sedi "s/- .\/apache\/ext-xdebug.ini/#- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
     fi;
 
     echo "Done :)";

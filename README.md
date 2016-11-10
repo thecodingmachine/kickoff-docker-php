@@ -63,11 +63,11 @@ Once everything has been installed, open your favorite web browser and copy / pa
 
 | Command                         | Description                                                                                                                                                                                |
 | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| prepare                         | Creates the `docker-compose.yml` file using the environment variables specified in the `Makefile`.                                                                                         |
+| prepare                         | Creates or updates the `docker-compose.yml` file using the environment variables specified in the `Makefile`.                                                                              |
 | build                           | Builds the containers.                                                                                                                                                                     |
 | down                            | Stops the containers, deletes their network and cleans the docker cache.                                                                                                                   |
-| up                              | Stops the containers if they're running and then up them.                                                                                                                                  |
-| kickoff                         | Combo of prepare, build, and up commands.                                                                                                                                                  |
+| up                              | Ups the conainers.                                                                                                                                                                         |
+| kickoff                         | Combo of down, prepare, build, and up commands.                                                                                                                                            |
 | composer cmd=*yourcommand*      | Allows you to run a composer command. Ex: `make composer cmd=install`, `make composer cmd=update`, ...                                                                                     |
 | npm cmd=*yourcommand*           | Allows you to run a npm command. Ex: `make npm cmd=install`, `make npm cmd="install --save-dev gulp"`, ...                                                                                 |
 | export                          | This command will dump the database into a SQL file located at `mysql/dumps`. If there is a pre-existing `yourdatabasename.sql` file, it will rename it to `yourdatabasename.old.sql`.     |
@@ -135,14 +135,14 @@ services:
     restart: unless-stopped
     container_name: nginx_proxy
     networks:
-       - testing
-       - prod
+       - scope_testing
+       - scope_prod
 
 networks:
-  testing:
+  scope_testing:
     external:
       name: testingmyproject_testing
-  prod:
+  scope_prod:
     external:
       name: wwwmyproject_prod
 ```

@@ -13,21 +13,21 @@ services:
       #- /the/path/to/certs:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: unless-stopped
-    container_name: {PROJECT_NAME}_nginx_proxy_{ENV}
+    container_name: _nginx_proxy_
     networks:
-      - {ENV}
+      - scope_
 
   php-apache-engine:
     volumes:
       - ./apache/volume:/var/www/html:rw
-      {XDEBUG_INI}
+      #- ./apache/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
     restart: unless-stopped
     build: ./apache
-    container_name: {PROJECT_NAME}_php_apache_engine_{ENV}
+    container_name: _php_apache_engine_
     environment:
-      - VIRTUAL_HOST={ENV_DOMAIN_NAME}
+      - VIRTUAL_HOST=
     networks:
-      - {ENV}
+      - scope_{ENV}
     depends_on:
       - mysql
 
@@ -36,19 +36,19 @@ services:
     volumes:
       - ./mysql/custom-my.cnf:/etc/mysql/my.cnf:ro
     restart: unless-stopped
-    container_name: {PROJECT_NAME}_mysql_{ENV}
+    container_name: _mysql_
     volumes:
       - ./mysql/volume:/var/lib/mysql:rw
     environment:
       MYSQL_ROOT_PASSWORD: admin
-      MYSQL_DATABASE: {DATABASE_NAME}
+      MYSQL_DATABASE:
       MYSQL_USER: admin
       MYSQL_PASSWORD: admin
     networks:
-      - {ENV}
+      - scope_
 
 volumes:
   mysql: {}
 
 networks:
-  {ENV}: {}
+  scope_: {}
