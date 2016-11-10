@@ -33,12 +33,11 @@ services:
 
   mysql:
     image: mysql:5.7
-    volumes:
-      - ./mysql/custom-my.cnf:/etc/mysql/my.cnf:ro
     restart: unless-stopped
     container_name: _mysql_
     volumes:
       - ./mysql/volume:/var/lib/mysql:rw
+       - ./mysql/custom-my.cnf:/etc/mysql/my.cnf:ro
     environment:
       MYSQL_ROOT_PASSWORD: admin
       MYSQL_DATABASE:
