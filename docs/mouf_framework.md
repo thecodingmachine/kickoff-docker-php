@@ -43,11 +43,15 @@ If you connect to Mouf UI, you should see the following:
 
 Click on the button `Run install tasks` and then on the button `Run the x pending install tasks`.
 
+---
+
 After a while, it will ask you to set up Splash:
 
 <img src="images/mouf_framework2.png" alt="Setting up Splash" />
 
 Click on the button `Configure Splash` and then on the button `Install Splash`.
+
+---
 
 Soon after, it will also ask you to set up your database connection:
 
@@ -57,11 +61,15 @@ Fill the form like the following (you might have to change some values):
 
 <img src="images/mouf_framework4.png" alt="Database connection configuration" />
 
+---
+
 Last but not least, it will ask you to set up TDBM:
 
 <img src="images/mouf_framework2.png" alt="Setting up TDBM" />
 
 Click on the button `Configure TDBM` and then on the button `Install TDBM`.
+
+---
 
 Once all tasks have been installed, navigate to the home of Mouf UI. You should see the following:
 
