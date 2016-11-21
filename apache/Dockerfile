@@ -5,17 +5,21 @@ ADD php.ini /usr/local/etc/php/php.ini
 ADD ext-apcu.ini /usr/local/etc/php/conf.d/ext-acpu.ini
 
 # installs missing php dependencies
-RUN pecl install apcu-5.1.5 \
-    && pecl install xdebug-2.4.0
+RUN pecl install apcu \
+    && pecl install xdebug
 
 RUN apt-get update \
-    && apt-get install -y zlib1g-dev # dependency for php zip extension
+    && apt-get install -y cron zlib1g-dev # dependency for php zip extension
 
 RUN docker-php-ext-install pdo_mysql \
     && docker-php-ext-install zip
 
 # enables Apache's rewrite module
 RUN a2enmod rewrite
+
+# register cron
+ADD crontab /tmp/
+RUN crontab /tmp/crontab
 
 # installs composer
 RUN curl -sS https://getcomposer.org/installer \

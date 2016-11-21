@@ -1,0 +1,2 @@
+## Customize the line below to run regularly your PHP scripts.
+# * * * * * cd /var/www/html/; /usr/local/bin/php my_script.php | tee -a /var/logs/cron/my_script.log
