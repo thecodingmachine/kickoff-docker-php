@@ -9,10 +9,18 @@ RUN pecl install apcu \
     && pecl install xdebug
 
 RUN apt-get update \
-    && apt-get install -y cron zlib1g-dev # dependency for php zip extension
+    && apt-get install -y cron zlib1g-dev \
+            libfreetype6-dev \
+            libjpeg62-turbo-dev \
+            libmcrypt-dev \
+            libpng12-dev
 
 RUN docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install zip
+    && docker-php-ext-install zip \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install opcache
+
 
 # enables Apache's rewrite module
 RUN a2enmod rewrite
