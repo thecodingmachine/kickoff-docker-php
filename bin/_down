@@ -1,6 +1,11 @@
 #!/bin/bash
 
-source .bin.env;
+# location
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+# environment variables
+source ${ROOT}/.env;
 
 if [ -f ${ROOT}/docker-compose.yml ]; then
     docker-compose -f ${ROOT}/docker-compose.yml down;

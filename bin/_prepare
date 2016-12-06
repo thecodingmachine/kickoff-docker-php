@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source .bin.env;
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+# environment variables
+source ${ROOT}/.env;
 
 sedi()
 {
@@ -12,20 +16,37 @@ prepare()
     echo "Filling docker-compose.yml...";
 
     if [ ! -f ${ROOT}/docker-compose.yml ]; then
-        rm ${ROOT}/docker-compose.yml;
+        rm -f ${ROOT}/docker-compose.yml;
     fi;
 
     cp ${ROOT}/docker-compose.yml.template ${ROOT}/docker-compose.yml;
 
+    # network
+    sedi "s/scope_\${ENV}/scope_${ENV}/g" ${ROOT}/docker-compose.yml;
+
+    # nginx-proxy
+    sedi "s/container_name: \${PROJECT_NAME}_nginx_proxy_\${ENV}/container_name: ${PROJECT_NAME}_nginx_proxy_${ENV}/g" ${ROOT}/docker-compose.yml;
     sedi "s/#- \${CERTS_PATH}/- \${CERTS_PATH}/g" ${ROOT}/docker-compose.yml;
-    if [ ${WITH_XDEBUG} = 0 ]; then
+    if [ ${WITH_SSL} = 0 ]; then
         sedi "s/- \${CERTS_PATH}/#- \${CERTS_PATH}/g" ${ROOT}/docker-compose.yml;
+    else
+        sedi "s/- \${CERTS_PATH}/- $(echo ${CERTS_PATH} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/g" ${ROOT}/docker-compose.yml;
     fi;
 
+    # php-apache-engine
+    sedi "s/container_name: \${PROJECT_NAME}_php_apache_engine_\${ENV}/container_name: ${PROJECT_NAME}_php_apache_engine_${ENV}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/- VIRTUAL_HOST=\${APACHE_VIRTUAL_HOST}/- VIRTUAL_HOST=${APACHE_VIRTUAL_HOST}/g" ${ROOT}/docker-compose.yml;
     sedi "s/#- .\/apache\/ext-xdebug.ini/- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
-    if [ ${WITH_SSL} = 0 ]; then
+    if [ ${WITH_XDEBUG} = 0 ]; then
         sedi "s/- .\/apache\/ext-xdebug.ini/#- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
     fi;
+
+    # mysql
+    sedi "s/container_name: \${PROJECT_NAME}_mysql_\${ENV}/container_name: ${PROJECT_NAME}_mysql_${ENV}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/MYSQL_ROOT_PASSWORD: \${MYSQL_ROOT_PASSWORD}/MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/MYSQL_DATABASE: \${MYSQL_DATABASE}/MYSQL_DATABASE: ${MYSQL_DATABASE}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/MYSQL_USER: \${MYSQL_USER}/MYSQL_USER: ${MYSQL_USER}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/MYSQL_PASSWORD: \${MYSQL_PASSWORD}/MYSQL_PASSWORD: ${MYSQL_PASSWORD}/g" ${ROOT}/docker-compose.yml;
 
     echo "Done :)";
 }

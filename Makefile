@@ -2,7 +2,7 @@
 
 # kickoff-docker-php makefile
 
-source .env
+include ./.env
 
 # UTILS
 #------------------------------------------------------

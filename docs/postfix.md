@@ -4,30 +4,41 @@ It's always nice to have a Postfix somewhere for sending `no-reply` e-mails!
 
 By chance, there is a cool docker image which will help us with that: https://github.com/catatnight/docker-postfix
 
-First, remove the `docker-compose.yml` file and update your `docker-compose.yml.template` file with the following:
+First, update your `.env.template` file by adding:
+
+```
+# postfix
+POSTFIX_CONTAINER=${PROJECT_NAME}_mysql_${ENV}
+MAIL_DOMAIN=${APACHE_VIRTUAL_HOST}
+NO_REPLY_EMAIL=no-replay@dev.yourproject.com
+SMTP_PASSWORD=admin
+```
+
+Then, update your `docker-compose.yml.template` file with the following:
 
 ```
 postfix:
   image: catatnight/postfix:latest
   restart: unless-stopped
-  container_name: _postfix_
+  container_name: ${PROJECT_NAME}_postfix_${ENV}
   ports:
     - 25:25
   environment:
-    maildomain:
-    smtp_user: :admin
+    maildomain: ${MAIL_DOMAIN}
+    smtp_user: ${NO_REPLY_EMAIL}:${SMTP_PASSWORD}
   networks:
-    - scope_
+    - scope_${ENV}
 ```
 
-Then add the following lines in the `prepare()` method of the `_prepare` script (in `bin` directory):
+Add the following lines in the `prepare()` method of the `_prepare` script (in `bin` directory):
 
 ```
-sedi "s/container_name: .*_postfix_.*/container_name: ${PROJECT_NAME}_postfix_${ENV}/g" ${ROOT}/docker-compose.yml;
-sedi "s/maildomain: .*/maildomain: $ENV_DOMAIN_NAME/g" ${ROOT}/docker-compose.yml;
-sedi "s/smtp_user: .*:/smtp_user: no-reply@$ENV_DOMAIN_NAME:/g" ${ROOT}/docker-compose.yml;
+# postfix
+sedi "s/container_name: \${PROJECT_NAME}_postfix_\${ENV}/container_name: ${PROJECT_NAME}_postfix_${ENV}/g" ${ROOT}/docker-compose.yml;
+sedi "s/maildomain: \${MAIL_DOMAIN}/maildomain: ${MAIL_DOMAIN}/g" ${ROOT}/docker-compose.yml;
+sedi "s/smtp_user: \${NO_REPLY_EMAIL}:\${SMTP_PASSWORD}/smtp_user: ${NO_REPLY_EMAIL}:${SMTP_PASSWORD}/g" ${ROOT}/docker-compose.yml;
 ```
 
-Last but not least, run `make kickoff`! You have now at your disposal a nice Postfix container :smiley:
+Last but not least, run `cp .env.template .env` and `make kickoff`! You have now at your disposal a nice Postfix container :smiley:
 
 **Note:** if you want to test the quality of the e-mails send by your Postfix container, we recommend using this nice tool: https://www.mail-tester.com/.

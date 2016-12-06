@@ -79,7 +79,10 @@ Click on the `Edit` button and of the erroneous instance *fileTranslatorService*
 
 You have now a fresh install of Mouf running in your docker container! :metal:
 
-**Note:** if the message `A problem occured with your Mouf installation` appears, click on the URL specified in `Port forwarding issues`. On the new page, change the local URL to http://localhost/vendor/mouf/mouf/
+**Important:** 
+
+* if the message `A problem occured with your Mouf installation` appears, click on the URL specified in `Port forwarding issues`. On the new page, change the local URL to http://localhost/vendor/mouf/mouf/
+* add the `config.php` file and the `mouf/no_commit` folder to the `.gitignore` file! 
 
 ## Using Doctrine ORM
 

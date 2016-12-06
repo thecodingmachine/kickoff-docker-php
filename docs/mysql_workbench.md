@@ -1,6 +1,6 @@
 # Use MySQL Workbench to manage your database
 
-First, update the MySQL service in your `docker-compose-yml` file by adding:
+First, update the MySQL service in your `docker-compose-yml.template` file by adding:
 
 ```
 ports:

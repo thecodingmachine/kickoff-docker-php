@@ -21,7 +21,6 @@ RUN docker-php-ext-install pdo_mysql \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install opcache
 
-
 # enables Apache's rewrite module
 RUN a2enmod rewrite
 

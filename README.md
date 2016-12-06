@@ -28,20 +28,16 @@ curl -L https://github.com/thecodingmachine/kickoff-docker-php/archive/master.ta
 Once done, move to the root directory of this project and run:
 
 ```
-cp Makefile.default Makefile
+cp .env.template .env
 ```
 
-Open your freshly created `Makefile` in your favorite editor and update the following environment variables:
+Open your freshly created `.env` file in your favorite editor and update the environment variables which will be used in the `docker-compose.yml` file.
 
-```
-PROJECT_NAME=yourproject
-DATABASE_NAME=database_name
-ENV=dev
-ENV_DOMAIN_NAME=dev.yourproject.com
-WITH_XDEBUG=0
-```
+**Important:** 
 
-**Note:** if `WITH_XDEBUG=1`, it will enable Xdebug on the apache container. We also recommend to enable it only for your development environment!
+* if `WITH_XDEBUG=1`, it will enable Xdebug on the apache container. We also recommend to enable it only for your development environment!
+* if `WITH_SSL=1`, it will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `CERTS_PATH`! 
+* you will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support. Also, if you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains!
 
 Good :smiley:? Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the following line at the end of the file:
 
@@ -49,7 +45,7 @@ Good :smiley:? Now open the file located at `/etc/hosts` (on MacOS / Linux) and 
 127.0.0.1   dev.yourproject.com
 ```
 
-**Note:** make sure that the domain name matches the value defined for `ENV_DOMAIN_NAME`.
+**Note:** make sure that the domain name matches the value defined for `APACHE_VIRTUAL_HOST`.
  
 We're now done with the configuration! :metal:
 
@@ -65,41 +61,26 @@ Once everything has been installed, open your favorite web browser and copy / pa
 
 # Make commands
 
-| Command                         | Description                                                                                                                                                                                |
-| ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| prepare                         | Creates or updates the `docker-compose.yml` file using the environment variables specified in the `Makefile`.                                                                              |
-| build                           | Builds the containers.                                                                                                                                                                     |
-| down                            | Stops the containers, deletes their network and cleans the docker cache.                                                                                                                   |
-| up                              | Ups the containers.                                                                                                                                                                        |
-| kickoff                         | Combo of down, prepare, build, and up commands.                                                                                                                                            |
-| composer cmd=*yourcommand*      | Allows you to run a composer command. Ex: `make composer cmd=install`, `make composer cmd=update`, ...                                                                                     |
-| npm cmd=*yourcommand*           | Allows you to run a npm command. Ex: `make npm cmd=install`, `make npm cmd="install --save-dev gulp"`, ...                                                                                 |
-| export                          | This command will dump the database into a SQL file located at `mysql/dumps`. If there is a pre-existing `yourdatabasename.sql` file, it will rename it to `yourdatabasename.old.sql`.     |
-| import                          | This command will drop the database, recreate it and then run the `yourdatabasename.sql` file.                                                                                             |
-| shell                           | Connects through bash to the Apache container.                                                                                                                                             |
-| shell-nginx                     | Connects through bash to the NGINX container.                                                                                                                                              |
-| shell-mysql                     | Connects through bash to the MySQL container.                                                                                                                                              |
-| mysql-cli                       | Opens the MySQL cli.                                                                                                                                                                       |
-| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                        |
-| tail-e                          | Displays the error log of Apache.                                                                                                                                                          |
-| tail-a                          | Displays the access log of Apache.                                                                                                                                                         |
-| tail-nginx                      | Displays the docker's logs of the NGINX container.                                                                                                                                         |
-| tail-mysql                      | Displays the docker's logs of the MySQL container.                                                                                                                                         |
-
-# SSL support
-
-In order to enable SSL, uncomment and update the following line in your `docker-compose.yml` file:
-
-```
-volumes:
-  - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
-  #- /the/path/to/certs:/etc/nginx/certs:ro
-  - /var/run/docker.sock:/tmp/docker.sock:ro
-```
-
-You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
-
-Also, if you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
+| Command                         | Description                                                                                                                                                                                        |
+| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| prepare                         | Creates or updates the `docker-compose.yml` file using the environment variables specified in the `.env` file.                                                                                     |
+| build                           | Builds the containers.                                                                                                                                                                             |
+| down                            | Stops the containers, deletes their network and cleans the docker cache.                                                                                                                           |
+| up                              | Ups the containers.                                                                                                                                                                                |
+| kickoff                         | Combo of down, prepare, build, and up commands.                                                                                                                                                    |
+| composer cmd=*yourcommand*      | Allows you to run a composer command. Ex: `make composer cmd=install`, `make composer cmd=update`, ...                                                                                             |
+| npm cmd=*yourcommand*           | Allows you to run a npm command. Ex: `make npm cmd=install`, `make npm cmd="install --save-dev gulp"`, ...                                                                                         |
+| export                          | This command will dump the database into a SQL file located at `mysql/dumps`. If there is a pre-existing `yourdatabasename.sql` file, it will rename it to `yourdatabasename.Y-m-d:H:M:S.sql`.     |
+| import                          | This command will drop the database, recreate it and then run the `yourdatabasename.sql` file.                                                                                                     |
+| shell                           | Connects through bash to the Apache container.                                                                                                                                                     |
+| shell-nginx                     | Connects through bash to the NGINX container.                                                                                                                                                      |
+| shell-mysql                     | Connects through bash to the MySQL container.                                                                                                                                                      |
+| mysql-cli                       | Opens the MySQL cli.                                                                                                                                                                               |
+| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                                |
+| tail-e                          | Displays the error log of Apache.                                                                                                                                                                  |
+| tail-a                          | Displays the access log of Apache.                                                                                                                                                                 |
+| tail-nginx                      | Displays the docker's logs of the NGINX container.                                                                                                                                                 |
+| tail-mysql                      | Displays the docker's logs of the MySQL container.                                                                                                                                                 |
 
 # Multiple environments on the same host
 
@@ -120,7 +101,7 @@ You have two folders, one for your testing environment (`testing.myproject`) and
 
 But the problem is that you can't use two `nginx-proxy` at the same time.
 
-So just remove the `nginx-proxy` service in each `docker-compose.yml` files and create a new `docker-compose-nginx.yml` elsewhere containing:
+So just remove the `nginx-proxy` service in each `docker-compose.yml.template` files and create a new `docker-compose-nginx.yml` elsewhere containing:
 
 ```
 version: '2'

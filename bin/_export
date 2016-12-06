@@ -1,6 +1,10 @@
 #!/bin/bash
 
-source .bin.env;
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+# environment variables
+source ${ROOT}/.env;
 
 exportDatabase()
 {
@@ -8,7 +12,7 @@ exportDatabase()
 
     DATE_TIME=$(date +%Y-%m-%d:%H:%M:%S);
 
-    mv ${ROOT}/mysql/dumps/${MYSQL_CONTAINER}.sql ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.${DATE_TIME}.sql;
+    mv ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.${DATE_TIME}.sql;
 
     echo "Dumping database into a new SQL file...";
 

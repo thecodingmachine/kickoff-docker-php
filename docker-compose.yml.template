@@ -53,5 +53,3 @@ volumes:
 
 networks:
   scope_${ENV}: {}
-
-env_file: .env
