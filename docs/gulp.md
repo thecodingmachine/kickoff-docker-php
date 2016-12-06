@@ -1,6 +1,6 @@
 # Install Gulp
 
-First, launch your environment with `Make kickoff` and install gulp with `make npm cmd="install --save-dev gulp"`.
+First, launch your environment with `make kickoff` and install gulp with `make npm cmd="install --save-dev gulp"`.
 
 For convenience purpose, add this command in your `Makefile`:
 
