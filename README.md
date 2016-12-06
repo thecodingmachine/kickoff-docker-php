@@ -63,7 +63,7 @@ Once everything has been installed, open your favorite web browser and copy / pa
 
 | Command                         | Description                                                                                                                                                                                        |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| prepare                         | Creates or updates the `docker-compose.yml` file using the environment variables specified in the `.env` file.                                                                                     |
+| prepare                         | Creates the `docker-compose.yml` file using the environment variables specified in the `.env` file.                                                                                                |
 | build                           | Builds the containers.                                                                                                                                                                             |
 | down                            | Stops the containers, deletes their network and cleans the docker cache.                                                                                                                           |
 | up                              | Ups the containers.                                                                                                                                                                                |
