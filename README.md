@@ -37,7 +37,8 @@ Open your freshly created `.env` file in your favorite editor and update the env
 
 * if `WITH_XDEBUG=1`, it will enable Xdebug on the apache container. We also recommend to enable it only for your development environment!
 * if `WITH_SSL=1`, it will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `CERTS_PATH`! 
-* you will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support. Also, if you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains!
+* you will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
+* if you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
 
 Good :smiley:? Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the following line at the end of the file:
 
