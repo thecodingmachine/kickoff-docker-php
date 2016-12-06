@@ -2,15 +2,7 @@
 
 # kickoff-docker-php makefile
 
-PROJECT_NAME=yourproject
-DATABASE_NAME=database_name
-ENV=dev
-ENV_DOMAIN_NAME=dev.yourproject.com
-WITH_XDEBUG=1
-
-NGINX_CONTAINER=${PROJECT_NAME}_nginx_proxy_${ENV}
-APACHE_CONTAINER=${PROJECT_NAME}_php_apache_engine_${ENV}
-MYSQL_CONTAINER=${PROJECT_NAME}_mysql_${ENV}
+source .env
 
 # UTILS
 #------------------------------------------------------
@@ -24,7 +16,7 @@ shell-mysql:
 	docker exec -ti ${MYSQL_CONTAINER} bash;
 
 mysql-cli:
-	docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p;
+	docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p${MYSQL_PASSWORD};
 
 tail:
 	docker logs -f ${APACHE_CONTAINER};
@@ -42,13 +34,13 @@ tail-mysql:
 	docker logs -f ${MYSQL_CONTAINER};
 
 export:
-	./bin/_export --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
+	./bin/_export;
 
 import:
-	./bin/_import --mysql_container ${MYSQL_CONTAINER} --database_name ${DATABASE_NAME};
+	./bin/_import;
 
 composer:
-	./bin/_composer --apache_container ${APACHE_CONTAINER} --command $(cmd);
+	./bin/_composer --command $(cmd);
 
 npm:
 	docker exec --user="custom_user" -ti ${APACHE_CONTAINER} npm $(cmd);
@@ -56,7 +48,7 @@ npm:
 # BUILDING
 #------------------------------------------------------
 prepare:
-	./bin/_prepare --project_name ${PROJECT_NAME} --database_name ${DATABASE_NAME} --env ${ENV} --env_domain_name ${ENV_DOMAIN_NAME} --with_xdebug ${WITH_XDEBUG};
+	./bin/_prepare;
 
 build:
 	docker-compose -f docker-compose.yml build;

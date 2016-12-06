@@ -1,9 +1,6 @@
 #!/bin/bash
 
-# stops the containers, removes their network and cleans the docker cache.
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
-ROOT=${DIR}/..;
+source .bin.env;
 
 if [ -f ${ROOT}/docker-compose.yml ]; then
     docker-compose -f ${ROOT}/docker-compose.yml down;

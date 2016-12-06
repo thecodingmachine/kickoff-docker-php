@@ -1,14 +1,11 @@
 #!/bin/bash
 
-# this scripts run a composer command inside the container.
-
-APACHE_CONTAINER='';
-CMD='';
+source .bin.env;
 
 usage()
 {
     echo "Usage:";
-    echo "sh _composer --apache_container yourapachecontainername --command [install|update|...]";
+    echo "sh _composer --command [install|update|...]";
     exit 0;
 }
 
@@ -39,11 +36,6 @@ fi
 
 while [ "$1" != "" ]; do
     case $1 in
-        --apache_container ) shift
-            if [ -z $1 ]; then
-                missing_arg --apache_container;
-            fi;
-            APACHE_CONTAINER=$1 ;;
         --command ) shift
             if [ -z $1 ]; then
                 missing_arg --command;

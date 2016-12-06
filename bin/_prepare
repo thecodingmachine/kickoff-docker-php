@@ -1,28 +1,6 @@
 #!/bin/bash
 
-# generates the docker-compose.yml. This script should be called using the command "make prepare".
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
-ROOT=${DIR}/..;
-
-PROJECT_NAME='';
-DATABASE_NAME='';
-ENV='';
-ENV_DOMAIN_NAME='';
-WITH_XDEBUG=0;
-
-usage()
-{
-    echo "Usage:";
-    echo "sh _prepare --project_name yourproject --database_name yourdatabasename --env [dev|testing|prod|...] --env_domain_name [dev.yourdomain.com|www.yourdomain.com|...] --with_xdebug [0|1]";
-    exit 0;
-}
-
-missing_arg()
-{
-    echo "ERROR: Missing argument $1."
-    exit 1;
-}
+source .bin.env;
 
 sedi()
 {
@@ -31,64 +9,26 @@ sedi()
 
 prepare()
 {
-    echo "Filling docker-compose.yml template...";
+    echo "Filling docker-compose.yml...";
 
     if [ ! -f ${ROOT}/docker-compose.yml ]; then
-        cp ${ROOT}/docker-compose.yml.template ${ROOT}/docker-compose.yml;
+        rm ${ROOT}/docker-compose.yml;
     fi;
 
-    sedi "s/- scope_.*$/- scope_$ENV/g" ${ROOT}/docker-compose.yml;
-    sedi "s/scope_.*: {}/scope_$ENV: {}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/container_name: .*_nginx_proxy_.*/container_name: ${PROJECT_NAME}_nginx_proxy_${ENV}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/container_name: .*_php_apache_engine_.*/container_name: ${PROJECT_NAME}_php_apache_engine_${ENV}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/container_name: .*_mysql_.*/container_name: ${PROJECT_NAME}_mysql_${ENV}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/- VIRTUAL_HOST=.*/- VIRTUAL_HOST=$ENV_DOMAIN_NAME/g" ${ROOT}/docker-compose.yml;
-    sedi "s/MYSQL_DATABASE:.*/MYSQL_DATABASE: $DATABASE_NAME/g" ${ROOT}/docker-compose.yml;
+    cp ${ROOT}/docker-compose.yml.template ${ROOT}/docker-compose.yml;
+
+    sedi "s/#- \${CERTS_PATH}/- \${CERTS_PATH}/g" ${ROOT}/docker-compose.yml;
+    if [ ${WITH_XDEBUG} = 0 ]; then
+        sedi "s/- \${CERTS_PATH}/#- \${CERTS_PATH}/g" ${ROOT}/docker-compose.yml;
+    fi;
 
     sedi "s/#- .\/apache\/ext-xdebug.ini/- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
-    if [ ${WITH_XDEBUG} = 0 ]; then
+    if [ ${WITH_SSL} = 0 ]; then
         sedi "s/- .\/apache\/ext-xdebug.ini/#- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
     fi;
 
     echo "Done :)";
 }
-
-# checking parameters
-if [ "$#" -eq 0 ]; then
-    usage;
-    exit 1;
-fi
-
-while [ "$1" != "" ]; do
-    case $1 in
-        --project_name ) shift
-            if [ -z $1 ]; then
-                missing_arg --project_name;
-            fi;
-            PROJECT_NAME=$1 ;;
-        --database_name ) shift
-            if [ -z $1 ]; then
-                missing_arg --database_name;
-            fi;
-            DATABASE_NAME=$1 ;;
-        --env ) shift
-            if [ -z $1 ]; then
-                missing_arg --env;
-            fi;
-            ENV=$1 ;;
-        --env_domain_name ) shift
-            if [ -z $1 ]; then
-                missing_arg --env_domain_name;
-            fi;
-            ENV_DOMAIN_NAME=$1 ;;
-        --with_xdebug ) shift
-            if [ -z $1 ]; then
-                missing_arg --with_xdebug;
-            fi;
-            WITH_XDEBUG=$1 ;;
-    esac
-    shift
-done
 
 prepare;
 

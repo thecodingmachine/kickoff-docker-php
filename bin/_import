@@ -1,70 +1,23 @@
 #!/bin/bash
 
-# drops the database, recreates it and then imports data contained in the .sql file located at ./mysql/dumps.
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
-ROOT=${DIR}/..;
-
-MYSQL_CONTAINER='';
-DATABASE_NAME='';
-
-usage()
-{
-    echo "Usage:";
-    echo "sh _import --mysql_container yourmysqlcontainername --databasename yourdatabasename";
-    exit 0;
-}
-
-missing_arg()
-{
-    echo "ERROR: Missing argument $1."
-    exit 1;
-}
+source .bin.env;
 
 importDatabase()
 {
-    stty -echo;
-    printf "MySQL root password: ";
-    read rootpass;
-    stty echo;
-    printf "\n";
-
     echo "Dropping database...";
 
-    docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} -e "drop database $DATABASE_NAME";
+    docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} -e "drop database $MYSQL_DATABASE";
 
     echo "Creating database...";
 
-    docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} -e "create database $DATABASE_NAME character set utf8 collate utf8_unicode_ci";
+    docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} -e "create database $MYSQL_DATABASE character set utf8 collate utf8_unicode_ci";
 
     echo "Importing database using the SQL file...";
 
-    cat ${ROOT}/mysql/dumps/${DATABASE_NAME}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${rootpass} ${DATABASE_NAME};
+    cat ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE};
 
     echo "Done :)";
 }
-
-# checking parameters
-if [ "$#" -eq 0 ]; then
-    usage;
-    exit 1;
-fi
-
-while [ "$1" != "" ]; do
-    case $1 in
-        --mysql_container ) shift
-            if [ -z $1 ]; then
-                missing_arg --mysql_container;
-            fi;
-            MYSQL_CONTAINER=$1 ;;
-        --database_name ) shift
-            if [ -z $1 ]; then
-                missing_arg --database_name;
-            fi;
-            DATABASE_NAME=$1 ;;
-    esac
-    shift
-done
 
 importDatabase;
 

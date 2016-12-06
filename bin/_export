@@ -1,66 +1,21 @@
 #!/bin/bash
 
-# creates a .sql file in ./mysql/dumps containing the data of your database. If there is a pre-existing .sql file, this script will rename it to yourdatabasename.old.sql.
-
-MYSQL_CONTAINER='';
-DATABASE_NAME='';
-
-DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
-ROOT=${DIR}/..;
-
-usage()
-{
-    echo "Usage:";
-    echo "sh _export --mysql_container yourmysqlcontainername --databasename yourdatabasename";
-    exit 0;
-}
-
-missing_arg()
-{
-    echo "ERROR: Missing argument $1."
-    exit 1;
-}
+source .bin.env;
 
 exportDatabase()
 {
-    stty -echo;
-    printf "MySQL root password: ";
-    read rootpass;
-    stty echo;
-    printf "\n";
-
     echo "Renaming previous SQL file...";
 
-    mv ${ROOT}/mysql/dumps/${DATABASE_NAME}.sql ${ROOT}/mysql/dumps/${DATABASE_NAME}.old.sql;
+    DATE_TIME=$(date +%Y-%m-%d:%H:%M:%S);
+
+    mv ${ROOT}/mysql/dumps/${MYSQL_CONTAINER}.sql ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.${DATE_TIME}.sql;
 
     echo "Dumping database into a new SQL file...";
 
-    docker exec ${MYSQL_CONTAINER} mysqldump --opt -uroot -p${rootpass} ${DATABASE_NAME} > ${ROOT}/mysql/dumps/${DATABASE_NAME}.sql;
+    docker exec ${MYSQL_CONTAINER} mysqldump --opt -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} > ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql;
 
     echo "Done :)";
 }
-
-# checking parameters
-if [ "$#" -eq 0 ]; then
-    usage;
-    exit 1;
-fi
-
-while [ "$1" != "" ]; do
-    case $1 in
-        --mysql_container ) shift
-            if [ -z $1 ]; then
-                missing_arg --mysql_container;
-            fi;
-            MYSQL_CONTAINER=$1 ;;
-        --database_name ) shift
-            if [ -z $1 ]; then
-                missing_arg --database_name;
-            fi;
-            DATABASE_NAME=$1 ;;
-    esac
-    shift
-done
 
 exportDatabase;
 

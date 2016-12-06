@@ -5,5 +5,5 @@
 /apache/volume/node_modules
 /apache/volume/npm-debug.log
 /mysql/volume
+.env
 docker-compose.yml
-Makefile
