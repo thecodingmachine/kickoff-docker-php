@@ -23,7 +23,7 @@ composer()
 {
     echo "Running composer command...";
 
-    docker exec -ti ${APACHE_CONTAINER} composer ${CMD};
+    docker exec --user www-data -ti ${APACHE_CONTAINER} composer ${CMD};
 
     echo "Done :)";
 }
