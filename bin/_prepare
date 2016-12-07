@@ -13,9 +13,9 @@ sedi()
 
 prepare()
 {
-    echo "Filling docker-compose.yml...";
+    echo "Creating docker-compose.yml...";
 
-    if [ ! -f ${ROOT}/docker-compose.yml ]; then
+    if [ -f ${ROOT}/docker-compose.yml ]; then
         rm -f ${ROOT}/docker-compose.yml;
     fi;
 
