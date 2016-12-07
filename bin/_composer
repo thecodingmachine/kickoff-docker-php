@@ -25,10 +25,6 @@ composer()
 
     docker exec -ti ${APACHE_CONTAINER} composer ${CMD};
 
-    echo "Changing ownership of vendor directory...";
-
-    docker exec -ti ${APACHE_CONTAINER} chown -R www-data:www-data /var/www/html/vendor > /dev/null 2>&1;
-
     echo "Done :)";
 }
 
