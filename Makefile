@@ -21,12 +21,6 @@ mysql-cli:
 tail:
 	docker logs -f ${APACHE_CONTAINER};
 
-tail-e:
-	docker exec -ti ${APACHE_CONTAINER} tail -f /var/log/apache2/error.log;
-
-tail-a:
-	docker exec -ti ${APACHE_CONTAINER} tail -f /var/log/apache2/access.log;
-
 tail-nginx:
 	docker logs -f ${NGINX_CONTAINER};
 

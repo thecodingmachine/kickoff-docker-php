@@ -31,24 +31,13 @@ Once done, move to the root directory of this project and run:
 cp .env.template .env
 ```
 
-Open your freshly created `.env` file in your favorite editor and update the environment variables which will be used in the `docker-compose.yml` file.
-
-**Important:** 
-
-* if `WITH_XDEBUG=1`, it will enable Xdebug on the apache container. We also recommend to enable it only for your development environment!
-* if `WITH_SSL=1`, it will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `CERTS_PATH`! 
-* you will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
-* if you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
-
-Good :smiley:? Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the following line at the end of the file:
+Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the following line at the end of the file:
 
 ```
 127.0.0.1   dev.yourproject.com
 ```
-
-**Note:** make sure that the domain name matches the value defined for `APACHE_VIRTUAL_HOST`.
  
-We're now done with the configuration! :metal:
+Good :smiley:? We're now done with the configuration! :metal:
 
 Last but not least, shutdown your local Apache or anything which could use your 80 and 443 ports, and run:
 
@@ -59,6 +48,17 @@ make kickoff
 The installation might take some time, so go for a coffee break! :coffee: 
 
 Once everything has been installed, open your favorite web browser and copy / paste http://dev.yourproject.com and check if everything is OK!
+
+# How does it work?
+
+There are two important files:
+
+* `.env.template` which contains environment variables with default values. These values should not be used directly, that's why you have to run `cp .env.template .env`.
+* `docker-compose.yml.template` which contains the run configuration and the environment variables defined in `.env.template`.
+
+The command `make kickoff` will create a `docker-compose.yml` file using the environment variables defined in the `.env` file.
+
+For security concern, these two file are not versioned, because they contain sensible data like the MySQL database password and so on.
 
 # Make commands
 
@@ -77,11 +77,21 @@ Once everything has been installed, open your favorite web browser and copy / pa
 | shell-nginx                     | Connects through bash to the NGINX container.                                                                                                                                                      |
 | shell-mysql                     | Connects through bash to the MySQL container.                                                                                                                                                      |
 | mysql-cli                       | Opens the MySQL cli.                                                                                                                                                                               |
-| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                                |
-| tail-e                          | Displays the error log of Apache.                                                                                                                                                                  |
-| tail-a                          | Displays the access log of Apache.                                                                                                                                                                 |
+| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                                |                                                                                                                                                               |
 | tail-nginx                      | Displays the docker's logs of the NGINX container.                                                                                                                                                 |
 | tail-mysql                      | Displays the docker's logs of the MySQL container.                                                                                                                                                 |
+
+# Xdebug support
+
+Open your `.env` file in your favorite editor and update the variable `WITH_XDEBUG=1`. It will enable Xdebug on the apache container, but we recommend to enable it only for your development environment!
+
+# SSL support
+
+Open your `.env` file in your favorite editor and update the variable `WITH_SSL=1`. It will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `CERTS_PATH`!
+
+You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
+
+If you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
 
 # Multiple environments on the same host
 
