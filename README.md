@@ -58,7 +58,7 @@ There are two important files:
 
 The command `make kickoff` will create a `docker-compose.yml` file using the environment variables defined in the `.env` file.
 
-For security concern, these two file are not versioned, because they contain sensible data like the MySQL database password and so on.
+For security concern, these two files are not versioned, because they contain sensible data like the MySQL database password and so on.
 
 # Make commands
 
