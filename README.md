@@ -11,7 +11,7 @@ This project will help you to start a PHP project with Docker, thanks to some us
 
 # Prerequisites
 
-Install Docker (**>= 1.10**) for MacOSX / Linux following the official instructions: https://docs.docker.com/engine/installation
+Install Docker (**>= 1.12**) for MacOSX / Linux following the official instructions: https://docs.docker.com/engine/installation
 
 Install docker-compose (**>= 1.8.0**) for MacOSX / Linux following the official instructions: https://docs.docker.com/compose/install
 

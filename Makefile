@@ -37,7 +37,7 @@ composer:
 	./bin/_composer --command $(cmd);
 
 npm:
-	docker exec --user="custom_user" -ti ${APACHE_CONTAINER} npm $(cmd);
+	docker exec -ti ${APACHE_CONTAINER} npm $(cmd);
 
 # BUILDING
 #------------------------------------------------------

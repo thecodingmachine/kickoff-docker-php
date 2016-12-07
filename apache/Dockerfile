@@ -32,6 +32,9 @@ RUN crontab /tmp/crontab
 RUN curl -sS https://getcomposer.org/installer \
     | php -- --install-dir=/usr/local/bin --filename=composer
 
+# allows Composer to be run as root
+ENV COMPOSER_ALLOW_SUPERUSER 1
+
 # installs git
 RUN apt-get update \
     && apt-get -y install git
@@ -47,8 +50,3 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - \
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
-
-# creates composer / npm user
-RUN useradd --create-home --shell /bin/bash custom_user \
-    && echo 'custom_user:custom_user' | chpasswd \
-    && adduser custom_user sudo

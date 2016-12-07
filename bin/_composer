@@ -23,7 +23,7 @@ composer()
 {
     echo "Running composer command...";
 
-    docker exec --user="custom_user" -ti ${APACHE_CONTAINER} composer ${CMD};
+    docker exec -ti ${APACHE_CONTAINER} composer ${CMD};
 
     echo "Changing group of vendor directory...";
 
