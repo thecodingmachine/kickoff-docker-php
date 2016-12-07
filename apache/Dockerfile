@@ -46,10 +46,8 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - \
     && ln -s /usr/bin/nodejs /usr/local/bin/node \
     && ln -s /usr/bin/npm /usr/local/bin/npm
 
-# installs inotify-tools
-RUN export DEBIAN_FRONTEND=noninteractive \
-  && apt -y update \
-  && apt -y install inotify-tools
+# Give /var/www to www-data (to solve right issues with Composer cache)
+RUN chown www-data: /var/www
 
 # defines entry point
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
