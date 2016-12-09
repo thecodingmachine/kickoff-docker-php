@@ -4,6 +4,22 @@
 
 include ./.env
 
+# BUILDING
+#------------------------------------------------------
+prepare:
+	./bin/_prepare;
+
+build:
+	docker-compose -f docker-compose.yml build;
+
+down:
+	./bin/_down;
+
+up:
+	docker-compose -f docker-compose.yml up -d;
+
+kickoff: down prepare build up
+
 # UTILS
 #------------------------------------------------------
 shell:
@@ -37,20 +53,4 @@ composer:
 	./bin/_composer --command $(cmd);
 
 npm:
-	docker exec --user www-data -ti ${APACHE_CONTAINER} npm $(cmd);
-
-# BUILDING
-#------------------------------------------------------
-prepare:
-	./bin/_prepare;
-
-build:
-	docker-compose -f docker-compose.yml build;
-
-down:
-	./bin/_down;
-
-up:
-	docker-compose -f docker-compose.yml up -d;
-
-kickoff: down prepare build up
+	docker exec -ti ${APACHE_CONTAINER} npm $(cmd);

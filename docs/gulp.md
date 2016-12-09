@@ -6,7 +6,7 @@ For convenience purpose, add this command in your `Makefile`:
 
 ```
 gulp:
-	docker exec --user="custom_user" -ti ${APACHE_CONTAINER} /var/www/html/node_modules/.bin/gulp $(cmd);
+	docker exec -ti ${APACHE_CONTAINER} /var/www/html/node_modules/.bin/gulp $(cmd);
 ```
 
 **Note:** make sure that your `Makefile` uses tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.

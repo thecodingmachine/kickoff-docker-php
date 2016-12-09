@@ -24,7 +24,7 @@ RUN docker-php-ext-install pdo_mysql \
 # enables Apache's rewrite module
 RUN a2enmod rewrite
 
-# register cron
+# enables cron
 ADD crontab /tmp/
 RUN crontab /tmp/crontab
 
@@ -32,8 +32,8 @@ RUN crontab /tmp/crontab
 RUN curl -sS https://getcomposer.org/installer \
     | php -- --install-dir=/usr/local/bin --filename=composer
 
-# allows Composer to be run as root
-ENV COMPOSER_ALLOW_SUPERUSER 1
+# gives /var/www to www-data (to solve right issues with Composer cache)
+RUN chown www-data: /var/www
 
 # installs git
 RUN apt-get update \
@@ -45,9 +45,6 @@ RUN curl -sL https://deb.nodesource.com/setup_4.x | bash - \
     && apt-get install -y nodejs \
     && ln -s /usr/bin/nodejs /usr/local/bin/node \
     && ln -s /usr/bin/npm /usr/local/bin/npm
-
-# Give /var/www to www-data (to solve right issues with Composer cache)
-RUN chown www-data: /var/www
 
 # defines entry point
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
