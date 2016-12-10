@@ -56,8 +56,8 @@ Once everything has been installed, open your favorite web browser and copy / pa
 There are three important files:
 
 * `.env.template` which contains environment variables with default values. These values should not be used directly, that's why you have to run `cp .env.template .env`.
-* `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus the environment variables defined in `.env.template`.
-* `docker-compose-nginx.yml.template` which contains the run configuration of the NGINX container plus the environment variables defined in `.env.template`.
+* `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus some of the environment variables defined in `.env.template`.
+* `docker-compose-nginx.yml.template` which contains the run configuration of the NGINX container plus some of the environment variables defined in `.env.template`.
 
 The command `make kickoff` will create the `docker-compose.yml` and `docker-compose-nginx.yml` files using the environment variables' values defined in the `.env` file.
 
@@ -90,7 +90,7 @@ For security concern, these three files are not versioned, because they contain 
 
 Open your `.env` file in your favorite editor, set the variable `WITH_XDEBUG=1` and run `make kickoff`. 
 
-It will enable Xdebug on the apache container, but we recommend to enable it only for your development environment!
+It will enable Xdebug on the Apache container. Use it only for your development environment!
 
 # SSL support
 
@@ -106,7 +106,7 @@ If you're using SSL Certificate Chains, we advise you to read the official NGINX
 
 As you long as each `PROXY_NAME` variables in your `.env` files have the same value, you are able to run as many environments as you need. 
 
-Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for your Apache containers.
+Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
 
 # Dive in
 
