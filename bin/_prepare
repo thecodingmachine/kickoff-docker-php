@@ -13,8 +13,6 @@ sedi()
 
 prepare()
 {
-    echo "Creating docker-compose.yml...";
-
     if [ -f ${ROOT}/docker-compose.yml ]; then
         rm -f ${ROOT}/docker-compose.yml;
     fi;
@@ -41,8 +39,6 @@ prepare()
     sedi "s/MYSQL_USER: \${MYSQL_USER}/MYSQL_USER: ${MYSQL_USER}/g" ${ROOT}/docker-compose.yml;
     sedi "s/MYSQL_PASSWORD: \${MYSQL_PASSWORD}/MYSQL_PASSWORD: ${MYSQL_PASSWORD}/g" ${ROOT}/docker-compose.yml;
 
-    echo "Creating docker-compose-nginx.yml...";
-
     if [ -f ${ROOT}/docker-compose-nginx.yml ]; then
         rm -f ${ROOT}/docker-compose-nginx.yml;
     fi;
@@ -57,8 +53,6 @@ prepare()
     else
         sedi "s/- \${CERTS_PATH}/- $(echo ${CERTS_PATH} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/g" ${ROOT}/docker-compose-nginx.yml;
     fi;
-
-    echo "Done :)";
 }
 
 prepare;

@@ -8,17 +8,12 @@ source ${ROOT}/.env;
 
 exportDatabase()
 {
-    echo "Renaming previous SQL file...";
-
-    DATE_TIME=$(date +%Y-%m-%d:%H:%M:%S);
-
-    mv ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.${DATE_TIME}.sql;
-
-    echo "Dumping database into a new SQL file...";
+    if [ -f ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql ]; then
+        DATE_TIME=$(date +%Y-%m-%d:%H:%M:%S);
+        mv ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.${DATE_TIME}.sql;
+    fi;
 
     docker exec ${MYSQL_CONTAINER} mysqldump --opt -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} > ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql;
-
-    echo "Done :)";
 }
 
 exportDatabase;

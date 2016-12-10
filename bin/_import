@@ -8,19 +8,11 @@ source ${ROOT}/.env;
 
 importDatabase()
 {
-    echo "Dropping database...";
-
     docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} -e "drop database $MYSQL_DATABASE";
-
-    echo "Creating database...";
 
     docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} -e "create database $MYSQL_DATABASE character set utf8 collate utf8_unicode_ci";
 
-    echo "Importing database using the SQL file...";
-
     cat ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE};
-
-    echo "Done :)";
 }
 
 importDatabase;

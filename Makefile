@@ -8,23 +8,30 @@ include ./.env
 #------------------------------------------------------
 prepare:
 	./bin/_prepare;
+	./bin/_whalesay --say "Your docker-compose files are ready!";
 
 build:
 	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml build;
+	./bin/_whalesay --say "The Apache container has been built!";
 
 down:
 	./bin/_down;
+	./bin/_whalesay --say "The Apache and MySQL containers have been stopped!";
 
 up:
 	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml up -d;
+	./bin/_whalesay --say "The Apache and MySQL containers are running!";
 
 nginx-down:
 	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml down;
+	./bin/_whalesay --say "The NGINX container has been stopped!";
 
 nginx-up:
 	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml up -d;
+	./bin/_whalesay --say "The NGINX container is running!";
 
-kickoff: down prepare build nginx-up up
+kickoff: down prepare build nginx-up up;
+	./bin/_whalesay --say "You're ready to go!";
 
 # UTILS
 #------------------------------------------------------
@@ -51,9 +58,11 @@ tail-mysql:
 
 export:
 	./bin/_export;
+	./bin/_whalesay --say "Export complete!";
 
 import:
 	./bin/_import;
+	./bin/_whalesay --say "Import complete!";
 
 composer:
 	./bin/_composer --command $(cmd);

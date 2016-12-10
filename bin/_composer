@@ -32,18 +32,18 @@ composer()
 if [ "$#" -eq 0 ]; then
     usage;
     exit 1;
-fi
+fi;
 
 while [ "$1" != "" ]; do
     case $1 in
         --command ) shift
-            if [ -z $1 ]; then
+            if [ -z "$1" ]; then
                 missing_arg --command;
             fi;
             CMD=$1 ;;
     esac
     shift
-done
+done;
 
 composer;
 
