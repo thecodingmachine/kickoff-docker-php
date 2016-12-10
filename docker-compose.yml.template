@@ -1,4 +1,4 @@
-# docker-compose.yml
+# docker-compose.yml template
 version: '2'
 
 services:
