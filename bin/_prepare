@@ -23,15 +23,7 @@ prepare()
 
     # common
     sedi "s/\${ENV}/${ENV}/g" ${ROOT}/docker-compose.yml;
-
-    # nginx-proxy
-    sedi "s/\${NGINX_CONTAINER}/${NGINX_CONTAINER}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/#- \${CERTS_PATH}/- \${CERTS_PATH}/g" ${ROOT}/docker-compose.yml;
-    if [ ${WITH_SSL} = 0 ]; then
-        sedi "s/- \${CERTS_PATH}/#- \${CERTS_PATH}/g" ${ROOT}/docker-compose.yml;
-    else
-        sedi "s/- \${CERTS_PATH}/- $(echo ${CERTS_PATH} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/g" ${ROOT}/docker-compose.yml;
-    fi;
+    sedi "s/\${PROXY_NAME}/${PROXY_NAME}/g" ${ROOT}/docker-compose.yml;
 
     # php-apache-engine
     sedi "s/\${APACHE_CONTAINER}/${APACHE_CONTAINER}/g" ${ROOT}/docker-compose.yml;
@@ -48,6 +40,23 @@ prepare()
     sedi "s/MYSQL_DATABASE: \${MYSQL_DATABASE}/MYSQL_DATABASE: ${MYSQL_DATABASE}/g" ${ROOT}/docker-compose.yml;
     sedi "s/MYSQL_USER: \${MYSQL_USER}/MYSQL_USER: ${MYSQL_USER}/g" ${ROOT}/docker-compose.yml;
     sedi "s/MYSQL_PASSWORD: \${MYSQL_PASSWORD}/MYSQL_PASSWORD: ${MYSQL_PASSWORD}/g" ${ROOT}/docker-compose.yml;
+
+    echo "Creating docker-compose-nginx.yml...";
+
+    if [ -f ${ROOT}/docker-compose-nginx.yml ]; then
+        rm -f ${ROOT}/docker-compose-nginx.yml;
+    fi;
+
+    cp ${ROOT}/docker-compose-nginx.yml.template ${ROOT}/docker-compose-nginx.yml;
+
+    # nginx-proxy
+    sedi "s/\${NGINX_CONTAINER}/${NGINX_CONTAINER}/g" ${ROOT}/docker-compose-nginx.yml;
+    sedi "s/#- \${CERTS_PATH}/- \${CERTS_PATH}/g" ${ROOT}/docker-compose-nginx.yml;
+    if [ ${WITH_SSL} = 0 ]; then
+        sedi "s/- \${CERTS_PATH}/#- \${CERTS_PATH}/g" ${ROOT}/docker-compose-nginx.yml;
+    else
+        sedi "s/- \${CERTS_PATH}/- $(echo ${CERTS_PATH} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/g" ${ROOT}/docker-compose-nginx.yml;
+    fi;
 
     echo "Done :)";
 }

@@ -19,6 +19,8 @@ Install docker-compose (**>= 1.8.0**) for MacOSX / Linux following the official 
 
 # Quick start
 
+**Important: make sure you're not using `root` user. Your current user must be a sudoer and be able to run docker commands.**
+
 First, fork this project and clone it or download the tarball using:
 
 ```
@@ -51,24 +53,27 @@ Once everything has been installed, open your favorite web browser and copy / pa
 
 # How does it work?
 
-There are two important files:
+There are three important files:
 
 * `.env.template` which contains environment variables with default values. These values should not be used directly, that's why you have to run `cp .env.template .env`.
-* `docker-compose.yml.template` which contains the run configuration and the environment variables defined in `.env.template`.
+* `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus the environment variables defined in `.env.template`.
+* `docker-compose-nginx.yml.template` which contains the run configuration of the NGINX container plus the environment variables defined in `.env.template`.
 
-The command `make kickoff` will create a `docker-compose.yml` file using the environment variables defined in the `.env` file.
+The command `make kickoff` will create the `docker-compose.yml` and `docker-compose-nginx.yml` files using the environment variables' values defined in the `.env` file.
 
-For security concern, these two files are not versioned, because they contain sensible data like the MySQL database password and so on.
+For security concern, these three files are not versioned, because they contain sensible data like the MySQL database password and so on.
 
 # Make commands
 
 | Command                         | Description                                                                                                                                                                                        |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| prepare                         | Creates the `docker-compose.yml` file using the environment variables specified in the `.env` file.                                                                                                |
-| build                           | Builds the containers.                                                                                                                                                                             |
-| down                            | Stops the containers, deletes their network and cleans the docker cache.                                                                                                                           |
-| up                              | Ups the containers.                                                                                                                                                                                |
-| kickoff                         | Combo of down, prepare, build, and up commands.                                                                                                                                                    |
+| prepare                         | Creates the `docker-compose.yml` and `docker-compose-nginx.yml` files using the environment variables specified in the `.env` file.                                                                |
+| build                           | Builds the Apache container.                                                                                                                                                                       |
+| down                            | Stops the Apache and MySQL containers, deletes their network and cleans the docker cache.                                                                                                          |
+| up                              | Ups the Apache and MySQL containers.                                                                                                                                                               |
+| nginx-down                      | Stops the NGINX container and deletes its network.                                                                                                                                                 |
+| nginx-up                        | Ups the NGINX container.                                                                                                                                                                           |
+| kickoff                         | Combo of down, prepare, build, nginx-up and up commands.                                                                                                                                           |
 | composer cmd=*yourcommand*      | Allows you to run a composer command. Ex: `make composer cmd=install`, `make composer cmd=update`, ...                                                                                             |
 | npm cmd=*yourcommand*           | Allows you to run a npm command. Ex: `make npm cmd=install`, `make npm cmd="install --save-dev gulp"`, ...                                                                                         |
 | export                          | This command will dump the database into a SQL file located at `mysql/dumps`. If there is a pre-existing `yourdatabasename.sql` file, it will rename it to `yourdatabasename.Y-m-d:H:M:S.sql`.     |
@@ -77,17 +82,21 @@ For security concern, these two files are not versioned, because they contain se
 | shell-nginx                     | Connects through bash to the NGINX container.                                                                                                                                                      |
 | shell-mysql                     | Connects through bash to the MySQL container.                                                                                                                                                      |
 | mysql-cli                       | Opens the MySQL cli.                                                                                                                                                                               |
-| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                                |                                                                                                                                                               |
+| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                                |
 | tail-nginx                      | Displays the docker's logs of the NGINX container.                                                                                                                                                 |
 | tail-mysql                      | Displays the docker's logs of the MySQL container.                                                                                                                                                 |
 
 # Xdebug support
 
-Open your `.env` file in your favorite editor and update the variable `WITH_XDEBUG=1`. It will enable Xdebug on the apache container, but we recommend to enable it only for your development environment!
+Open your `.env` file in your favorite editor, set the variable `WITH_XDEBUG=1` and run `make kickoff`. 
+
+It will enable Xdebug on the apache container, but we recommend to enable it only for your development environment!
 
 # SSL support
 
-Open your `.env` file in your favorite editor and update the variable `WITH_SSL=1`. It will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `CERTS_PATH`!
+Open your `.env` file in your favorite editor, set the variable `WITH_SSL=1` and run `make kickoff`. 
+
+It will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `CERTS_PATH`!
 
 You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
 
@@ -95,70 +104,9 @@ If you're using SSL Certificate Chains, we advise you to read the official NGINX
 
 # Multiple environments on the same host
 
-Let's say you need your testing and production environments to be on the same host.
+As you long as each `PROXY_NAME` variables in your `.env` files have the same value, you are able to run as many environments as you need. 
 
-Here is your current structure:
-
-```
-| testing.myproject
-    | apache
-    | ...
-| www.myproject
-    | apache
-    | ...
-```
-
-You have two folders, one for your testing environment (`testing.myproject`) and another one for your production environment (`www.myproject`), each containing the source code of your project.
-
-But the problem is that you can't use two `nginx-proxy` at the same time.
-
-So just remove the `nginx-proxy` service in each `docker-compose.yml.template` files and create a new `docker-compose-nginx.yml` elsewhere containing:
-
-```
-version: '2'
-
-services:
-
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
-      - /the/path/to/certs:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: unless-stopped
-    container_name: nginx_proxy
-    networks:
-       - scope_testing
-       - scope_prod
-
-networks:
-  scope_testing:
-    external:
-      name: testingmyproject_scope_testing
-  scope_prod:
-    external:
-      name: wwwmyproject_scope_prod
-```
-
-**Note:** the name of an external network has to follow this format: `{projectfoldername}_scope_{env}`. The `{env}` value must match the value specified in the considered `.env` file and the `{projectfoldername}` value must match the project folder name without special characters, spaces, punctuations and so on.
-
-Your structure should now look like this:
-
-```
-- nginx-custom.conf
-- docker-compose-nginx.yml
-| testing.myproject
-    | apache
-    | ...
-| www.myproject
-    | apache
-    | ...
-```
-
-In order to make the proxy working, just run `docker-compose -f docker-compose-nginx.yml up -d`.
+Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for your Apache containers.
 
 # Dive in
 

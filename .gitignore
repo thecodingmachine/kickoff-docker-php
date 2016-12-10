@@ -1,10 +1,11 @@
 .idea
 .DS_STORE
 /apache/logs
-/apache/volume/vendor
 /apache/volume/node_modules
 /apache/volume/npm-debug.log
+/apache/volume/vendor
 /mysql/dumps/*.sql
 /mysql/volume
 .env
 docker-compose.yml
+docker-compose-nginx.yml

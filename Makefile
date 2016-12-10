@@ -10,15 +10,21 @@ prepare:
 	./bin/_prepare;
 
 build:
-	docker-compose -f docker-compose.yml build;
+	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml build;
 
 down:
 	./bin/_down;
 
 up:
-	docker-compose -f docker-compose.yml up -d;
+	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml up -d;
 
-kickoff: down prepare build up
+nginx-down:
+	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml down;
+
+nginx-up:
+	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml up -d;
+
+kickoff: down prepare build nginx-up up
 
 # UTILS
 #------------------------------------------------------
