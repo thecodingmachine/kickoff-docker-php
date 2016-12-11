@@ -24,11 +24,11 @@ up:
 
 nginx-down:
 	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml down;
-	./bin/_whalesay --say "NGINX container has been stopped!";
+	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER}) container has been stopped!";
 
 nginx-up:
 	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml up -d;
-	./bin/_whalesay --say "NGINX container is running!";
+	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER}) container is running!";
 
 kickoff: down prepare build nginx-up up;
 	./bin/_whalesay --say "You're ready to go!";
