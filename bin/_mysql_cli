@@ -1,0 +1,36 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+# environment variables
+source ${ROOT}/.env;
+
+usage()
+{
+    echo "Usage:";
+    echo "sh _tail --container_name your_container_name --service_name your_service_name";
+    exit 0;
+}
+
+missing_arg()
+{
+    echo "ERROR: Missing argument $1."
+    exit 1;
+}
+
+mysql_cli()
+{
+    sh ${DIR}/_health_check --container_name ${MYSQL_CONTAINER};
+
+    if [ $? -eq 1 ]; then
+        sh ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER}) is not running.";
+        exit 1;
+    fi;
+
+    docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p${MYSQL_PASSWORD};
+}
+
+mysql_cli;
+
+exit 0;

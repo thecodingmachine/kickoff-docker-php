@@ -12,23 +12,23 @@ prepare:
 
 build:
 	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml build;
-	./bin/_whalesay --say "The Apache container has been built!";
+	./bin/_whalesay --say "Apache container (${APACHE_CONTAINER}) has been built!";
 
 down:
 	./bin/_down;
-	./bin/_whalesay --say "The Apache and MySQL containers have been stopped!";
+	./bin/_whalesay --say "Apache (${APACHE_CONTAINER}) and MySQL (${MYSQL_CONTAINER}) containers have been stopped!";
 
 up:
 	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml up -d;
-	./bin/_whalesay --say "The Apache and MySQL containers are running!";
+	./bin/_whalesay --say "Apache (${APACHE_CONTAINER}) and MySQL (${MYSQL_CONTAINER}) containers are running!";
 
 nginx-down:
 	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml down;
-	./bin/_whalesay --say "The NGINX container has been stopped!";
+	./bin/_whalesay --say "NGINX container has been stopped!";
 
 nginx-up:
 	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml up -d;
-	./bin/_whalesay --say "The NGINX container is running!";
+	./bin/_whalesay --say "NGINX container is running!";
 
 kickoff: down prepare build nginx-up up;
 	./bin/_whalesay --say "You're ready to go!";
@@ -36,36 +36,34 @@ kickoff: down prepare build nginx-up up;
 # UTILS
 #------------------------------------------------------
 shell:
-	docker exec -ti ${APACHE_CONTAINER} bash;
+	./bin/_shell --container_name ${APACHE_CONTAINER} --service_name "Apache";
 
 shell-nginx:
-	docker exec -ti ${NGINX_CONTAINER} bash;
+	./bin/_shell --container_name ${NGINX_CONTAINER} --service_name "NGINX";
 
 shell-mysql:
-	docker exec -ti ${MYSQL_CONTAINER} bash;
+	./bin/_shell --container_name ${MYSQL_CONTAINER} --service_name "MySQL";
 
 mysql-cli:
-	docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p${MYSQL_PASSWORD};
+	./bin/_mysql_cli;
 
 tail:
-	docker logs -f ${APACHE_CONTAINER};
+	./bin/_tail --container_name ${APACHE_CONTAINER} --service_name "Apache";
 
 tail-nginx:
-	docker logs -f ${NGINX_CONTAINER};
+	./bin/_tail --container_name ${NGINX_CONTAINER} --service_name "NGINX";
 
 tail-mysql:
-	docker logs -f ${MYSQL_CONTAINER};
+	./bin/_tail --container_name ${MYSQL_CONTAINER} --service_name "MySQL";
 
 export:
 	./bin/_export;
-	./bin/_whalesay --say "Export complete!";
 
 import:
 	./bin/_import;
-	./bin/_whalesay --say "Import complete!";
 
 composer:
 	./bin/_composer --command $(cmd);
 
 npm:
-	docker exec -ti ${APACHE_CONTAINER} npm $(cmd);
+	./bin/_npm --command $(cmd);

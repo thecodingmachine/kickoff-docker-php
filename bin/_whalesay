@@ -30,8 +30,6 @@ say()
     printf "\n";
 
     echo "     \\";
-    echo "      \\";
-    echo "       \\";
     echo "                   ##         .";
     echo "             ## ## ##        ==";
     echo "          ## ## ## ## ##    ===";

@@ -9,7 +9,7 @@ source ${ROOT}/.env;
 usage()
 {
     echo "Usage:";
-    echo "sh _composer --command [install|update|...]";
+    echo "sh _npm --command [install|update|...]";
     exit 0;
 }
 
@@ -19,7 +19,7 @@ missing_arg()
     exit 1;
 }
 
-composer()
+npm()
 {
     sh ${DIR}/_health_check --container_name ${APACHE_CONTAINER};
 
@@ -28,7 +28,7 @@ composer()
         exit 1;
     fi;
 
-    docker exec --user www-data -ti ${APACHE_CONTAINER} composer ${CMD};
+    docker exec -ti ${APACHE_CONTAINER} npm ${CMD};
 }
 
 # checking parameters
@@ -48,6 +48,6 @@ while [ "$1" != "" ]; do
     shift
 done;
 
-composer;
+npm;
 
 exit 0;

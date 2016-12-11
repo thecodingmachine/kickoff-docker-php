@@ -8,12 +8,21 @@ source ${ROOT}/.env;
 
 exportDatabase()
 {
+    sh ${DIR}/_health_check --container_name ${MYSQL_CONTAINER};
+
+    if [ $? -eq 1 ]; then
+        sh ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER}) is not running.";
+        exit 1;
+    fi;
+
     if [ -f ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql ]; then
-        DATE_TIME=$(date +%Y-%m-%d:%H:%M:%S);
-        mv ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.${DATE_TIME}.sql;
+        rm -f ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql;
     fi;
 
     docker exec ${MYSQL_CONTAINER} mysqldump --opt -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} > ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql;
+    cp ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.$(date +%Y-%m-%d:%H:%M:%S).sql;
+
+    sh ${DIR}/_whalesay --say "Export task complete!";
 }
 
 exportDatabase;
