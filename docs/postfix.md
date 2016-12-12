@@ -10,7 +10,7 @@ First, update your `.env.template` file by adding:
 # postfix
 POSTFIX_CONTAINER=${PROJECT_NAME}_postfix_${ENV}
 MAIL_DOMAIN=${APACHE_VIRTUAL_HOST}
-NO_REPLY_EMAIL=no-replay@dev.yourproject.com
+NO_REPLY_EMAIL=no-reply@dev.yourproject.com
 SMTP_PASSWORD=admin
 ```
 
