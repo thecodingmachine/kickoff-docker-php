@@ -60,6 +60,8 @@ gulp;
 exit 0;
 ```
 
+Run `chmod u+x _gulp` to avoir permission issue.
+
 Then, update the `Makefile` by adding:
 
 ```
