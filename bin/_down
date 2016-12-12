@@ -8,7 +8,7 @@ ROOT=${DIR}/..;
 source ${ROOT}/.env;
 
 if [ -f ${ROOT}/docker-compose.yml ]; then
-    docker-compose -p ${PROJECT_NAME} -f ${ROOT}/docker-compose.yml down;
+    docker-compose -f ${ROOT}/docker-compose.yml down;
 fi;
 
 docker rm $(docker ps -q -f status=exited) >/dev/null;

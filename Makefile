@@ -11,7 +11,7 @@ prepare:
 	./bin/_whalesay --say "Your docker-compose files are ready!";
 
 build:
-	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml build;
+	docker-compose -f docker-compose.yml build;
 	./bin/_whalesay --say "Apache container (${APACHE_CONTAINER}) has been built!";
 
 down:
@@ -19,7 +19,7 @@ down:
 	./bin/_whalesay --say "Apache (${APACHE_CONTAINER}) and MySQL (${MYSQL_CONTAINER}) containers have been stopped!";
 
 up:
-	docker-compose -p ${PROJECT_NAME} -f docker-compose.yml up -d;
+	docker-compose -f docker-compose.yml up -d;
 	./bin/_whalesay --say "Apache (${APACHE_CONTAINER}) and MySQL (${MYSQL_CONTAINER}) containers are running!";
 
 nginx-down:
