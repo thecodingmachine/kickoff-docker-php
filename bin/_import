@@ -8,10 +8,10 @@ source ${ROOT}/.env;
 
 importDatabase()
 {
-    sh ${DIR}/_health_check --container_name ${MYSQL_CONTAINER};
+    /bin/bash ${DIR}/_health_check --container_name ${MYSQL_CONTAINER};
 
     if [ $? -eq 1 ]; then
-        sh ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER}) is not running.";
+        /bin/bash ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER}) is not running.";
         exit 1;
     fi;
 
@@ -21,7 +21,7 @@ importDatabase()
 
     cat ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE};
 
-    sh ${DIR}/_whalesay --say "Import task complete!";
+    /bin/bash ${DIR}/_whalesay --say "Import task complete!";
 }
 
 importDatabase;

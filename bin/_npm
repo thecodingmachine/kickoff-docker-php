@@ -9,7 +9,7 @@ source ${ROOT}/.env;
 usage()
 {
     echo "Usage:";
-    echo "sh _npm --command [install|update|...]";
+    echo "./_npm --command [install|update|...]";
     exit 0;
 }
 
@@ -21,10 +21,10 @@ missing_arg()
 
 npm()
 {
-    sh ${DIR}/_health_check --container_name ${APACHE_CONTAINER};
+    /bin/bash ${DIR}/_health_check --container_name ${APACHE_CONTAINER};
 
     if [ $? -eq 1 ]; then
-        sh ${DIR}/_whalesay --say "Apache container (${APACHE_CONTAINER}) is not running.";
+        /bin/bash ${DIR}/_whalesay --say "Apache container (${APACHE_CONTAINER}) is not running.";
         exit 1;
     fi;
 

@@ -9,7 +9,7 @@ source ${ROOT}/.env;
 usage()
 {
     echo "Usage:";
-    echo "sh _shell --container_name your_container_name --service_name your_service_name";
+    echo "./_shell --container_name your_container_name --service_name your_service_name";
     exit 0;
 }
 
@@ -21,10 +21,10 @@ missing_arg()
 
 shell()
 {
-    sh ${DIR}/_health_check --container_name ${CONTAINER_NAME};
+    /bin/bash ${DIR}/_health_check --container_name ${CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
-        sh ${DIR}/_whalesay --say "${SERVICE_NAME} container (${CONTAINER_NAME}) is not running.";
+        /bin/bash ${DIR}/_whalesay --say "${SERVICE_NAME} container (${CONTAINER_NAME}) is not running.";
         exit 1;
     fi;
 

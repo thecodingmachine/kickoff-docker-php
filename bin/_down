@@ -11,8 +11,8 @@ if [ -f ${ROOT}/docker-compose.yml ]; then
     docker-compose -p ${PROJECT_NAME} -f ${ROOT}/docker-compose.yml down;
 fi;
 
-docker rm $(docker ps -q -f status=exited) >/dev/null 2>&1;
-docker rmi $(docker images -q -f dangling=true) >/dev/null 2>&1;
-docker volume rm $(docker volume ls -qf dangling=true) >/dev/null 2>&1;
+docker rm $(docker ps -q -f status=exited) >/dev/null;
+docker rmi $(docker images -q -f dangling=true) >/dev/null
+docker volume rm $(docker volume ls -qf dangling=true) >/dev/null;
 
 exit 0;

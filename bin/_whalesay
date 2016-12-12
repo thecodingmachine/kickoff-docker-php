@@ -3,7 +3,7 @@
 usage()
 {
     echo "Usage:";
-    echo "sh _whalesay --say \"thoughts\"";
+    echo "./_whalesay --say \"thoughts\"";
     exit 0;
 }
 
