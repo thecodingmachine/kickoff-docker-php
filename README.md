@@ -1,8 +1,8 @@
 [![PHP 7.0](https://img.shields.io/badge/PHP-7.0-green.svg)](apache/Dockerfile#L1)
-[![Composer latest](https://img.shields.io/badge/Composer-latest-green.svg)](apache/Dockerfile#L21)
-[![MySQL 5.7](https://img.shields.io/badge/MySQL-5.7-green.svg)](docker-compose.yml.template#L35)
-[![Node.js 4.x](https://img.shields.io/badge/Node.js-4.x-orange.svg)](apache/Dockerfile#L29)
-[![npm 2.x](https://img.shields.io/badge/npm-2.x-orange.svg)](apache/Dockerfile#L29)
+[![Composer latest](https://img.shields.io/badge/Composer-latest-green.svg)](apache/Dockerfile#L32)
+[![MySQL 5.7](https://img.shields.io/badge/MySQL-5.7-green.svg)](docker-compose.yml.template#L23)
+[![Node.js 4.x](https://img.shields.io/badge/Node.js-4.x-orange.svg)](apache/Dockerfile#L43)
+[![npm 2.x](https://img.shields.io/badge/npm-2.x-orange.svg)](apache/Dockerfile#L43)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # Goal
