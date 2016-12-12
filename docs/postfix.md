@@ -20,7 +20,7 @@ Then, update your `docker-compose.yml.template` file with the following:
 postfix:
   image: catatnight/postfix:latest
   restart: unless-stopped
-  container_name: ${PROJECT_NAME}_postfix_${ENV}
+  container_name: ${POSTFIX_CONTAINER}
   ports:
     - 25:25
   environment:
@@ -34,9 +34,10 @@ Add the following lines in the `prepare()` method of the `_prepare` script (in `
 
 ```
 # postfix
-sedi "s/container_name: \${PROJECT_NAME}_postfix_\${ENV}/container_name: ${PROJECT_NAME}_postfix_${ENV}/g" ${ROOT}/docker-compose.yml;
-sedi "s/maildomain: \${MAIL_DOMAIN}/maildomain: ${MAIL_DOMAIN}/g" ${ROOT}/docker-compose.yml;
-sedi "s/smtp_user: \${NO_REPLY_EMAIL}:\${SMTP_PASSWORD}/smtp_user: ${NO_REPLY_EMAIL}:${SMTP_PASSWORD}/g" ${ROOT}/docker-compose.yml;
+sedi "s/\${POSTFIX_CONTAINER}/${POSTFIX_CONTAINER}/g" ${ROOT}/docker-compose.yml;
+sedi "s/\${MAIL_DOMAIN}/${MAIL_DOMAIN}/g" ${ROOT}/docker-compose.yml;
+sedi "s/\${NO_REPLY_EMAIL}/${NO_REPLY_EMAIL}/g" ${ROOT}/docker-compose.yml;
+sedi "s/\${SMTP_PASSWORD}/${SMTP_PASSWORD}/g" ${ROOT}/docker-compose.yml;
 ```
 
 Last but not least, run `cp .env.template .env` and `make kickoff`! You have now at your disposal a nice Postfix container :smiley:
