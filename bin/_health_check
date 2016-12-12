@@ -6,7 +6,7 @@ ROOT=${DIR}/..;
 usage()
 {
     echo "Usage:";
-    echo "sh _health_check --container_name your_container_name";
+    echo "./_health_check --container_name your_container_name";
     exit 0;
 }
 
