@@ -8,19 +8,20 @@ source ${ROOT}/.env;
 
 importDatabase()
 {
-    echo "Dropping database...";
+    /bin/bash ${DIR}/_health_check --container_name ${MYSQL_CONTAINER};
+
+    if [ $? -eq 1 ]; then
+        /bin/bash ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER}) is not running.";
+        exit 1;
+    fi;
 
     docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} -e "drop database $MYSQL_DATABASE";
 
-    echo "Creating database...";
-
     docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} -e "create database $MYSQL_DATABASE character set utf8 collate utf8_unicode_ci";
-
-    echo "Importing database using the SQL file...";
 
     cat ${ROOT}/mysql/dumps/${MYSQL_DATABASE}.sql | docker exec -i ${MYSQL_CONTAINER} mysql --verbose -uroot -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE};
 
-    echo "Done :)";
+    /bin/bash ${DIR}/_whalesay --say "Import task complete!";
 }
 
 importDatabase;

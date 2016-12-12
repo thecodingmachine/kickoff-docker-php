@@ -1,0 +1,58 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+# environment variables
+source ${ROOT}/.env;
+
+usage()
+{
+    echo "Usage:";
+    echo "./_tail --container_name your_container_name --service_name your_service_name";
+    exit 0;
+}
+
+missing_arg()
+{
+    echo "ERROR: Missing argument $1."
+    exit 1;
+}
+
+tail()
+{
+    /bin/bash ${DIR}/_health_check --container_name ${CONTAINER_NAME};
+
+    if [ $? -eq 1 ]; then
+        /bin/bash ${DIR}/_whalesay --say "${SERVICE_NAME} container (${CONTAINER_NAME}) is not running.";
+        exit 1;
+    fi;
+
+    docker logs -f ${CONTAINER_NAME};
+}
+
+# checking parameters
+if [ "$#" -eq 0 ]; then
+    usage;
+    exit 1;
+fi;
+
+while [ "$1" != "" ]; do
+    case $1 in
+        --container_name ) shift
+            if [ -z "$1" ]; then
+                missing_arg --container_name;
+            fi;
+            CONTAINER_NAME=$1 ;;
+        --service_name ) shift
+            if [ -z "$1" ]; then
+                missing_arg --service_name;
+            fi;
+            SERVICE_NAME=$1 ;;
+    esac
+    shift
+done;
+
+tail;
+
+exit 0;

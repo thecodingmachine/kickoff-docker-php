@@ -1,0 +1,63 @@
+#!/bin/bash
+
+usage()
+{
+    echo "Usage:";
+    echo "./_whalesay --say \"thoughts\"";
+    exit 0;
+}
+
+missing_arg()
+{
+    echo "ERROR: Missing argument $1."
+    exit 1;
+}
+
+say()
+{
+    printf "  ";
+    for ((i=-1; i<=${#SAY}; i++)); do
+        printf "_";
+    done
+    printf "\n";
+
+    echo " < ${SAY} >";
+
+    printf "  ";
+    for ((i=-1; i<=${#SAY}; i++)); do
+        printf "-";
+    done
+    printf "\n";
+
+    echo "     \\";
+    echo "                   ##         .";
+    echo "             ## ## ##        ==";
+    echo "          ## ## ## ## ##    ===";
+    echo "      /\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\"\___/ ===";
+    echo " ~~~ {~~ ~~~~ ~~~ ~~~~ ~~~ ~ /  ===- ~~~";
+    echo "      \______ o           __/";
+    echo "        \    \         __/";
+    echo "         \____\_______/";
+    printf "\n";
+}
+
+# checking parameters
+if [ "$#" -eq 0 ]; then
+    usage;
+    exit 1;
+fi;
+
+while [ "$1" != "" ]; do
+    case $1 in
+        --say ) shift
+            if [ -z "$1" ]; then
+                missing_arg --say;
+            fi;
+            SAY=$1 ;;
+    esac
+    shift
+done;
+
+say;
+
+exit 0;

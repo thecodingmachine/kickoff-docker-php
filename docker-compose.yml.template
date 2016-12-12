@@ -1,21 +1,7 @@
-# docker-compose.yml
+# docker-compose.yml template
 version: '2'
 
 services:
-
-  nginx-proxy:
-    image: jwilder/nginx-proxy
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
-      #- ${CERTS_PATH}:/etc/nginx/certs:ro
-      - /var/run/docker.sock:/tmp/docker.sock:ro
-    restart: unless-stopped
-    container_name: ${NGINX_CONTAINER}
-    networks:
-      - scope_${ENV}
 
   php-apache-engine:
     volumes:
@@ -31,8 +17,7 @@ services:
       - USER_ID=${USER_ID}
     networks:
       - scope_${ENV}
-    depends_on:
-      - mysql
+      - scope_proxy
 
   mysql:
     image: mysql:5.7
@@ -54,3 +39,6 @@ volumes:
 
 networks:
   scope_${ENV}: {}
+  scope_proxy:
+    external:
+      name: ${PROXY_NAME}_scope_proxy

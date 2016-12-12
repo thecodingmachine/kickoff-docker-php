@@ -1,0 +1,23 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+# environment variables
+source ${ROOT}/.env;
+
+mysql_cli()
+{
+    /bin/bash ${DIR}/_health_check --container_name ${MYSQL_CONTAINER};
+
+    if [ $? -eq 1 ]; then
+        /bin/bash ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER}) is not running.";
+        exit 1;
+    fi;
+
+    docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p${MYSQL_PASSWORD};
+}
+
+mysql_cli;
+
+exit 0;
