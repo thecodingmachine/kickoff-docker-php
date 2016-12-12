@@ -108,6 +108,8 @@ As you long as each `PROXY_NAME` variables in your `.env` files have the same va
 
 Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
 
+Also, use only letters (no whitespaces, special characters and so on) for the `PROXY_NAME` variables value!
+
 # Dive in
 
 * [Use Xdebug with PhpStorm](docs/xdebug.md)
