@@ -6,7 +6,6 @@ services:
   php-apache-engine:
     volumes:
       - ./apache/volume:/var/www/html:rw
-      - ./apache/logs/apache2:/var/logs/apache2:rw
       - ./apache/logs/cron:/var/logs/cron:rw
       #- ./apache/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
     restart: unless-stopped
