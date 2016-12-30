@@ -1,13 +1,14 @@
-# docker-compose.yml template
 version: '2'
 
 services:
 
-  php-apache-engine:
+  ${APACHE_SERVICE_NAME}:
     volumes:
       - ./apache/volume:/var/www/html:rw
       - ./apache/logs/cron:/var/logs/cron:rw
-      #- ./apache/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
+      - ./apache/php.ini:/usr/local/etc/php/php.ini:ro
+      - ./apache/ext-apcu.ini:/usr/local/etc/php/conf.d/ext-apcu.ini:ro
+      - ./apache/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
     restart: unless-stopped
     build: ./apache
     container_name: ${APACHE_CONTAINER}
@@ -18,7 +19,7 @@ services:
       - scope_${ENV}
       - scope_proxy
 
-  mysql:
+  ${MYSQL_SERVICE_NAME}:
     image: mysql:5.7
     volumes:
       - ./mysql/volume:/var/lib/mysql:rw
@@ -34,7 +35,7 @@ services:
       - scope_${ENV}
 
 volumes:
-  mysql: {}
+  ${MYSQL_SERVICE_NAME}: {}
 
 networks:
   scope_${ENV}: {}

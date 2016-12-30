@@ -1,8 +1,8 @@
-[![PHP 7.0](https://img.shields.io/badge/PHP-7.0-green.svg)](apache/Dockerfile#L1)
-[![Composer latest](https://img.shields.io/badge/Composer-latest-green.svg)](apache/Dockerfile#L32)
+[![PHP 7.0](https://img.shields.io/badge/PHP-7.1-green.svg)](apache/Dockerfile#L1)
+[![Composer latest](https://img.shields.io/badge/Composer-latest-green.svg)](apache/Dockerfile#6)
 [![MySQL 5.7](https://img.shields.io/badge/MySQL-5.7-green.svg)](docker-compose.yml.template#L23)
-[![Node.js 4.x](https://img.shields.io/badge/Node.js-4.x-orange.svg)](apache/Dockerfile#L43)
-[![npm 2.x](https://img.shields.io/badge/npm-2.x-orange.svg)](apache/Dockerfile#L43)
+[![Node.js 4.x](https://img.shields.io/badge/Node.js-6.9-green.svg)](apache/Dockerfile#L9)
+[![npm 2.x](https://img.shields.io/badge/npm-3.10-green.svg)](apache/Dockerfile#L9)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # Goal
@@ -59,7 +59,7 @@ There are three important files:
 * `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus some of the environment variables defined in `.env.template`.
 * `docker-compose-nginx.yml.template` which contains the run configuration of the NGINX container plus some of the environment variables defined in `.env.template`.
 
-The command `make kickoff` will create the `docker-compose.yml` and `docker-compose-nginx.yml` files using the environment variables' values defined in the `.env` file.
+The command `make prepare` will create the `docker-compose.yml` and `docker-compose-nginx.yml` files using the environment variables' values defined in the `.env` file.
 
 For security concern, these three files are not versioned, because they contain sensible data like the MySQL database password and so on.
 
@@ -108,7 +108,7 @@ As you long as each `PROXY_NAME` variables in your `.env` files have the same va
 
 Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
 
-Also, use only letters (no whitespaces, special characters and so on) for the `PROXY_NAME` variables value!
+Also, use only letters (no whitespaces, special characters and so on) for the `PROXY_NAME` variable's value!
 
 # Dive in
 
@@ -120,18 +120,23 @@ Also, use only letters (no whitespaces, special characters and so on) for the `P
 
 # Known issues
 
-*A make command failed to run entirely*
+**Should I use this in production?**
 
-Sometimes, you need to re-run a make command, especially the commands `make build`, `make kickoff`, `make composer cmd=install`, `make import`.
+This project aims to help you starting a PHP development environment on Docker. As the `www-data` apache container user shares the same `uid` as your current user, we do not recommend using this project for your production environment.
 
-*docker-compose failed to parse my yaml file*
+**docker-compose failed to parse my yaml file**
 
 Make sure that your file's indents are corrects!
 
-*I've added a make command, but it's not working*
+**I've added a make command, but it's not working**
 
 Make sure that your `Makefile` uses tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.
 
-*My web application is not really fast while developing on MacOS*
+**My web application is not really fast on MacOS**
 
-Yep, this seems to be a current limitation of Docker on MacOS. But don't worry, it will be way faster on a Linux distribution (like your production server).
+Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076))
+
+**Xdebug is not working on MacOS**
+
+* If you have php-fpm installed on your machine, the port 9000 might already be used. You have to change the `xdebug.remote_port` variable's value with `1000` and updates your IDE configuration for Xdebug.
+* Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).

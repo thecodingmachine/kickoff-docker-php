@@ -1,4 +1,3 @@
-# docker-compose-nginx.yml template
 version: '2'
 
 services:
@@ -10,7 +9,7 @@ services:
       - 443:443
     volumes:
       - ./nginx/nginx-custom.conf:/etc/nginx/conf.d/nginx_custom.conf:ro
-      #- ${CERTS_PATH}:/etc/nginx/certs:ro
+      - ${CERTS_PATH}:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: unless-stopped
     container_name: ${NGINX_CONTAINER}
