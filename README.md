@@ -134,7 +134,7 @@ Make sure that your `Makefile` uses tab indents! In PhpStorm, click on `Edit > C
 
 **My web application is not really fast on MacOS**
 
-Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076))
+Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076)).
 
 **Xdebug is not working on MacOS**
 
