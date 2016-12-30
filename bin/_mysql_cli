@@ -15,7 +15,7 @@ mysql_cli()
         exit 1;
     fi;
 
-    docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p${MYSQL_PASSWORD};
+    docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p${MYSQL_ROOT_PASSWORD};
 }
 
 mysql_cli;
