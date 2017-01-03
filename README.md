@@ -98,7 +98,7 @@ For security concern, these three files have been added in the `.gitignore` file
 
 ## Managing your database
 
-The simple way is to access directly to the MySQL cli using `make mysql-cli`.
+The simplest way is to access directly to the MySQL cli using `make mysql-cli`.
 
 If you want to manage your database with a more powerful tool (like MySQL Workbench), open your `.env` file in your favorite editor, set the variable `MYSQL_ENABLE_PORTS_MAPPING=1`, update if needed the variable `MYSQL_HOST_PORT_TO_MAP` and finally run `make kickoff`.
 
@@ -136,7 +136,7 @@ Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each
 
 **How can I link my PHP application to the MySQL database?**
 
-It is actually quite simple. In your Apache container, the hostname of the MySQL database is known as the variable's value `MYSQL_SERVICE_NAME`. Just use the port `3306` and the credentials defined in the `.env` file. 
+It is actually quite simple. In your Apache container, the hostname of the MySQL database is equal to the variable's value `MYSQL_SERVICE_NAME` defined in the `.env` file. Also, just use the port `3306` and the credentials defined in the `.env` file. 
 
 **Should I use this in production?**
 
