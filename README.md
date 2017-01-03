@@ -93,7 +93,7 @@ For security concern, these three files have been added in the `.gitignore` file
 
 <img src="docs/images/readme1.png" alt="Containers and project structure" />
 
-* The `apache/volume` folder is where your sources codes must be located. It is mapped with the `/var/www/html` folder on the Apache container.
+* The `apache/volume` folder is where your source code must be located. It is mapped with the `/var/www/html` folder on the Apache container.
 * The `mysql/volume` has been created by the MySQL container. It is where your database is persisted on the host.
 
 ## Managing your database
