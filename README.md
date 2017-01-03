@@ -134,6 +134,10 @@ Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each
 
 # FAQ / Known issues
 
+**How can I link my PHP application to the MySQL database?**
+
+It is actually quite simple. In your Apache container, the hostname of the MySQL database is known as the variable's value `MYSQL_SERVICE_NAME`. Just use the port `3306` and the credentials defined in the `.env` file. 
+
 **Should I use this in production?**
 
 This project aims to help you starting a PHP development environment on Docker. As the `www-data` apache container user shares the same `uid` as your current user, we do not recommend using this project for your production environment.
