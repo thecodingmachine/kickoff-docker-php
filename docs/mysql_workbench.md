@@ -1,13 +1,6 @@
 # Use MySQL Workbench to manage your database
 
-First, update the MySQL service in your `docker-compose-yml.template` file by adding:
-
-```
-ports:
-  - 3307:3306
-```
-
-Then, download and install the last version of MySQL Workbench following the official instructions: https://www.mysql.fr/products/workbench/
+Download and install the last version of MySQL Workbench following the official instructions: https://www.mysql.fr/products/workbench/
 
 Run `make kickoff` and open MySQL Workbench: click on the `+` button next to `MySQL Connections` to setup a new connection:
 

@@ -23,11 +23,11 @@ up:
 	./bin/_whalesay --say "Apache (${APACHE_CONTAINER}) and MySQL (${MYSQL_CONTAINER}) containers are running!";
 
 nginx-down:
-	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml down;
+	docker-compose -p ${NGINX_PROXY_NAME} -f docker-compose-nginx.yml down;
 	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER}) container has been stopped!";
 
 nginx-up:
-	docker-compose -p ${PROXY_NAME} -f docker-compose-nginx.yml up -d;
+	docker-compose -p ${NGINX_PROXY_NAME} -f docker-compose-nginx.yml up -d;
 	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER}) container is running!";
 
 kickoff: down prepare build nginx-up up;

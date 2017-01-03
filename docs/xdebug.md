@@ -1,6 +1,6 @@
 # Use Xdebug with PhpStorm
 
-Add a new Run/Debug configuration (should be accessible on the top right of the screen):
+Add a new Run/Debug configuration:
 
 <img src="images/xdebug1.png" alt="Add a new Run/Debug configurations" />
 

@@ -21,6 +21,8 @@ services:
 
   ${MYSQL_SERVICE_NAME}:
     image: mysql:5.7
+    ${MYSQL_PORTS_MAPPING}:
+      - ${MYSQL_HOST_PORT_TO_MAP}:3306
     volumes:
       - ./mysql/volume:/var/lib/mysql:rw
       - ./mysql/custom-my.cnf:/etc/mysql/my.cnf:ro
@@ -41,4 +43,4 @@ networks:
   scope_${ENV}: {}
   scope_proxy:
     external:
-      name: ${PROXY_NAME}_scope_proxy
+      name: ${NGINX_PROXY_NAME}_scope_proxy

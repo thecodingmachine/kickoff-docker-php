@@ -1,8 +1,8 @@
-[![PHP 7.0](https://img.shields.io/badge/PHP-7.1-green.svg)](apache/Dockerfile#L1)
+[![PHP 7.1](https://img.shields.io/badge/PHP-7.1-green.svg)](apache/Dockerfile#L1)
 [![Composer latest](https://img.shields.io/badge/Composer-latest-green.svg)](apache/Dockerfile#6)
 [![MySQL 5.7](https://img.shields.io/badge/MySQL-5.7-green.svg)](docker-compose.yml.template#L23)
-[![Node.js 4.x](https://img.shields.io/badge/Node.js-6.9-green.svg)](apache/Dockerfile#L9)
-[![npm 2.x](https://img.shields.io/badge/npm-3.10-green.svg)](apache/Dockerfile#L9)
+[![Node.js 6.9](https://img.shields.io/badge/Node.js-6.9-green.svg)](apache/Dockerfile#L9)
+[![npm 3.10](https://img.shields.io/badge/npm-3.10-green.svg)](apache/Dockerfile#L9)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 # Goal
@@ -11,15 +11,13 @@ This project will help you to start a PHP project with Docker, thanks to some us
 
 # Prerequisites
 
-Install Docker (**>= 1.12**) for MacOSX / Linux following the official instructions: https://docs.docker.com/engine/installation
+Docker (**>= 1.12**) for MacOSX / Linux: https://docs.docker.com/engine/installation
 
-Install docker-compose (**>= 1.8.0**) for MacOSX / Linux following the official instructions: https://docs.docker.com/compose/install
-
-**Important: for now, we do not recommend using Windows.**
+Docker Compose (**>= 1.8.0**) for MacOSX / Linux: https://docs.docker.com/compose/install
 
 # Quick start
 
-**Important: make sure you're not using `root` user. Your current user must be a sudoer and be able to run docker commands.**
+**Important for Linux users:** make sure you're not using `root` user. Your current user must be part of `sudo` and `docker` groups.
 
 First, fork this project and clone it or download the tarball using:
 
@@ -51,23 +49,11 @@ The installation might take some time, so go for a coffee break! :coffee:
 
 Once everything has been installed, open your favorite web browser and copy / paste http://dev.yourproject.com and check if everything is OK!
 
-# How does it work?
-
-There are three important files:
-
-* `.env.template` which contains environment variables with default values. These values should not be used directly, that's why you have to run `cp .env.template .env`.
-* `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus some of the environment variables defined in `.env.template`.
-* `docker-compose-nginx.yml.template` which contains the run configuration of the NGINX container plus some of the environment variables defined in `.env.template`.
-
-The command `make prepare` will create the `docker-compose.yml` and `docker-compose-nginx.yml` files using the environment variables' values defined in the `.env` file.
-
-For security concern, these three files are not versioned, because they contain sensible data like the MySQL database password and so on.
-
 # Make commands
 
 | Command                         | Description                                                                                                                                                                                        |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| prepare                         | Creates the `docker-compose.yml` and `docker-compose-nginx.yml` files using the environment variables specified in the `.env` file.                                                                |
+| prepare                         | Creates the `docker-compose.yml` and `docker-compose-nginx.yml` files using the variables's values specified in the `.env` file.                                                                   |
 | build                           | Builds the Apache container.                                                                                                                                                                       |
 | down                            | Stops the Apache and MySQL containers, deletes their network and cleans the docker cache.                                                                                                          |
 | up                              | Ups the Apache and MySQL containers.                                                                                                                                                               |
@@ -82,43 +68,71 @@ For security concern, these three files are not versioned, because they contain 
 | shell-nginx                     | Connects through bash to the NGINX container.                                                                                                                                                      |
 | shell-mysql                     | Connects through bash to the MySQL container.                                                                                                                                                      |
 | mysql-cli                       | Opens the MySQL cli.                                                                                                                                                                               |
-| tail                            | Displays the docker's logs of the Apache container.                                                                                                                                                |
-| tail-nginx                      | Displays the docker's logs of the NGINX container.                                                                                                                                                 |
-| tail-mysql                      | Displays the docker's logs of the MySQL container.                                                                                                                                                 |
+| tail                            | Displays the Docker's logs of the Apache container.                                                                                                                                                |
+| tail-nginx                      | Displays the Docker's logs of the NGINX container.                                                                                                                                                 |
+| tail-mysql                      | Displays the Docker's logs of the MySQL container.                                                                                                                                                 |
 
-# Xdebug support
+# Dive in
 
-Open your `.env` file in your favorite editor, set the variable `WITH_XDEBUG=1` and run `make kickoff`. 
+## How does it work?
 
-It will enable Xdebug on the Apache container. Use it only for your development environment!
+There are three important files:
 
-# SSL support
+* `.env.template` which contains variables with default values.
+* `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus some of the variables defined in `.env.template`.
+* `docker-compose-nginx.yml.template` which contains the run configuration of the NGINX container plus some of the variables defined in `.env.template`.
 
-Open your `.env` file in your favorite editor, set the variable `WITH_SSL=1` and run `make kickoff`. 
+As these files are templates, they are not used directly. That's why you have to:
 
-It will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `CERTS_PATH`!
+* run `cp .env.template .env` and update the variables' values in the `.env` file at your convenience.
+* run `make kickoff` which runs `make prepare`: this command creates the `docker-compose.yml` and `docker-compose-nginx.yml` files using the variables' values defined in the `.env` file.
+
+For security concern, these three files have been added in the `.gitignore` file as they contain sensible data like the MySQL database password and so on.
+
+## Project structure
+
+<img src="docs/images/readme1.png" alt="Containers and project structure" />
+
+* The `apache/volume` folder is where your sources codes must be located. It is mapped with the `/var/www/html` folder on the Apache container.
+* The `mysql/volume` has been created by the MySQL container. It is where your database is persisted on the host.
+
+## Managing your database
+
+The simple way is to access directly to the MySQL cli using `make mysql-cli`.
+
+If you want to manage your database with a more powerful tool (like MySQL Workbench), open your `.env` file in your favorite editor, set the variable `MYSQL_ENABLE_PORTS_MAPPING=1`, update if needed the variable `MYSQL_HOST_PORT_TO_MAP` and finally run `make kickoff`.
+
+You are now able to access on your host to your MySQL database using `127.0.0.1` and the port defined in the variable `MYSQL_HOST_PORT_TO_MAP`. See also: [Use MySQL Workbench to manage your database](docs/mysql_workbench.md)
+
+## Xdebug support
+
+Open your `.env` file in your favorite editor, set the variable `APACHE_ENABLE_XDEBUG=1` and run `make kickoff`. 
+
+It will enable Xdebug on the Apache container. See also: [Use Xdebug with PhpStorm](docs/xdebug.md)
+
+## SSL support
+
+Open your `.env` file in your favorite editor, set the variable `NGINX_ENABLE_SSL=1` and run `make kickoff`. 
+
+It will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `NGINX_CERTS_PATH`!
 
 You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
 
 If you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
 
-# Multiple environments on the same host
+## Multiple environments/projects on the same host
 
-As you long as each `PROXY_NAME` variables in your `.env` files have the same value, you are able to run as many environments as you need. 
+As you long as each `NGINX_PROXY_NAME` variables in your `.env` files have the same value, you are able to run as many environments/projects as you need. 
 
 Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
 
-Also, use only letters (no whitespaces, special characters and so on) for the `PROXY_NAME` variable's value!
+# Candies
 
-# Dive in
-
-* [Use Xdebug with PhpStorm](docs/xdebug.md)
-* [Use MySQL Workbench to manage your database](docs/mysql_workbench.md)
 * [Install a Postfix container](docs/postfix.md)
 * [Install Gulp](docs/gulp.md)
 * [Install Mouf framework](docs/mouf_framework.md) 
 
-# Known issues
+# FAQ / Known issues
 
 **Should I use this in production?**
 
