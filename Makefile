@@ -12,23 +12,23 @@ prepare:
 
 build:
 	docker-compose -f docker-compose.yml build;
-	./bin/_whalesay --say "Apache container (${APACHE_CONTAINER}) has been built!";
+	./bin/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) has been built!";
 
 down:
 	./bin/_down;
-	./bin/_whalesay --say "Apache (${APACHE_CONTAINER}) and MySQL (${MYSQL_CONTAINER}) containers have been stopped!";
+	./bin/_whalesay --say "Apache (${APACHE_CONTAINER_NAME}) and MySQL (${MYSQL_CONTAINER_NAME}) containers have been stopped!";
 
 up:
 	docker-compose -f docker-compose.yml up -d;
-	./bin/_whalesay --say "Apache (${APACHE_CONTAINER}) and MySQL (${MYSQL_CONTAINER}) containers are running!";
+	./bin/_whalesay --say "Apache (${APACHE_CONTAINER_NAME}) and MySQL (${MYSQL_CONTAINER_NAME}) containers are running!";
 
 nginx-down:
 	docker-compose -p ${NGINX_PROXY_NAME} -f docker-compose-nginx.yml down;
-	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER}) container has been stopped!";
+	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER_NAME}) container has been stopped!";
 
 nginx-up:
 	docker-compose -p ${NGINX_PROXY_NAME} -f docker-compose-nginx.yml up -d;
-	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER}) container is running!";
+	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER_NAME}) container is running!";
 
 kickoff: down prepare build nginx-up up;
 	./bin/_whalesay --say "You're ready to go!";
@@ -36,25 +36,25 @@ kickoff: down prepare build nginx-up up;
 # UTILS
 #------------------------------------------------------
 shell:
-	./bin/_shell --container_name ${APACHE_CONTAINER} --service_name "Apache";
+	./bin/_shell --container_name ${APACHE_CONTAINER_NAME} --service_name "Apache";
 
 shell-nginx:
-	./bin/_shell --container_name ${NGINX_CONTAINER} --service_name "NGINX";
+	./bin/_shell --container_name ${NGINX_CONTAINER_NAME} --service_name "NGINX";
 
 shell-mysql:
-	./bin/_shell --container_name ${MYSQL_CONTAINER} --service_name "MySQL";
+	./bin/_shell --container_name ${MYSQL_CONTAINER_NAME} --service_name "MySQL";
 
 mysql-cli:
 	./bin/_mysql_cli;
 
 tail:
-	./bin/_tail --container_name ${APACHE_CONTAINER} --service_name "Apache";
+	./bin/_tail --container_name ${APACHE_CONTAINER_NAME} --service_name "Apache";
 
 tail-nginx:
-	./bin/_tail --container_name ${NGINX_CONTAINER} --service_name "NGINX";
+	./bin/_tail --container_name ${NGINX_CONTAINER_NAME} --service_name "NGINX";
 
 tail-mysql:
-	./bin/_tail --container_name ${MYSQL_CONTAINER} --service_name "MySQL";
+	./bin/_tail --container_name ${MYSQL_CONTAINER_NAME} --service_name "MySQL";
 
 export:
 	./bin/_export;

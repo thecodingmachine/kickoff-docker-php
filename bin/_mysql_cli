@@ -8,14 +8,14 @@ source ${ROOT}/.env;
 
 mysql_cli()
 {
-    /bin/bash ${DIR}/_health_check --container_name ${MYSQL_CONTAINER};
+    /bin/bash ${DIR}/_health_check --container_name ${MYSQL_CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
-        /bin/bash ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER}) is not running.";
+        /bin/bash ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER_NAME}) is not running.";
         exit 1;
     fi;
 
-    docker exec -ti ${MYSQL_CONTAINER} mysql -uroot -p${MYSQL_ROOT_PASSWORD};
+    docker exec -ti ${MYSQL_CONTAINER_NAME} mysql -uroot -p${MYSQL_ROOT_PASSWORD};
 }
 
 mysql_cli;

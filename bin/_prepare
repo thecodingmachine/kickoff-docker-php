@@ -19,15 +19,12 @@ prepare()
 
     cp ${ROOT}/docker-compose.yml.template ${ROOT}/docker-compose.yml;
 
-    # common
-    sedi "s/\${ENV}/${ENV}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/\${NGINX_PROXY_NAME}/${NGINX_PROXY_NAME}/g" ${ROOT}/docker-compose.yml;
-
     # apache
     sedi "s/\${APACHE_SERVICE_NAME}/${APACHE_SERVICE_NAME}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/\${APACHE_CONTAINER}/${APACHE_CONTAINER}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/\${APACHE_CONTAINER_NAME}/${APACHE_CONTAINER_NAME}/g" ${ROOT}/docker-compose.yml;
     sedi "s/- VIRTUAL_HOST=\${APACHE_VIRTUAL_HOST}/- VIRTUAL_HOST=${APACHE_VIRTUAL_HOST}/g" ${ROOT}/docker-compose.yml;
     sedi "s/\${USER_ID}/$(id -u)/g" ${ROOT}/docker-compose.yml; # permissions issues workaround
+    sedi "s/\${NGINX_PROXY_NAME}/${NGINX_PROXY_NAME}/g" ${ROOT}/docker-compose.yml;
 
     if [ ${APACHE_ENABLE_XDEBUG} = 0 ]; then
         sedi "s/- .\/apache\/ext-xdebug.ini/#- .\/apache\/ext-xdebug.ini/g" ${ROOT}/docker-compose.yml;
@@ -35,7 +32,7 @@ prepare()
 
     # mysql
     sedi "s/\${MYSQL_SERVICE_NAME}/${MYSQL_SERVICE_NAME}/g" ${ROOT}/docker-compose.yml;
-    sedi "s/\${MYSQL_CONTAINER}/${MYSQL_CONTAINER}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/\${MYSQL_CONTAINER_NAME}/${MYSQL_CONTAINER_NAME}/g" ${ROOT}/docker-compose.yml;
     sedi "s/MYSQL_ROOT_PASSWORD: \${MYSQL_ROOT_PASSWORD}/MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}/g" ${ROOT}/docker-compose.yml;
     sedi "s/MYSQL_DATABASE: \${MYSQL_DATABASE}/MYSQL_DATABASE: ${MYSQL_DATABASE}/g" ${ROOT}/docker-compose.yml;
     sedi "s/MYSQL_USER: \${MYSQL_USER}/MYSQL_USER: ${MYSQL_USER}/g" ${ROOT}/docker-compose.yml;
@@ -57,13 +54,18 @@ prepare()
 
     # nginx
     sedi "s/\${NGINX_SERVICE_NAME}/${NGINX_SERVICE_NAME}/g" ${ROOT}/docker-compose-nginx.yml;
-    sedi "s/\${NGINX_CONTAINER}/${NGINX_CONTAINER}/g" ${ROOT}/docker-compose-nginx.yml;
+    sedi "s/\${NGINX_CONTAINER_NAME}/${NGINX_CONTAINER_NAME}/g" ${ROOT}/docker-compose-nginx.yml;
 
     if [ ${NGINX_ENABLE_SSL} = 0 ]; then
         sedi "s/- \${NGINX_CERTS_PATH}/#- \${NGINX_CERTS_PATH}/g" ${ROOT}/docker-compose-nginx.yml;
     else
         sedi "s/- \${NGINX_CERTS_PATH}/- $(echo ${NGINX_CERTS_PATH} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/g" ${ROOT}/docker-compose-nginx.yml;
     fi;
+
+    # networks
+    sedi "s/\${BASE_NETWORK}/${BASE_NETWORK}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/\${PROXY_NETWORK}/${PROXY_NETWORK}/g" ${ROOT}/docker-compose.yml;
+    sedi "s/\${PROXY_NETWORK}/${PROXY_NETWORK}/g" ${ROOT}/docker-compose-nginx.yml;
 }
 
 prepare;

@@ -12,9 +12,9 @@ services:
       - ${NGINX_CERTS_PATH}:/etc/nginx/certs:ro
       - /var/run/docker.sock:/tmp/docker.sock:ro
     restart: unless-stopped
-    container_name: ${NGINX_CONTAINER}
+    container_name: ${NGINX_CONTAINER_NAME}
     networks:
-      - scope_proxy
+      - ${PROXY_NETWORK}
 
 networks:
-  scope_proxy: {}
+  ${PROXY_NETWORK}: {}

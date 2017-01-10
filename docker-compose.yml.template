@@ -11,13 +11,13 @@ services:
       - ./apache/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
     restart: unless-stopped
     build: ./apache
-    container_name: ${APACHE_CONTAINER}
+    container_name: ${APACHE_CONTAINER_NAME}
     environment:
       - VIRTUAL_HOST=${APACHE_VIRTUAL_HOST}
       - USER_ID=${USER_ID}
     networks:
-      - scope_${ENV}
-      - scope_proxy
+      - ${BASE_NETWORK}
+      - ${PROXY_NETWORK}
 
   ${MYSQL_SERVICE_NAME}:
     image: mysql:5.7
@@ -27,20 +27,20 @@ services:
       - ./mysql/volume:/var/lib/mysql:rw
       - ./mysql/custom-my.cnf:/etc/mysql/my.cnf:ro
     restart: unless-stopped
-    container_name: ${MYSQL_CONTAINER}
+    container_name: ${MYSQL_CONTAINER_NAME}
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     networks:
-      - scope_${ENV}
+      - ${BASE_NETWORK}
 
 volumes:
   ${MYSQL_SERVICE_NAME}: {}
 
 networks:
-  scope_${ENV}: {}
-  scope_proxy:
+  ${BASE_NETWORK}: {}
+  ${PROXY_NETWORK}:
     external:
-      name: ${NGINX_PROXY_NAME}_scope_proxy
+      name: ${NGINX_PROXY_NAME}_${PROXY_NETWORK}
