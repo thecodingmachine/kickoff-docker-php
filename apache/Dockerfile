@@ -12,7 +12,6 @@ RUN curl -sS https://getcomposer.org/installer \
         nodejs \
         cron \
         git \
-        zlib1g-dev \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
         libmcrypt-dev \
@@ -23,12 +22,12 @@ RUN curl -sS https://getcomposer.org/installer \
     && ln -s /usr/bin/npm /usr/local/bin/npm \
     && a2enmod rewrite
 
-# installs missing php dependencies
-RUN docker-php-ext-install pdo_mysql \
-    && docker-php-ext-install zip \
+# installs core php dependencies
+RUN docker-php-ext-install -j$(nproc) iconv mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install opcache \
+    && docker-php-ext-install pdo_mysql \
     && pecl install apcu \
     && pecl install xdebug
 
