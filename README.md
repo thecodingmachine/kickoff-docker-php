@@ -91,12 +91,22 @@ For security concern, these three files have been added in the `.gitignore` file
 
 ## Project structure
 
-<img src="docs/images/readme1.png" alt="Containers and project structure" />
+This project will run three containers:
+
+1. A reverse proxy using the well-known [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy) image.
+2. An Apache container with PHP 7.1 (and core PHP libraries), Composer (for managing your PHP dependencies), Node.js and NPM (for managing your frontend dependencies).
+3. A MySQL container using MySQL 5.7.
+
+<img align="center" src="docs/images/readme1.png" alt="Containers and project structure" />
 
 * The `apache/volume` folder is where your source code must be located. It is mapped with the `/var/www/html` folder on the Apache container.
 * The `mysql/volume` has been created by the MySQL container. It is where your database is persisted on the host.
 
-## Managing your database
+## Link your PHP application to your MySQL database
+
+It is actually quite simple. In your Apache container, the hostname of the MySQL database is equal to the variable's value `MYSQL_SERVICE_NAME` defined in the `.env` file. Also, just use the port `3306` and the credentials defined in the `.env` file. 
+
+## Manage your database
 
 The simplest way is to access directly to the MySQL cli using `make mysql-cli`.
 
@@ -122,9 +132,15 @@ If you're using SSL Certificate Chains, we advise you to read the official NGINX
 
 ## Multiple environments/projects on the same host
 
-As you long as each `NGINX_PROXY_NAME` variables in your `.env` files have the same value, you are able to run as many environments/projects as you need. 
+As you long as each `NGINX_PROXY_NAME` and `PROXY_NETWORK` variables in your `.env` files have the same values, you are able to run as many environments/projects as you need. 
 
 Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
+
+## Install more PHP extensions
+
+Open the `Dockerfile` located in the `apache/volume` folder and [follow the official instructions](https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions).
+
+Once done, run `make kickoff` to rebuild your Apache container.
 
 # Candies
 
@@ -134,13 +150,9 @@ Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each
 
 # FAQ / Known issues
 
-**How can I link my PHP application to the MySQL database?**
-
-It is actually quite simple. In your Apache container, the hostname of the MySQL database is equal to the variable's value `MYSQL_SERVICE_NAME` defined in the `.env` file. Also, just use the port `3306` and the credentials defined in the `.env` file. 
-
 **Should I use this in production?**
 
-This project aims to help you starting a PHP development environment on Docker. As the `www-data` apache container user shares the same `uid` as your current user, we do not recommend using this project for your production environment.
+This project aims to help you starting a PHP development environment on Docker. As the `www-data` user in the Apache container shares the same `uid` as your current user, we do not recommend using this project for your production environment.
 
 **docker-compose failed to parse my yaml file**
 
