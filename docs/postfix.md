@@ -28,7 +28,7 @@ ${POSTFIX_SERVICE_NAME}:
     maildomain: ${MAIL_DOMAIN}
     smtp_user: ${NO_REPLY_EMAIL}:${SMTP_PASSWORD}
   networks:
-    - scope_${ENV}
+    - ${BASE_NETWORK}
 ```
 
 Add the following lines in the `prepare()` method of the `_prepare` script (in `bin` directory):
