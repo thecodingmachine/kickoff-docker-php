@@ -22,7 +22,7 @@ RUN curl -sS https://getcomposer.org/installer \
     && ln -s /usr/bin/npm /usr/local/bin/npm \
     && a2enmod rewrite
 
-# installs core php dependencies
+# installs php dependencies
 RUN docker-php-ext-install -j$(nproc) iconv mcrypt \
     && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
     && docker-php-ext-install -j$(nproc) gd \
