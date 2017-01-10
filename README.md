@@ -94,10 +94,12 @@ For security concern, these three files have been added in the `.gitignore` file
 This project will run three containers:
 
 1. A reverse proxy using the well-known [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy) image.
-2. An Apache container with PHP 7.1 (and core PHP libraries), Composer (for managing your PHP dependencies), Node.js and NPM (for managing your frontend dependencies).
+2. An Apache container with PHP 7.1 (and core PHP libraries), Composer (for managing your PHP dependencies), Node.js and npm (for managing your frontend dependencies).
 3. A MySQL container using MySQL 5.7.
 
-<img align="center" src="docs/images/readme1.png" alt="Containers and project structure" />
+<p align="center">
+<img src="docs/images/readme1.png" alt="Containers and project structure" />
+</p>
 
 * The `apache/volume` folder is where your source code must be located. It is mapped with the `/var/www/html` folder on the Apache container.
 * The `mysql/volume` has been created by the MySQL container. It is where your database is persisted on the host.
