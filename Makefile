@@ -27,7 +27,7 @@ nginx-down:
 	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER_NAME}) container has been stopped!";
 
 nginx-up:
-	docker-compose -p ${NGINX_PROXY_NAME} -f docker-compose-nginx.yml up -d;
+	./bin/_nginx_up;
 	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER_NAME}) container is running!";
 
 kickoff: down prepare build nginx-up up;
