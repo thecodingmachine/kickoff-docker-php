@@ -4,7 +4,21 @@ Simple tutorial to help you installing [Mouf framework](http://mouf-php.com/).
 
 ## Using TDBM ORM
 
-First update your `composer.json` file located at `apache/volume`:
+First, update the `Dockerfile` located in the `apache` folder by adding:
+
+```
+# installs php dependencies
+RUN docker-php-ext-install -j$(nproc) iconv mcrypt \
+    && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install opcache \
+    && docker-php-ext-install pdo_mysql \
+    && docker-php-ext-install zip \ <-- INSERT THIS LINE
+    && pecl install apcu \
+    && pecl install xdebug
+```
+
+Then update your `composer.json` file located at `apache/volume`:
 
 ```
 {
@@ -31,9 +45,9 @@ First update your `composer.json` file located at `apache/volume`:
 }
 ```
 
-Then run `make kickoff`.
+Run `make kickoff`.
 
-Once everything has been installed and you're sure that your apache container is running (`make tail`), use `make composer cmd=install` in order to install PHP dependencies.
+Once everything has been installed and you're sure that your apache container is running (`make tail`), use `make composer cmd=install` in order to install PHP dependencies (you might also have to run `make composer cmd=update`).
 
 Good :smiley:? Now open your favorite web browser, copy / paste http://dev.yourproject.com/vendor/mouf/mouf/ and create the user you will use to connect to Mouf UI.
 
