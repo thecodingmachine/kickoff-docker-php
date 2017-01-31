@@ -28,14 +28,14 @@ missing_arg()
 
 gulp()
 {
-     /bin/bash ${DIR}/_health_check --container_name ${APACHE_CONTAINER};
+     /bin/bash ${DIR}/_health_check --container_name ${APACHE_CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
-        /bin/bash ${DIR}/_whalesay --say "Apache container (${APACHE_CONTAINER}) is not running.";
+        /bin/bash ${DIR}/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) is not running.";
         exit 1;
     fi;
 
-    docker exec -ti ${APACHE_CONTAINER} /var/www/html/node_modules/.bin/gulp ${CMD};
+    docker exec -ti ${APACHE_CONTAINER_NAME} /var/www/html/node_modules/.bin/gulp ${CMD};
 }
 
 # checking parameters
