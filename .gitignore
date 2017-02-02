@@ -1,6 +1,5 @@
 .idea
 .DS_STORE
-/apache/logs
 /apache/volume/node_modules
 /apache/volume/npm-debug.log
 /apache/volume/vendor
