@@ -156,10 +156,6 @@ Once done, run `make kickoff` to rebuild your Apache container.
 
 This project aims to help you starting a PHP development environment on Docker. As the `www-data` user in the Apache container shares the same `uid` as your current user, we do not recommend using this project for your production environment.
 
-**docker-compose failed to parse my yaml file**
-
-Make sure that your file's indents are corrects!
-
 **I've added a make command, but it's not working**
 
 Make sure that your `Makefile` uses tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.
@@ -170,5 +166,4 @@ Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https
 
 **Xdebug is not working on MacOS**
 
-* If you have php-fpm installed on your machine, the port 9000 might already be used. You have to change the `xdebug.remote_port` variable's value with `1000` and updates your IDE configuration for Xdebug.
-* Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).
+Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).
