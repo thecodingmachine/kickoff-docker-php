@@ -39,7 +39,7 @@ Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the followi
 127.0.0.1   dev.yourproject.com
 ```
 
-**Note:** Make sure that your domain name matches the `APACHE_VIRTUAL_HOST` variable's value.
+**Note:** Make sure that your domain name matches the `APACHE_VIRTUAL_HOST` variable's value located in the `.env` file.
  
 Good :smiley:? We're now done with the configuration! :metal:
 
