@@ -1,5 +1,5 @@
 <div align="center">
-<img src="./logo.png" alt="kickoff-docker-php logo" width="300" height="300" />
+<img src="./logo.png" alt="kickoff-docker-php logo" width="200" height="200" />
 </div>
 
 <h1 align="center">kickoff-docker-php</h1>
@@ -15,19 +15,17 @@
 
 <br>
 
-# Goal
-
-This project will help you to setup a PHP project with Docker, thanks to some useful make commands.
+This project will help you to setup a **PHP project with Docker**, thanks to some useful make commands.
 
 Think of it as a starter kit and update it at your convenience.
 
-# Prerequisites
+## Prerequisites
 
 Docker (**>= 1.12**) for MacOS / Linux: https://docs.docker.com/engine/installation
 
 Docker Compose (**>= 1.8.0**) for MacOS / Linux: https://docs.docker.com/compose/install
 
-# Quick start
+## Quick start
 
 **Important for Linux users:** make sure you're not using `root` user. Your current user must be part of `sudo` and `docker` groups.
 
@@ -63,7 +61,7 @@ The installation might take some time, so go for a coffee break! :coffee:
 
 Once everything has been installed, open your favorite web browser and copy / paste http://dev.yourproject.com and check if everything is OK!
 
-# Make commands
+## Make commands
 
 | Command                         | Description                                                                                                                                                                                        |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -86,9 +84,9 @@ Once everything has been installed, open your favorite web browser and copy / pa
 | tail-nginx                      | Displays the Docker's logs of the NGINX container.                                                                                                                                                 |
 | tail-mysql                      | Displays the Docker's logs of the MySQL container.                                                                                                                                                 |
 
-# Dive in
+## Dive in
 
-## How does it work?
+### How does it work?
 
 There are three important files:
 
@@ -103,7 +101,7 @@ As these files are templates, they are not used directly. That's why you have to
 
 For security concern, these three files have been added in the `.gitignore` file as they contain sensible data like the MySQL database password and so on.
 
-## Project structure
+### Project structure
 
 This project will run three containers:
 
@@ -118,11 +116,11 @@ This project will run three containers:
 * The `apache/volume` folder is where your source code must be located. It is mapped with the `/var/www/html` folder on the Apache container.
 * The `mysql/volume` has been created by the MySQL container. It is where your database is persisted on the host.
 
-## Link your PHP application to your MySQL database
+### Link your PHP application to your MySQL database
 
 It is actually quite simple. In your Apache container, the hostname of the MySQL database is equal to the variable's value `MYSQL_SERVICE_NAME` defined in the `.env` file. Also, just use the port `3306` and the credentials defined in the `.env` file. 
 
-## Manage your database
+### Manage your database
 
 The simplest way is to access directly to the MySQL cli using `make mysql-cli`.
 
@@ -130,13 +128,13 @@ If you want to manage your database with a more powerful tool (like MySQL Workbe
 
 You are now able to access on your host to your MySQL database using `127.0.0.1` and the port defined in the variable `MYSQL_HOST_PORT_TO_MAP`. See also: [Use MySQL Workbench to manage your database](docs/mysql_workbench.md)
 
-## Xdebug support
+### Xdebug support
 
 Open your `.env` file in your favorite editor, set the variable `APACHE_ENABLE_XDEBUG=1` and run `make kickoff`. 
 
 It will enable Xdebug on the Apache container. See also: [Use Xdebug with PhpStorm](docs/xdebug.md)
 
-## SSL support
+### SSL support
 
 Open your `.env` file in your favorite editor, set the variable `NGINX_ENABLE_SSL=1` and run `make kickoff`. 
 
@@ -146,25 +144,25 @@ You will find more information on how to make SSL work here: https://github.com/
 
 If you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
 
-## Multiple environments/projects on the same host
+### Multiple environments/projects on the same host
 
 As you long as each `NGINX_PROXY_NAME` and `PROXY_NETWORK` variables in your `.env` files have the same values, you are able to run as many environments/projects as you need. 
 
 Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
 
-## Install more PHP extensions
+### Install more PHP extensions
 
 Open the `Dockerfile` located in the `apache/volume` folder and [follow the official instructions](https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions).
 
 Once done, run `make kickoff` to rebuild your Apache container.
 
-# Candies
+## Candies
 
 * [Install a Postfix container](docs/postfix.md)
 * [Install Gulp](docs/gulp.md)
 * [Install Mouf framework](docs/mouf_framework.md) 
 
-# FAQ / Known issues
+## FAQ / Known issues
 
 **Should I use this in production?**
 
@@ -182,6 +180,6 @@ Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https
 
 Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).
 
-# Credits
+## Credits
 
 * Icon by Nikita Kozin from the Noun Project
