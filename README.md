@@ -1,13 +1,19 @@
-<p align="center">
+<div align="center">
 <img src="./logo.png" alt="kickoff-docker-php logo" width="300" height="300" />
-</p>
+</div>
 
-[![PHP 7.1](https://img.shields.io/badge/PHP-7.1-green.svg)](apache/Dockerfile#L1)
-[![Composer latest](https://img.shields.io/badge/Composer-latest-green.svg)](apache/Dockerfile#6)
-[![MySQL 5.7](https://img.shields.io/badge/MySQL-5.7-green.svg)](docker-compose.yml.template#L23)
-[![Node.js 6.9](https://img.shields.io/badge/Node.js-6.9-green.svg)](apache/Dockerfile#L9)
-[![npm 3.10](https://img.shields.io/badge/npm-3.10-green.svg)](apache/Dockerfile#L9)
-[![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+<h1 align="center">kickoff-docker-php</h1>
+
+<div align="center">
+<img src="https://img.shields.io/badge/PHP-7.1-green.svg" alt="PHP 7.1">
+<img src="https://img.shields.io/badge/Composer-latest-green.svg" alt="Composer latest">
+<img src="https://img.shields.io/badge/MySQL-5.7-green.svg" alt="MySQL 5.7">
+<img src="https://img.shields.io/badge/Node.js-6.9-green.svg" alt="Node.js 6.9">
+<img src="https://img.shields.io/badge/npm-3.10-green.svg" alt="npm 3.10">
+<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License MIT">
+</div>
+
+<br>
 
 # Goal
 
