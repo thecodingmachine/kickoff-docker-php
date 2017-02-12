@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./logo.png" alt="kickoff-docker-php logo" />
+<img src="./logo.png" alt="kickoff-docker-php logo" width="300" height="300" />
 </p>
 
 [![PHP 7.1](https://img.shields.io/badge/PHP-7.1-green.svg)](apache/Dockerfile#L1)
@@ -175,3 +175,7 @@ Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https
 **Xdebug is not working on MacOS**
 
 Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).
+
+# Credits
+
+* Icon by Nikita Kozin from the Noun Project
