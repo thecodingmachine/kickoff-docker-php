@@ -152,7 +152,7 @@ Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each
 
 ### Install more PHP extensions
 
-Open the `Dockerfile` located in the `apache/volume` folder and [follow the official instructions](https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions).
+Open the `Dockerfile` located in the `apache` folder and [follow the official instructions](https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions).
 
 Once done, run `make kickoff` to rebuild your Apache container.
 
