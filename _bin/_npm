@@ -9,7 +9,7 @@ source ${ROOT}/.env;
 usage()
 {
     echo "Usage:";
-    echo "./_composer --command [install|update|...]";
+    echo "./_npm --command [install|update|...]";
     exit 0;
 }
 
@@ -19,16 +19,16 @@ missing_arg()
     exit 1;
 }
 
-composer()
+npm()
 {
-    /bin/bash ${DIR}/_health_check --container_name ${APACHE_CONTAINER_NAME};
+    /bin/bash ${DIR}/misc/_health_check --container_name ${APACHE_CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
-        /bin/bash ${DIR}/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) is not running.";
+        /bin/bash ${DIR}/utils/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) is not running.";
         exit 1;
     fi;
 
-    docker exec --user www-data -ti ${APACHE_CONTAINER_NAME} composer ${CMD};
+    docker exec -ti ${APACHE_CONTAINER_NAME} npm ${CMD};
 }
 
 # checking parameters
@@ -48,6 +48,6 @@ while [ "$1" != "" ]; do
     shift
 done;
 
-composer;
+npm;
 
 exit 0;

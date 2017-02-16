@@ -1,0 +1,32 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+kickoff()
+{
+    /bin/bash ${DIR}/_down;
+
+    if ! /bin/bash ${DIR}/_prepare; then
+        exit 1;
+    fi;
+
+    if ! /bin/bash ${DIR}/_build; then
+        exit 1;
+    fi;
+
+    if ! /bin/bash ${DIR}/_reverse_proxy_up; then
+        exit 1;
+    fi;
+
+    if ! /bin/bash ${DIR}/_up; then
+        exit 1;
+    fi;
+
+    /bin/bash ${DIR}/misc/_whalesay --say "You're ready to go!";
+}
+
+
+kickoff;
+
+exit 0;

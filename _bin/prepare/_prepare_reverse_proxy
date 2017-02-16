@@ -1,0 +1,16 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/../..;
+
+# environment variables
+source ${ROOT}/.env;
+
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${REVERSE_PROXY_SERVICE_NAME}/${REVERSE_PROXY_SERVICE_NAME}/g" ${ROOT}/docker-compose-reverse-proxy.yml;
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${REVERSE_PROXY_CONTAINER_NAME}/${REVERSE_PROXY_CONTAINER_NAME}/g" ${ROOT}/docker-compose-reverse-proxy.yml;
+
+if [ ${REVERSE_PROXY_ENABLE_SSL} = 0 ]; then
+    /bin/bash ${ROOT}/_bin/utils/_sedi "s/- \${REVERSE_PROXY_CERTS_PATH}/#- \${REVERSE_PROXY_CERTS_PATH}/g" ${ROOT}/docker-compose-reverse-proxy.yml;
+else
+    /bin/bash ${ROOT}/_bin/utils/_sedi "s/- \${REVERSE_PROXY_CERTS_PATH}/- $(echo ${REVERSE_PROXY_CERTS_PATH} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/g" ${ROOT}/docker-compose-reverse-proxy.yml;
+fi;

@@ -1,4 +1,4 @@
 PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
 
 ## Customize the line below to run regularly your PHP scripts.
-# * * * * * cd /var/www/html/; /usr/local/bin/php my_script.php > /proc/1/fd/2 2> /proc/1/fd/2
+# * * * * * cd /var/www/html/; php my_script.php > /proc/1/fd/2 2> /proc/1/fd/2

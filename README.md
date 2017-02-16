@@ -65,23 +65,23 @@ Once everything has been installed, open your favorite web browser and copy / pa
 
 | Command                         | Description                                                                                                                                                                                        |
 | ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| prepare                         | Creates the `docker-compose.yml` and `docker-compose-nginx.yml` files using the variables's values specified in the `.env` file.                                                                   |
+| prepare                         | Creates the `docker-compose.yml` and `docker-compose-reverse-proxy.yml` files using the variables's values specified in the `.env` file.                                                           |
 | build                           | Builds the Apache container.                                                                                                                                                                       |
 | down                            | Stops the Apache and MySQL containers, deletes their network and cleans the docker cache.                                                                                                          |
 | up                              | Ups the Apache and MySQL containers.                                                                                                                                                               |
-| nginx-down                      | Stops the NGINX container and deletes its network.                                                                                                                                                 |
-| nginx-up                        | Ups the NGINX container.                                                                                                                                                                           |
-| kickoff                         | Combo of down, prepare, build, nginx-up and up commands.                                                                                                                                           |
+| proxy-down                      | Stops the reverse proxy container and deletes its network.                                                                                                                                         |
+| proxy-up                        | Ups the reverse proxy container.                                                                                                                                                                   |
+| kickoff                         | Combo of down, prepare, build, proxy-up and up commands.                                                                                                                                           |
 | composer cmd=*yourcommand*      | Allows you to run a composer command. Ex: `make composer cmd=install`, `make composer cmd=update`, ...                                                                                             |
 | npm cmd=*yourcommand*           | Allows you to run a npm command. Ex: `make npm cmd=install`, `make npm cmd="install --save-dev gulp"`, ...                                                                                         |
 | export                          | This command will dump the database into two SQL files located at `mysql/dumps`. The files will be named as `yourdatabasename.sql` and `yourdatabasename.Y-m-d:H:M:S.sql`.                         |
 | import                          | This command will drop the database, recreate it and then run the `yourdatabasename.sql` file.                                                                                                     |
 | shell                           | Connects through bash to the Apache container.                                                                                                                                                     |
-| shell-nginx                     | Connects through bash to the NGINX container.                                                                                                                                                      |
+| shell-proxy                     | Connects through bash to the reverse proxy container.                                                                                                                                              |
 | shell-mysql                     | Connects through bash to the MySQL container.                                                                                                                                                      |
 | mysql-cli                       | Opens the MySQL cli.                                                                                                                                                                               |
 | tail                            | Displays the Docker's logs of the Apache container.                                                                                                                                                |
-| tail-nginx                      | Displays the Docker's logs of the NGINX container.                                                                                                                                                 |
+| tail-proxy                      | Displays the Docker's logs of the reverse proxy container.                                                                                                                                         |
 | tail-mysql                      | Displays the Docker's logs of the MySQL container.                                                                                                                                                 |
 
 ## Dive in
@@ -92,12 +92,12 @@ There are three important files:
 
 * `.env.template` which contains variables with default values.
 * `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus some of the variables defined in `.env.template`.
-* `docker-compose-nginx.yml.template` which contains the run configuration of the NGINX container plus some of the variables defined in `.env.template`.
+* `docker-compose-reverse-proxy.yml.template` which contains the run configuration of the reverse proxy container plus some of the variables defined in `.env.template`.
 
 As these files are templates, they are not used directly. That's why you have to:
 
 * run `cp .env.template .env` and update the variables' values in the `.env` file at your convenience.
-* run `make kickoff` which runs `make prepare`: this command creates the `docker-compose.yml` and `docker-compose-nginx.yml` files using the variables' values defined in the `.env` file.
+* run `make kickoff` which runs `make prepare`: this command creates the `docker-compose.yml` and `docker-compose-reverse-proxy.yml` files using the variables' values defined in the `.env` file.
 
 For security concern, these three files have been added in the `.gitignore` file as they contain sensible data like the MySQL database password and so on.
 
@@ -146,13 +146,13 @@ If you're using SSL Certificate Chains, we advise you to read the official NGINX
 
 ### Multiple environments/projects on the same host
 
-As you long as each `NGINX_PROXY_NAME` and `PROXY_NETWORK` variables in your `.env` files have the same values, you are able to run as many environments/projects as you need. 
+As you long as each `REVERSE_PROXY_NAME` and `REVERSE_PROXY_NETWORK` variables in your `.env` files have the same values, you are able to run as many environments/projects as you need. 
 
 Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
 
 ### Install more PHP extensions
 
-Open the `Dockerfile` located in the `apache/volume` folder and [follow the official instructions](https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions).
+Open the `Dockerfile` located in the `apache` folder and [follow the official instructions](https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions).
 
 Once done, run `make kickoff` to rebuild your Apache container.
 

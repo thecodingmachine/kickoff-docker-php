@@ -7,4 +7,4 @@
 /mysql/volume
 .env
 docker-compose.yml
-docker-compose-nginx.yml
+docker-compose-reverse-proxy.yml

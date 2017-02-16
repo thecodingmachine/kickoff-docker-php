@@ -1,0 +1,27 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/..;
+
+# environment variables
+source ${ROOT}/.env;
+
+build()
+{
+    if [ -f ${ROOT}/docker-compose.yml ]; then
+        if docker-compose -f ${ROOT}/docker-compose.yml build; then
+            /bin/bash ${DIR}/misc/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) has been built!";
+        else
+            /bin/bash ${DIR}/misc/_whalesay --say "Failed to build the Apache container (${APACHE_CONTAINER_NAME}).";
+            exit 1;
+        fi;
+    else
+        /bin/bash ${DIR}/misc/_whalesay --say "No docker-compose.yml found. Did you run make prepare?";
+        exit 1;
+    fi;
+}
+
+
+build;
+
+exit 0;

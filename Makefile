@@ -7,63 +7,57 @@ include ./.env
 # BUILDING
 #------------------------------------------------------
 prepare:
-	./bin/_prepare;
-	./bin/_whalesay --say "Your docker-compose files are ready!";
+	./_bin/_prepare;
 
 build:
-	docker-compose -f docker-compose.yml build;
-	./bin/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) has been built!";
+	./_bin/_build;
 
 down:
-	./bin/_down;
-	./bin/_whalesay --say "Apache (${APACHE_CONTAINER_NAME}) and MySQL (${MYSQL_CONTAINER_NAME}) containers have been stopped!";
+	./_bin/_down;
 
 up:
-	docker-compose -f docker-compose.yml up -d;
-	./bin/_whalesay --say "Apache (${APACHE_CONTAINER_NAME}) and MySQL (${MYSQL_CONTAINER_NAME}) containers are running!";
+	./_bin/_up;
 
-nginx-down:
-	docker-compose -p ${NGINX_PROXY_NAME} -f docker-compose-nginx.yml down;
-	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER_NAME}) container has been stopped!";
+proxy-down:
+	./_bin/_reverse_proxy_down;
 
-nginx-up:
-	./bin/_nginx_up;
-	./bin/_whalesay --say "NGINX (${NGINX_CONTAINER_NAME}) container is running!";
+proxy-up:
+	./_bin/_reverse_proxy_up;
 
-kickoff: down prepare build nginx-up up;
-	./bin/_whalesay --say "You're ready to go!";
+kickoff:
+	./_bin/_kickoff;
 
 # UTILS
 #------------------------------------------------------
 shell:
-	./bin/_shell --container_name ${APACHE_CONTAINER_NAME} --service_name "Apache";
+	./_bin/_shell --container_name ${APACHE_CONTAINER_NAME} --service_name "Apache";
 
-shell-nginx:
-	./bin/_shell --container_name ${NGINX_CONTAINER_NAME} --service_name "NGINX";
+shell-proxy:
+	./_bin/_shell --container_name ${REVERSE_PROXY_CONTAINER_NAME} --service_name "Reverse proxy";
 
 shell-mysql:
-	./bin/_shell --container_name ${MYSQL_CONTAINER_NAME} --service_name "MySQL";
+	./_bin/_shell --container_name ${MYSQL_CONTAINER_NAME} --service_name "MySQL";
 
 mysql-cli:
-	./bin/_mysql_cli;
+	./_bin/_mysql_cli;
 
 tail:
-	./bin/_tail --container_name ${APACHE_CONTAINER_NAME} --service_name "Apache";
+	./_bin/_tail --container_name ${APACHE_CONTAINER_NAME} --service_name "Apache";
 
-tail-nginx:
-	./bin/_tail --container_name ${NGINX_CONTAINER_NAME} --service_name "NGINX";
+tail-proxy:
+	./_bin/_tail --container_name ${REVERSE_PROXY_CONTAINER_NAME} --service_name "Reverse proxy";
 
 tail-mysql:
-	./bin/_tail --container_name ${MYSQL_CONTAINER_NAME} --service_name "MySQL";
+	./_bin/_tail --container_name ${MYSQL_CONTAINER_NAME} --service_name "MySQL";
 
 export:
-	./bin/_export;
+	./_bin/_export;
 
 import:
-	./bin/_import;
+	./_bin/_import;
 
 composer:
-	./bin/_composer --command $(cmd);
+	./_bin/_composer --command $(cmd);
 
 npm:
-	./bin/_npm --command $(cmd);
+	./_bin/_npm --command $(cmd);

@@ -8,10 +8,10 @@ source ${ROOT}/.env;
 
 mysql_cli()
 {
-    /bin/bash ${DIR}/_health_check --container_name ${MYSQL_CONTAINER_NAME};
+    /bin/bash ${DIR}/utils/_health_check --container_name ${MYSQL_CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
-        /bin/bash ${DIR}/_whalesay --say "MySQL container (${MYSQL_CONTAINER_NAME}) is not running.";
+        /bin/bash ${DIR}/misc/_whalesay --say "MySQL container (${MYSQL_CONTAINER_NAME}) is not running.";
         exit 1;
     fi;
 

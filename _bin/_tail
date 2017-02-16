@@ -9,7 +9,7 @@ source ${ROOT}/.env;
 usage()
 {
     echo "Usage:";
-    echo "./_shell --container_name your_container_name --service_name your_service_name";
+    echo "./_tail --container_name your_container_name --service_name your_service_name";
     exit 0;
 }
 
@@ -19,16 +19,16 @@ missing_arg()
     exit 1;
 }
 
-shell()
+tail()
 {
-    /bin/bash ${DIR}/_health_check --container_name ${CONTAINER_NAME};
+    /bin/bash ${DIR}/utils/_health_check --container_name ${CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
-        /bin/bash ${DIR}/_whalesay --say "${SERVICE_NAME} container (${CONTAINER_NAME}) is not running.";
+        /bin/bash ${DIR}/misc/_whalesay --say "${SERVICE_NAME} container (${CONTAINER_NAME}) is not running.";
         exit 1;
     fi;
 
-    docker exec -ti ${CONTAINER_NAME} bash;
+    docker logs -f ${CONTAINER_NAME};
 }
 
 # checking parameters
@@ -53,6 +53,6 @@ while [ "$1" != "" ]; do
     shift
 done;
 
-shell;
+tail;
 
 exit 0;

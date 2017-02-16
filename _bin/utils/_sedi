@@ -1,0 +1,5 @@
+#!/bin/bash
+
+sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@";
+
+exit 0;

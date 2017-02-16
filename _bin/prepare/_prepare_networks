@@ -1,0 +1,11 @@
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/../..;
+
+# environment variables
+source ${ROOT}/.env;
+
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${BASE_NETWORK}/${BASE_NETWORK}/g" ${ROOT}/docker-compose.yml;
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${REVERSE_PROXY_NETWORK}/${REVERSE_PROXY_NETWORK}/g" ${ROOT}/docker-compose.yml;
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${REVERSE_PROXY_NETWORK}/${REVERSE_PROXY_NETWORK}/g" ${ROOT}/docker-compose-reverse-proxy.yml;

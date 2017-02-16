@@ -1,6 +1,6 @@
 FROM php:7.1-apache
 
-ENV TERM=linux
+ENV TERM=xterm
 
 # installs composer, Node.js (+ npm) and some useful libraries
 RUN curl -sS https://getcomposer.org/installer \
