@@ -15,7 +15,7 @@ up()
             if docker-compose -p ${REVERSE_PROXY_NAME} -f docker-compose-reverse-proxy.yml up -d; then
                 /bin/bash ${DIR}/misc/_whalesay --say "Reverse proxy container (${REVERSE_PROXY_CONTAINER_NAME}) is running!";
             else
-                /bin/bash ${DIR}/misc/_whalesay --say "Failed to run the reverse proxy container (${REVERSE_PROXY_CONTAINER_NAME})";
+                /bin/bash ${DIR}/misc/_whalesay --say "Failed to run the reverse proxy container (${REVERSE_PROXY_CONTAINER_NAME}).";
                 exit 1;
             fi;
         else
