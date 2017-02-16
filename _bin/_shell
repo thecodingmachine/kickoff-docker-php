@@ -21,7 +21,7 @@ missing_arg()
 
 shell()
 {
-    /bin/bash ${DIR}/utls/_health_check --container_name ${CONTAINER_NAME};
+    /bin/bash ${DIR}/utils/_health_check --container_name ${CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
         /bin/bash ${DIR}/misc/_whalesay --say "${SERVICE_NAME} container (${CONTAINER_NAME}) is not running.";
