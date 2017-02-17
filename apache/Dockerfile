@@ -35,7 +35,8 @@ RUN if [ ${ENABLE_XDEBUG} = 1 ]; then \
    pecl install xdebug \
 ;fi
 
-RUN rm -rf /usr/local/etc/php/conf.d
+# handles .ini files
+RUN rm -f /usr/local/etc/php/conf.d/docker-php-ext-opcache.ini
 COPY conf.d /usr/local/etc/php/conf.d
 
 # enables cron

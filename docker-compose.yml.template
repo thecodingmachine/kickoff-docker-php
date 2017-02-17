@@ -5,9 +5,6 @@ services:
   ${APACHE_SERVICE_NAME}:
     volumes:
       - ./apache/volume:/var/www/html:rw
-      #- ./apache/php.ini:/usr/local/etc/php/php.ini:ro
-      #- ./apache/ext-apcu.ini:/usr/local/etc/php/conf.d/ext-apcu.ini:ro
-     # - ./apache/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
     restart: unless-stopped
     build:
       context: ./apache
