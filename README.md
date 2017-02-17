@@ -136,9 +136,9 @@ It will enable Xdebug on the Apache container. See also: [Use Xdebug with PhpSto
 
 ### SSL support
 
-Open your `.env` file in your favorite editor, set the variable `NGINX_ENABLE_SSL=1` and run `make kickoff`. 
+Open your `.env` file in your favorite editor, set the variable `REVERSE_PROXY_ENABLE_SSL=1` and run `make kickoff`. 
 
-It will enable SSL on the NGINX container. Make sure that you have defined the correct path to your certifications in `NGINX_CERTS_PATH`!
+It will enable SSL on the reverse proxy container. Make sure that you have defined the correct path to your certifications in `REVERSE_PROXY_CERTS_PATH`!
 
 You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
 
@@ -178,7 +178,7 @@ Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https
 
 **Xdebug is not working on MacOS**
 
-Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).
+Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file located in the `apache/conf.d` directory. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).
 
 ## Credits
 

@@ -7,7 +7,7 @@ By chance, there is a cool docker image which will help us with that: https://gi
 First, update your `.env.template` file by adding:
 
 ```
-# postfix
+# [postfix]
 POSTFIX_SERVICE_NAME=postfix
 POSTFIX_CONTAINER_NAME=${PROJECT_NAME}_${POSTFIX_SERVICE_NAME}_${ENV}
 MAIL_DOMAIN=${APACHE_VIRTUAL_HOST}
@@ -31,15 +31,22 @@ ${POSTFIX_SERVICE_NAME}:
     - ${BASE_NETWORK}
 ```
 
-Add the following lines in the `prepare()` method of the `_prepare` script (in `bin` directory):
+Create a `_prepare_postfix` file in the `_bin/prepare` directory and add the following lines:
 
 ```
-# postfix
-sedi "s/\${POSTFIX_SERVICE_NAME}/${POSTFIX_SERVICE_NAME}/g" ${ROOT}/docker-compose.yml;
-sedi "s/\${POSTFIX_CONTAINER_NAME}/${POSTFIX_CONTAINER_NAME}/g" ${ROOT}/docker-compose.yml;
-sedi "s/\${MAIL_DOMAIN}/${MAIL_DOMAIN}/g" ${ROOT}/docker-compose.yml;
-sedi "s/\${NO_REPLY_EMAIL}/${NO_REPLY_EMAIL}/g" ${ROOT}/docker-compose.yml;
-sedi "s/\${SMTP_PASSWORD}/${SMTP_PASSWORD}/g" ${ROOT}/docker-compose.yml;
+#!/bin/bash
+
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )";
+ROOT=${DIR}/../..;
+
+# environment variables
+source ${ROOT}/.env;
+
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${POSTFIX_SERVICE_NAME}/${POSTFIX_SERVICE_NAME}/g" ${ROOT}/docker-compose.yml;
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${POSTFIX_CONTAINER_NAME}/${POSTFIX_CONTAINER_NAME}/g" ${ROOT}/docker-compose.yml;
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${MAIL_DOMAIN}/${MAIL_DOMAIN}/g" ${ROOT}/docker-compose.yml;
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${NO_REPLY_EMAIL}/${NO_REPLY_EMAIL}/g" ${ROOT}/docker-compose.yml;
+/bin/bash ${ROOT}/_bin/utils/_sedi "s/\${SMTP_PASSWORD}/${SMTP_PASSWORD}/g" ${ROOT}/docker-compose.yml;
 ```
 
 Last but not least, run `cp .env.template .env` and `make kickoff`! You have now at your disposal a nice Postfix container :smiley:

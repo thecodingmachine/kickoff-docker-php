@@ -2,7 +2,7 @@
 
 First, launch your environment with `make kickoff` and install gulp with `make npm cmd="install --save-dev gulp"`.
 
-Then, create a `_gulp` file in the bin folder with this content:
+Then, create a `_gulp` file in the `_bin` folder with this content:
 
 ```
 #!/bin/bash
@@ -28,10 +28,10 @@ missing_arg()
 
 gulp()
 {
-     /bin/bash ${DIR}/_health_check --container_name ${APACHE_CONTAINER_NAME};
+     /bin/bash ${DIR}/utils/_health_check --container_name ${APACHE_CONTAINER_NAME};
 
     if [ $? -eq 1 ]; then
-        /bin/bash ${DIR}/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) is not running.";
+        /bin/bash ${DIR}/misc/_whalesay --say "Apache container (${APACHE_CONTAINER_NAME}) is not running.";
         exit 1;
     fi;
 
