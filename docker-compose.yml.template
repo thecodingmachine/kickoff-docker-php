@@ -24,7 +24,7 @@ services:
       - ${MYSQL_HOST_PORT_TO_MAP}:3306
     volumes:
       - ./mysql/volume:/var/lib/mysql:rw
-      #- ./mysql/custom-my.cnf:/etc/mysql/my.cnf:ro
+      - ./mysql/conf.d/custom.cnf:/etc/mysql/conf.d/custom.cnf:ro
     restart: unless-stopped
     container_name: ${MYSQL_CONTAINER_NAME}
     environment:

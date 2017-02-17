@@ -9,7 +9,7 @@ source ${ROOT}/.env;
 down()
 {
     if [ -f ${ROOT}/docker-compose-reverse-proxy.yml ]; then
-        if docker-compose -p ${REVERSE_PROXY_PROXY_NAME} -f docker-compose-reverse-proxy.yml down; then
+        if docker-compose -p ${REVERSE_PROXY_NAME} -f ${ROOT}/docker-compose-reverse-proxy.yml down; then
             /bin/bash ${DIR}/misc/_whalesay --say "Reverse proxy (${REVERSE_PROXY_CONTAINER_NAME}) container has been stopped!";
         else
             /bin/bash ${DIR}/misc/_whalesay --say "Failed to stop reverse proxy (${REVERSE_PROXY_CONTAINER_NAME}) container.";
