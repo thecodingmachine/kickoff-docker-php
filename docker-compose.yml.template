@@ -9,7 +9,10 @@ services:
       #- ./apache/ext-apcu.ini:/usr/local/etc/php/conf.d/ext-apcu.ini:ro
      # - ./apache/ext-xdebug.ini:/usr/local/etc/php/conf.d/ext-xdebug.ini:ro
     restart: unless-stopped
-    build: ./apache
+    build:
+      context: ./apache
+      args:
+        - ENABLE_XDEBUG=${APACHE_ENABLE_XDEBUG}
     container_name: ${APACHE_CONTAINER_NAME}
     environment:
       - VIRTUAL_HOST=${APACHE_VIRTUAL_HOST}

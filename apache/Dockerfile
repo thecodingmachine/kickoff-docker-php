@@ -28,11 +28,18 @@ RUN docker-php-ext-install -j$(nproc) iconv mcrypt \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install opcache \
     && docker-php-ext-install pdo_mysql \
-    && pecl install apcu \
-    && pecl install xdebug
+    && pecl install apcu
+
+ARG ENABLE_XDEBUG
+RUN if [ ${ENABLE_XDEBUG} = 1 ]; then \
+   pecl install xdebug \
+;fi
+
+RUN rm -rf /usr/local/etc/php/conf.d
+COPY conf.d /usr/local/etc/php/conf.d
 
 # enables cron
-ADD crontab /tmp/
+COPY crontab /tmp/
 RUN crontab /tmp/crontab
 
 # defines entry point
