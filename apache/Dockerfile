@@ -44,6 +44,6 @@ COPY crontab /tmp/
 RUN crontab /tmp/crontab
 
 # defines entry point
-COPY entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
 
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
