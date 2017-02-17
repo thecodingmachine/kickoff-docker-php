@@ -14,3 +14,5 @@ if [ ${REVERSE_PROXY_ENABLE_SSL} = 0 ]; then
 else
     /bin/bash ${ROOT}/_bin/utils/_sedi "s/- \${REVERSE_PROXY_CERTS_PATH}/- $(echo ${REVERSE_PROXY_CERTS_PATH} | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')/g" ${ROOT}/docker-compose-reverse-proxy.yml;
 fi;
+
+exit 0;

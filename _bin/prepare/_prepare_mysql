@@ -18,3 +18,5 @@ else
     /bin/bash ${ROOT}/_bin/utils/_sedi "s/\${MYSQL_PORTS_MAPPING}/ports/g" ${ROOT}/docker-compose.yml;
     /bin/bash ${ROOT}/_bin/utils/_sedi "s/\${MYSQL_HOST_PORT_TO_MAP}/${MYSQL_HOST_PORT_TO_MAP}/g" ${ROOT}/docker-compose.yml;
 fi;
+
+exit 0;

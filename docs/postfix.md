@@ -47,6 +47,8 @@ source ${ROOT}/.env;
 /bin/bash ${ROOT}/_bin/utils/_sedi "s/\${MAIL_DOMAIN}/${MAIL_DOMAIN}/g" ${ROOT}/docker-compose.yml;
 /bin/bash ${ROOT}/_bin/utils/_sedi "s/\${NO_REPLY_EMAIL}/${NO_REPLY_EMAIL}/g" ${ROOT}/docker-compose.yml;
 /bin/bash ${ROOT}/_bin/utils/_sedi "s/\${SMTP_PASSWORD}/${SMTP_PASSWORD}/g" ${ROOT}/docker-compose.yml;
+
+exit 0;
 ```
 
 Last but not least, run `cp .env.template .env` and `make kickoff`! You have now at your disposal a nice Postfix container :smiley:

@@ -12,3 +12,5 @@ source ${ROOT}/.env;
 /bin/bash ${ROOT}/_bin/utils/_sedi "s/- VIRTUAL_HOST=\${APACHE_VIRTUAL_HOST}/- VIRTUAL_HOST=${APACHE_VIRTUAL_HOST}/g" ${ROOT}/docker-compose.yml;
 /bin/bash ${ROOT}/_bin/utils/_sedi "s/\${USER_ID}/$(id -u)/g" ${ROOT}/docker-compose.yml; # permissions issues workaround
 /bin/bash ${ROOT}/_bin/utils/_sedi "s/\${REVERSE_PROXY_NAME}/${REVERSE_PROXY_NAME}/g" ${ROOT}/docker-compose.yml;
+
+exit 0;
