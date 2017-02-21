@@ -1,7 +1,7 @@
 # Customize this ini file at your convenience
 
 [client]
-default-character-set= utf8mb4
+default-character-set = utf8mb4
 
 [mysqld]
 explicit_defaults_for_timestamp = true
@@ -11,8 +11,8 @@ innodb_file_format_max = barracuda
 innodb_file_per_table = true
 
 # Character collation
-character_set_server=utf8mb4
-collation_server=utf8mb4_unicode_ci
+character_set_server = utf8mb4
+collation_server = utf8mb4_unicode_ci
 
 # Example with innodb
 #innodb_buffer_pool_size = 1G
