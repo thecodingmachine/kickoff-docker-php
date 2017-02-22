@@ -13,6 +13,9 @@ innodb_file_per_table = true
 # Character collation
 character_set_server = utf8mb4
 collation_server = utf8mb4_unicode_ci
+init-connect='SET NAMES utf8mb4'
+init_connect='SET collation_connection = utf8mb4_unicode_ci'
+skip-character-set-client-handshake
 
 # Example with innodb
 #innodb_buffer_pool_size = 1G
