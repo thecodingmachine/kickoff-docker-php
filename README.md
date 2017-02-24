@@ -178,7 +178,7 @@ Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https
 
 **Xdebug is not working on MacOS**
 
-Add the `xdebug.idekey` variable with your corresponding value in the `ext-xdebug.ini` file located in the `apache/conf.d` directory. You might also have to update the `xdebug.remote_host` variable's value with the IP address of your container (`docker inspect YOUR_APACHE_CONTAINER_NAME`).
+You have to update the `xdebug.remote_host` variable's value with your IP address.
 
 ## Credits
 
