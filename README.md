@@ -27,7 +27,7 @@ Docker Compose (**>= 1.8.0**) for MacOS / Linux: https://docs.docker.com/compose
 
 ## Quick start
 
-**Important for Linux users:** make sure you're not using `root` user. Your current user must be part of `sudo` and `docker` groups.
+**Important for Linux users:** make sure you're not using `root` user. Your current user must be part of `sudo` and `docker` groups. Once you've added your current user to these groups, logout from your current session and then login into it.
 
 First, fork this project and clone it or download the tarball using:
 
