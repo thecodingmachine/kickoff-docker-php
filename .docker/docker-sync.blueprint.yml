@@ -1,0 +1,9 @@
+version: "2"
+
+options:
+  verbose: false
+
+syncs:
+  sync_{{ .EnvFiles.Kickoff.ENV }}_{{ .Values.Kickoff.project.name }}_app:
+    src: '../app'
+    sync_strategy: {{ if eq "darwin" .Os }}'native_osx'{{ else }}'unison'{{ end }}

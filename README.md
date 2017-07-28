@@ -1,185 +1,136 @@
-<div align="center">
-<img src="./logo.png" alt="kickoff-docker-php logo" width="200" height="200" />
-</div>
+<p align="center">
+    <img src="https://user-images.githubusercontent.com/8983173/28176182-c45b1196-67f6-11e7-8d96-fd1aefd3fcab.png" alt="kickoff-docker-php's logo" width="200" height="200" />
+</p>
+<h3 align="center">kickoff-docker-php</h3>
+<p align="center">A complete stack for your PHP project powered by Docker</p>
+<p align="center">
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/beta-2.0-yellow.svg" alt="Beta release: 2.0"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v1.0.3"><img src="https://img.shields.io/badge/stable-1.0.3-green.svg" alt="Stable release: 1.0.3"></a>
+</p>
 
-<h1 align="center">kickoff-docker-php</h1>
+---
 
-<div align="center">
-<img src="https://img.shields.io/badge/PHP-7.1-green.svg" alt="PHP 7.1">
-<img src="https://img.shields.io/badge/Composer-latest-green.svg" alt="Composer latest">
-<img src="https://img.shields.io/badge/MySQL-5.7-green.svg" alt="MySQL 5.7">
-<img src="https://img.shields.io/badge/Node.js-6.9-green.svg" alt="Node.js 6.9">
-<img src="https://img.shields.io/badge/npm-3.10-green.svg" alt="npm 3.10">
-<img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License MIT">
-</div>
+This project started with a bunch of shell-script files and a simpler stack (Apache, MySQL, NGINX as a reverse-proxy). 
+As we needed a cross-platform solution to kickoff our PHP projects under Docker, I've worked on a tool ([Orbit](https://github.com/gulien/orbit))
+to replace my Makefile and the shell-script files. 
 
-<br>
+The current version is the result of these efforts. As it does not aim to be the ultimate solution for powering PHP applications
+under Docker, it provides a lot of nice features as shown below :smile:.
+ 
+If you're interested, you can still take a look at the [first version](https://github.com/thecodingmachine/kickoff-docker-php/tree/v1.0.3)!
 
-This project will help you to setup a **PHP project with Docker**, thanks to some useful make commands.
+**Note:** This document is still under progress.
 
-Think of it as a starter kit and update it at your convenience.
+# Menu
 
-## Prerequisites
+* [Features](#features)
+* [Install](#install)
+* [Quick start](#quick-start)
+* [Configuration](#configuration)
+* [Commands](#commands)
+* [Credits](#credits)
 
-Docker (**>= 1.12**) for MacOS / Linux: https://docs.docker.com/engine/installation
+## Features
 
-Docker Compose (**>= 1.8.0**) for MacOS / Linux: https://docs.docker.com/compose/install
+* **Cross-platform:** Windows, Mac, Linux
+* **A complete stack:** NGINX, PHP-FPM 7.1, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ and more
+* **Centralized logging** with Graylog
+* Automatic **HTTPS** on your local environment
+* A powerful **reverse-proy** ([Traefik](https://traefik.io/)) which can handle automatic HTTPS (via [Let's Encrypt](https://letsencrypt.org/))
+on your production environment
+* **Performance gains** on Mac and Windows using [Docker Sync](http://docker-sync.io/) or Docker for Mac's user-guided cache
+* **Customizable** thanks to [Orbit](https://github.com/gulien/orbit)
+
+And more to come! :smiley:
+
+## Install
+
+Download and install [Docker](https://docs.docker.com/engine/installation/) (**>= 17.06**) for your platform.
+
+**Note:** This project won't work using the legacy desktop solution, aka *Docker Toolbox*.
+
+On Linux, you also have to install [Docker compose](https://docs.docker.com/compose/install/) (**>= 1.14.0**) as it does not
+come with by default. Also add your current user to the `docker` group and don't forget to logout/login from your current 
+session.
+
+Then download and install [Orbit](https://github.com/gulien/orbit), a tool for generating files from templates and 
+running commands.
+
+You may now fork this project and clone it or download the latest release from the [releases page](../../releases).
+
+### Additional install for performance gains with Docker Sync (Mac and Windows)
+
+Download and install the latest release of [Docker Sync](http://docker-sync.io/).
+
+**Note:** On Windows, it only works with Windows Subsystem for Linux.
 
 ## Quick start
 
-**Important for Linux users:** make sure you're not using `root` user. Your current user must be part of `sudo` and `docker` groups. Once you've added your current user to these groups, logout from your current session and then login into it.
+Once you've downloaded this project, move to the root directory of this project and copy the file `.env.blueprint` and paste it to a file
+named `.env`.
 
-First, fork this project and clone it or download the tarball using:
+| Linux/Mac                	| Windows                    	|
+|--------------------------	|----------------------------	|
+| `cp .env.blueprint .env` 	| `copy .env.blueprint .env` 	|
+
+**Note:** If you wish to enable *Docker Sync*, don't forget to set `ENABLE_DOCKER_SYNC` to `true` in your `.env` file.
+
+Now open your hosts file...
+ 
+| Linux/Mac              | Windows                                                                                             |
+|------------------------|-----------------------------------------------------------------------------------------------------|
+| `sudo nano /etc/hosts` | Run Notepad as administrator and open the file located at `C:\Windows\System32\drivers\etc\hosts`   |
+ 
+...and add the following lines at the end of the file:
 
 ```
-curl -L https://github.com/thecodingmachine/kickoff-docker-php/archive/master.tar.gz > kickoff-docker-php.tar.gz
+127.0.0.1   my-awesome-project.local
+127.0.0.1   www.my-awesome-project.local
+127.0.0.1   traefik.my-awesome-project.local
+127.0.0.1   phpadmin.my-awesome-project.local
+127.0.0.1   rabbitmq.my-awesome-project.local
+127.0.0.1   graylog.my-awesome-project.local
 ```
-
-Once done, move to the root directory of this project and run:
-
-```
-cp .env.template .env
-```
-
-Now open the file located at `/etc/hosts` (on MacOS / Linux) and add the following line at the end of the file:
-
-```
-127.0.0.1   dev.yourproject.com
-```
-
-**Note:** Make sure that your domain name matches the `APACHE_VIRTUAL_HOST` variable's value located in the `.env` file.
  
 Good :smiley:? We're now done with the configuration! :metal:
 
 Last but not least, **shutdown your local Apache or anything which could use your 80 and 443 ports**, and run:
 
 ```
-make kickoff
+orbit run kickoff
 ```
 
 The installation might take some time, so go for a coffee break! :coffee: 
 
-Once everything has been installed, open your favorite web browser and copy / paste http://dev.yourproject.com and check if everything is OK!
+Once everything has been installed, open your favorite web browser and copy / paste https://www.my-awesome-project.local 
+and check if everything is OK!
 
-## Make commands
+## Configuration
 
-| Command                         | Description                                                                                                                                                                                        |
-| ------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| prepare                         | Creates the `docker-compose.yml` and `docker-compose-reverse-proxy.yml` files using the variables's values specified in the `.env` file.                                                           |
-| build                           | Builds the Apache container.                                                                                                                                                                       |
-| down                            | Stops the Apache and MySQL containers, deletes their network and cleans the docker cache.                                                                                                          |
-| up                              | Ups the Apache and MySQL containers.                                                                                                                                                               |
-| proxy-down                      | Stops the reverse proxy container and deletes its network.                                                                                                                                         |
-| proxy-up                        | Ups the reverse proxy container.                                                                                                                                                                   |
-| kickoff                         | Combo of down, prepare, build, proxy-up and up commands.                                                                                                                                           |
-| composer cmd=*yourcommand*      | Allows you to run a composer command. Ex: `make composer cmd=install`, `make composer cmd=update`, ...                                                                                             |
-| npm cmd=*yourcommand*           | Allows you to run a npm command. Ex: `make npm cmd=install`, `make npm cmd="install --save-dev gulp"`, ...                                                                                         |
-| export                          | This command will dump the database into two SQL files located at `mysql/dumps`. The files will be named as `yourdatabasename.sql` and `yourdatabasename.Y-m-d:H:M:S.sql`.                         |
-| import                          | This command will drop the database, recreate it and then run the `yourdatabasename.sql` file.                                                                                                     |
-| shell                           | Connects through bash to the Apache container.                                                                                                                                                     |
-| shell-proxy                     | Connects through bash to the reverse proxy container.                                                                                                                                              |
-| shell-mysql                     | Connects through bash to the MySQL container.                                                                                                                                                      |
-| mysql-cli                       | Opens the MySQL cli.                                                                                                                                                                               |
-| tail                            | Displays the Docker's logs of the Apache container.                                                                                                                                                |
-| tail-proxy                      | Displays the Docker's logs of the reverse proxy container.                                                                                                                                         |
-| tail-mysql                      | Displays the Docker's logs of the MySQL container.                                                                                                                                                 |
+| File        | Description                                            |
+|-------------|--------------------------------------------------------|
+| .env        | Contains all sensitive data like passwords.            |
+| kickoff.yml | Contains data like the user of MySQL, Redis and so on. |
+| orbit.yml   | Contains the Orbit's commands of this project.         |
 
-## Dive in
+Don't hesitate to take a look at those files, as they are provided with nice comments!
 
-### How does it work?
+## Commands
 
-There are three important files:
+| Command              | Description                                                                                                             |
+|----------------------|-------------------------------------------------------------------------------------------------------------------------|
+| `orbit run kickoff`  | Generates all configuration files and starts the containers.                                                            |
+| `orbit run shutdown` | Stops all the containers.                                                                                               |
+| `orbit run toolbox`  | Connects through ash to the toolbox container. This is where you're able to run `composer`, `npm` and  `yarn` commands. |
 
-* `.env.template` which contains variables with default values.
-* `docker-compose.yml.template` which contains the run configuration of the Apache and MySQL containers plus some of the variables defined in `.env.template`.
-* `docker-compose-reverse-proxy.yml.template` which contains the run configuration of the reverse proxy container plus some of the variables defined in `.env.template`.
-
-As these files are templates, they are not used directly. That's why you have to:
-
-* run `cp .env.template .env` and update the variables' values in the `.env` file at your convenience.
-* run `make kickoff` which runs `make prepare`: this command creates the `docker-compose.yml` and `docker-compose-reverse-proxy.yml` files using the variables' values defined in the `.env` file.
-
-For security concern, these three files have been added in the `.gitignore` file as they contain sensible data like the MySQL database password and so on.
-
-### Project structure
-
-This project will run three containers:
-
-1. A reverse proxy using the well-known [jwilder/nginx-proxy](https://github.com/jwilder/nginx-proxy) image.
-2. An Apache container with PHP 7.1 (and core PHP libraries), Composer (for managing your PHP dependencies), Node.js and npm (for managing your frontend dependencies).
-3. A MySQL container using MySQL 5.7.
-
-<p align="center">
-<img src="docs/images/readme1.png" alt="Containers and project structure" />
-</p>
-
-* The `apache/volume` folder is where your source code must be located. It is mapped with the `/var/www/html` folder on the Apache container.
-* The `mysql/volume` has been created by the MySQL container. It is where your database is persisted on the host.
-
-### Link your PHP application to your MySQL database
-
-It is actually quite simple. In your Apache container, the hostname of the MySQL database is equal to the variable's value `MYSQL_SERVICE_NAME` defined in the `.env` file. Also, just use the port `3306` and the credentials defined in the `.env` file. 
-
-### Manage your database
-
-The simplest way is to access directly to the MySQL cli using `make mysql-cli`.
-
-If you want to manage your database with a more powerful tool (like MySQL Workbench), open your `.env` file in your favorite editor, set the variable `MYSQL_ENABLE_PORTS_MAPPING=1`, update if needed the variable `MYSQL_HOST_PORT_TO_MAP` and finally run `make kickoff`.
-
-You are now able to access on your host to your MySQL database using `127.0.0.1` and the port defined in the variable `MYSQL_HOST_PORT_TO_MAP`. See also: [Use MySQL Workbench to manage your database](docs/mysql_workbench.md)
-
-### Xdebug support
-
-Open your `.env` file in your favorite editor, set the variable `APACHE_ENABLE_XDEBUG=1` and run `make kickoff`. 
-
-It will enable Xdebug on the Apache container. See also: [Use Xdebug with PhpStorm](docs/xdebug.md)
-
-### SSL support
-
-Open your `.env` file in your favorite editor, set the variable `REVERSE_PROXY_ENABLE_SSL=1` and run `make kickoff`. 
-
-It will enable SSL on the reverse proxy container. Make sure that you have defined the correct path to your certifications in `REVERSE_PROXY_CERTS_PATH`!
-
-You will find more information on how to make SSL work here: https://github.com/jwilder/nginx-proxy#ssl-support
-
-If you're using SSL Certificate Chains, we advise you to read the official NGINX documentation: https://www.nginx.com/resources/admin-guide/nginx-ssl-termination/#cert_chains
-
-### Multiple environments/projects on the same host
-
-As you long as each `REVERSE_PROXY_NAME` and `REVERSE_PROXY_NETWORK` variables in your `.env` files have the same values, you are able to run as many environments/projects as you need. 
-
-Make sure that you have defined a different `APACHE_VIRTUAL_HOST` value for each of your Apache containers.
-
-### Install more PHP extensions
-
-Open the `Dockerfile` located in the `apache` folder and [follow the official instructions](https://github.com/docker-library/docs/tree/master/php#how-to-install-more-php-extensions).
-
-Once done, run `make kickoff` to rebuild your Apache container.
-
-## Candies
-
-* [Install a Postfix container](docs/postfix.md)
-* [Install Gulp](docs/gulp.md)
-* [Install Mouf framework](docs/mouf_framework.md) 
-
-## FAQ / Known issues
-
-**Should I use this in production?**
-
-This project aims to help you starting a PHP development environment on Docker. As the `www-data` user in the Apache container shares the same `uid` as your current user, we do not recommend using this project for your production environment.
-
-**I've added a make command, but it's not working**
-
-Make sure that your `Makefile` uses tab indents! In PhpStorm, click on `Edit > Convert Indents > To Tabs`.
-
-**My web application is not really fast on MacOS**
-
-Yep, this seems to be a current limitation of Docker on MacOS (see [#8076](https://forums.docker.com/t/file-access-in-mounted-volumes-extremely-slow-cpu-bound/8076)).
-
-**Xdebug is not working on MacOS**
-
-You have to update the `xdebug.remote_host` variable's value with your IP address.
+Don't hesitate to take a look at `orbit.yml` file, as it is provided with nice comments!
 
 ## Credits
 
+* NGINX and PHP-FPM configuration files from [Cerenit](https://code.cerenit.fr/cerenit/docker-grav)
+* MySQL utf8mb4 encoding from [this blog article](https://mathiasbynens.be/notes/mysql-utf8mb4)
 * Icon by Nikita Kozin from the Noun Project
+
+---
+
+Would you like to update this documentation ? Feel free to open an [issue](../../issues).

@@ -1,0 +1,108 @@
+FROM php:7.1-fpm-alpine
+
+# |--------------------------------------------------------------------------
+# | Main PHP extensions
+# |--------------------------------------------------------------------------
+# |
+# | Installs the main PHP extensions
+# |
+
+RUN apk add --no-cache --virtual .persistent-deps \
+    libjpeg \
+    libjpeg-turbo \
+    libjpeg-turbo-dev \
+    libpng \
+    libpng-dev \
+    freetype \
+    freetype-dev \
+    icu \
+    icu-dev \
+    libmcrypt \
+    libmcrypt-dev
+
+RUN set -xe &&\
+    apk add --no-cache --virtual .build-deps &&\
+    docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ &&\
+    docker-php-ext-configure bcmath --enable-bcmath &&\
+    docker-php-ext-configure intl --enable-intl &&\
+    docker-php-ext-configure mbstring --enable-mbstring &&\
+    docker-php-ext-configure mcrypt --enable-mcrypt &&\
+    docker-php-ext-configure pdo_mysql --with-pdo-mysql &&\
+    docker-php-ext-configure opcache --enable-opcache &&\
+    docker-php-ext-configure zip --enable-zip &&\
+    docker-php-ext-install \
+        bcmath \
+        intl \
+        mbstring \
+        mcrypt \
+        pdo_mysql \
+        opcache \
+        zip
+
+# |--------------------------------------------------------------------------
+# | APCu extension
+# |--------------------------------------------------------------------------
+# |
+# | Installs the APCu extension for PHP.
+# |
+
+ENV APCU_VERSION v5.1.8
+
+RUN mkdir -p /usr/src/php/ext/apcu &&\
+    curl -L https://github.com/krakjoe/apcu/archive/$APCU_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/apcu --strip 1 &&\
+    echo 'apcu' >> /usr/src/php-available-exts &&\
+    docker-php-ext-install apcu
+
+# |--------------------------------------------------------------------------
+# | PHP extension for Redis
+# |--------------------------------------------------------------------------
+# |
+# | Installs the Redis extension for PHP. Also tells PHP to use it as the
+# | session handler.
+# |
+
+ENV PHPREDIS_VERSION 3.1.2
+
+RUN mkdir -p /usr/src/php/ext/redis &&\
+    curl -L https://github.com/phpredis/phpredis/archive/$PHPREDIS_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/redis --strip 1 &&\
+    echo 'redis' >> /usr/src/php-available-exts &&\
+    docker-php-ext-install redis &&\
+    { \
+        echo 'session.save_handler=redis'; \
+        echo 'session.save_path="tcp://redis:6379?auth={{ .EnvFiles.Kickoff.REDIS_PASSWORD }}"'; \
+    } >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini
+
+{{ if eq "local" .EnvFiles.Kickoff.ENV }}
+# |--------------------------------------------------------------------------
+# | Xdebug
+# |--------------------------------------------------------------------------
+# |
+# | Installs Xdebug, a tool for easily debugging your PHP code.
+# |
+
+ENV XDEBUG_VERSION XDEBUG_2_5_5
+
+RUN mkdir -p /usr/src/php/ext/xdebug &&\
+    curl -L https://github.com/xdebug/xdebug/archive/$XDEBUG_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/xdebug --strip 1 &&\
+    echo 'xdebug' >> /usr/src/php-available-exts &&\
+    docker-php-ext-install xdebug &&\
+    { \
+        echo 'xdebug.remote_enable=on'; \
+        echo 'xdebug.remote_autostart=off'; \
+        echo 'xdebug.remote_port=9000'; \
+        echo 'xdebug.remote_handler=dbgp'; \
+        echo 'xdebug.remote_connect_back=0'; \
+    } >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+{{ end }}
+
+# |--------------------------------------------------------------------------
+# | Permissions issues workaround
+# |--------------------------------------------------------------------------
+# |
+# | Installs 3.6 repositories and shadow package to enable usermod command.
+# | On Linux, the entrypoint of this container will set the UID of www-data
+# | with the UID of the current user from the host.
+# |
+
+RUN echo http://dl-2.alpinelinux.org/alpine/v3.6/community/ >> /etc/apk/repositories &&\
+    apk --no-cache add shadow

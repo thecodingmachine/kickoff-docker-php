@@ -1,0 +1,54 @@
+version: '3.3'
+
+
+services:
+
+
+  toolbox:
+    build:
+      context: ./toolbox
+      args:
+        - UID={{ if eq "linux" .Os }}${UID}{{ else }}1000{{ end }}
+    container_name: {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox
+    restart: {{ if ne "local" .EnvFiles.Kickoff.ENV }}unless-stopped{{ else }}"no"{{ end }}
+    tty: true
+    working_dir: /var/www/html
+    networks:
+      - backend
+    environment:
+      {{- range $env, $virtualhost := .Values.Kickoff.project.virtualhost }}
+      {{- if eq $env $.EnvFiles.Kickoff.ENV }}
+      - VIRTUAL_HOST={{ $virtualhost }}
+      {{- end }}
+      {{- end }}
+      {{- if ne "local" .EnvFiles.Kickoff.ENV }}
+      - TRAEFIK_USER={{ .Values.Kickoff.traefik.user }}
+      - TRAEFIK_PASSWORD={{ .EnvFiles.Kickoff.TRAEFIK_PASSWORD }}
+      {{- end }}
+      - GRAYLOG_ROOT_PASSWORD_SHA2={{ .EnvFiles.Kickoff.GRAYLOG_PASSWORD }}
+    labels:
+      - traefik.enable=false
+    volumes:
+      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+      - sync_{{ .EnvFiles.Kickoff.ENV }}_{{ .Values.Kickoff.project.name }}_app:/var/www/html:nocopy
+      {{- else }}
+      - ../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}ro{{ end }}
+      {{- end }}
+      - ./toolbox/conf.d/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini:ro
+      - ./toolbox/generated:/generated:rw
+      - ./toolbox/scripts:/scripts:ro
+
+
+networks:
+
+
+  backend:
+    driver: bridge
+
+{{ if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+volumes:
+
+
+  sync_{{ .EnvFiles.Kickoff.ENV }}_{{ .Values.Kickoff.project.name }}_app:
+    external: true
+{{- end }}

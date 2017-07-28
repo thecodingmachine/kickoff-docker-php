@@ -1,0 +1,4 @@
+conf.d/memory-limit.ini
+generated/graylog/.env
+generated/traefik
+Dockerfile

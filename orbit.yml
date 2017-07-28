@@ -1,0 +1,118 @@
+# |--------------------------------------------------------------------------
+# | Orbit commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the Orbit commands of your project.
+# | Feel free to add your own commands!
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run kickoff
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts all containers
+  # |
+
+  - use: "kickoff"
+    run:
+      - orbit run toolbox-build proxy-build graylog-build build toolbox-up proxy-up graylog-up up -s
+      - orbit run rkt -c=.docker/.orbit/orbit-misc.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  # |--------------------------------------------------------------------------
+  # | orbit run shutdown
+  # |--------------------------------------------------------------------------
+  # |
+  # | Stops all containers.
+  # |
+
+  - use: "shutdown"
+    run:
+      - orbit run down graylog-down proxy-down toolbox-down -s
+
+  # |--------------------------------------------------------------------------
+  # | Build commands
+  # |--------------------------------------------------------------------------
+  # |
+  # | See .docker/.orbit/orbit-build.yml for more information.
+  # |
+
+  - use: "toolbox-build"
+    run:
+      - orbit run toolbox-build -c=.docker/.orbit/orbit-build.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "proxy-build"
+    run:
+      - orbit run proxy-build -c=.docker/.orbit/orbit-build.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "graylog-build"
+    run:
+      - orbit run graylog-build -c=.docker/.orbit/orbit-build.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "build"
+    run:
+      - orbit run build -c=.docker/.orbit/orbit-build.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+      
+  # |--------------------------------------------------------------------------
+  # | Up commands
+  # |--------------------------------------------------------------------------
+  # |
+  # | See .docker/.orbit/orbit-up.yml for more information.
+  # |
+
+  - use: "toolbox-up"
+    run:
+      - orbit run toolbox-up -c=.docker/.orbit/orbit-up.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "proxy-up"
+    run:
+      - orbit run proxy-up -c=.docker/.orbit/orbit-up.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "graylog-up"
+    run:
+      - orbit run graylog-up -c=.docker/.orbit/orbit-up.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "up"
+    run:
+      - orbit run up -c=.docker/.orbit/orbit-up.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+      
+  # |--------------------------------------------------------------------------
+  # | Down commands
+  # |--------------------------------------------------------------------------
+  # |
+  # | See .docker/.orbit/orbit-down.yml for more information.
+  # |
+
+  - use: "toolbox-down"
+    run:
+      - orbit run toolbox-down -c=.docker/.orbit/orbit-down.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "proxy-down"
+    run:
+      - orbit run proxy-down -c=.docker/.orbit/orbit-down.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "graylog-down"
+    run:
+      - orbit run graylog-down -c=.docker/.orbit/orbit-down.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "down"
+    run:
+      - orbit run down -c=.docker/.orbit/orbit-down.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  # |--------------------------------------------------------------------------
+  # | Docker commands
+  # |--------------------------------------------------------------------------
+  # |
+  # | See .docker/.orbit/orbit-docker-commands.yml for more information.
+  # |
+
+  - use: "toolbox"
+    run:
+      - orbit run toolbox-ash -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+
+  - use: "mysql-cli"
+    run:
+      - orbit run mysql-cli -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s

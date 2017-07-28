@@ -1,0 +1,3 @@
+.secrets/mysql_password.txt
+.secrets/mysql_root_password.txt
+docker-entrypoint-initdb.d/databases.sql

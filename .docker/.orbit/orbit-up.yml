@@ -1,0 +1,65 @@
+# |--------------------------------------------------------------------------
+# | Orbit up commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the up commands of your project.
+# | Feel free to add your own commands!
+# |
+# | Up order: toolbox-up proxy-up graylog-up up
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run toolbox-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the toolbox container.
+  # |
+
+  - use: "toolbox-up"
+    run:
+      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+      - docker-sync start -c=.docker/docker-sync.yml
+      {{- end }}
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml up -d
+
+  # |--------------------------------------------------------------------------
+  # | orbit run proxy-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the Traefik container.
+  # |
+
+  - use: "proxy-up"
+    run:
+      - docker-compose -p kickoff -f .docker/docker-compose-proxy.yml up -d
+
+  # |--------------------------------------------------------------------------
+  # | orbit run graylog-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the Graylog containers.
+  # |
+
+  - use: "graylog-up"
+    run:
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-graylog.yml up -d
+
+  # |--------------------------------------------------------------------------
+  # | orbit run up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the NGINX, PHP-FPM, MySQL, Redis and RabbitMQ containers.
+  # |
+  # | On "local" environment, also starts the phpMyAdmin container.
+  # |
+  # | Make sure you have start other containers!
+  # |
+
+  - use: "up"
+    run:
+      - orbit run graylog-health-check -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose.yml up -d

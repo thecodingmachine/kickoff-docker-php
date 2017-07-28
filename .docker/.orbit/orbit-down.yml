@@ -1,0 +1,64 @@
+# |--------------------------------------------------------------------------
+# | Orbit down commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the down commands of your project.
+# | Feel free to add your own commands!
+# |
+# | Down order: down graylog-down proxy-down toolbox-down
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run toolbox-down
+  # |--------------------------------------------------------------------------
+  # |
+  # | Stops the toolbox container.
+  # |
+
+  - use: "toolbox-down"
+    run:
+      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+      - docker-sync stop -c=.docker/docker-sync.yml
+      {{- end }}
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml down
+
+  # |--------------------------------------------------------------------------
+  # | orbit run graylog-down
+  # |--------------------------------------------------------------------------
+  # |
+  # | Stops the Graylog containers.
+  # |
+
+  - use: "graylog-down"
+    run:
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-graylog.yml down
+
+  # |--------------------------------------------------------------------------
+  # | orbit run proxy-down
+  # |--------------------------------------------------------------------------
+  # |
+  # | Stops the Traefik container.
+  # |
+  # | If your others containers are still running, make sure you have run "down".
+  # |
+
+  - use: "proxy-down"
+    run:
+      - docker-compose -p kickoff -f .docker/docker-compose-proxy.yml down
+
+  # |--------------------------------------------------------------------------
+  # | orbit run down
+  # |--------------------------------------------------------------------------
+  # |
+  # | Stops the NGINX, PHP-FPM, MySQL, Redis and RabbitMQ containers.
+  # |
+  # | On "local" environment, also stops the phpMyAdmin container.
+  # |
+
+  - use: "down"
+    run:
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose.yml down

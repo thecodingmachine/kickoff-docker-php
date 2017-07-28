@@ -1,0 +1,38 @@
+version: '3.3'
+
+
+services:
+
+
+  proxy:
+    image: traefik:1.3.4-alpine
+    container_name: kickoff-proxy
+    restart: {{ if ne "local" .EnvFiles.Kickoff.ENV }}unless-stopped{{ else }}"no"{{ end }}
+    command: --docker --logLevel={{ .EnvFiles.Kickoff.TRAEFIK_LOG_LEVEL }}
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      {{- range $env, $virtualhost := .Values.Kickoff.project.virtualhost }}
+      {{- if eq $env $.EnvFiles.Kickoff.ENV }}
+      - traefik.frontend.rule=Host:traefik.{{ $virtualhost }}
+      {{- end }}
+      {{- end }}
+      - traefik.port=8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik/traefik.toml:/traefik.toml:ro
+      {{- if eq "local" .EnvFiles.Kickoff.ENV }}
+      - ./toolbox/generated/traefik/certs:/tests:ro
+      {{- end }}
+      {{- if ne "local" .EnvFiles.Kickoff.ENV }}
+      - ./toolbox/generated/traefik/auth/:/auth/:ro
+      {{ end }}
+
+networks:
+
+
+  proxy:
+    driver: bridge

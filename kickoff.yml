@@ -1,0 +1,96 @@
+project:
+
+  # |--------------------------------------------------------------------------
+  # | Project name
+  # |--------------------------------------------------------------------------
+  # |
+  # | Its the main identifier of your project. It will be used to name many
+  # | variables which will be useful to help identifying your project among
+  # | others Docker projects.
+  # |
+  # | Caution: use only alphabetical character
+  # |
+
+  name: myawesomeproject
+
+  # |--------------------------------------------------------------------------
+  # | Project base virtual host
+  # |--------------------------------------------------------------------------
+  # |
+  # | The base virtual host of your project according to your environments.
+  # |
+  # | The following URLs will be available:
+  # | - {virtualhost}, www.{virtualhost}: the URLs of your PHP application.
+  # | - traefik.{virtualhost}: the URL of the traefik dashboard.
+  # | - rabbitmq.{virtualhost}: the URL of the RabbitMQ management.
+  # | - graylog.{virtualhost}: the URL of the Graylog dashboard.
+  # | - phpadmin.{virtualhost} : the URL of the phpMyAdmin dashboard.
+  # |
+  # | The later will only be available on your "local" environment.
+  # | Also, don't forget to update your "hosts" file with the previous URLs.
+  # |
+
+  virtualhost:
+    local: my-awesome-project.local
+    staging: my-awesome-project.com
+    production: my-awesome-project.com
+
+traefik:
+
+  # |--------------------------------------------------------------------------
+  # | Traefik user
+  # |--------------------------------------------------------------------------
+  # |
+  # | The Traefik user used for generating the .htdigest file.
+  # | Only required for environments <> "local".
+  # |
+
+  user: kickoff
+
+mysql:
+
+  # |--------------------------------------------------------------------------
+  # | MySQL user
+  # |--------------------------------------------------------------------------
+  # |
+  # | The MySQL user of your PHP application.
+  # |
+
+  user: kickoff
+
+  # |--------------------------------------------------------------------------
+  # | MySQL databases
+  # |--------------------------------------------------------------------------
+  # |
+  # | List of the databases of your PHP application. If they do not exist,
+  # | they will be created when the MySQL container start.
+  # |
+  # | The previous user will have all privileges on these databases.
+  # |
+
+  databases:
+    - my_awesome_database
+    - my_genious_database
+    - my_ok_database
+
+rabbitmq:
+
+  # |--------------------------------------------------------------------------
+  # | RabbitMQ user
+  # |--------------------------------------------------------------------------
+  # |
+  # | The RabbitMQ user of your PHP application.
+  # |
+
+  user: kickoff
+
+graylog:
+
+  # |--------------------------------------------------------------------------
+  # | Graylog user
+  # |--------------------------------------------------------------------------
+  # |
+  # | The Graylog root user.
+  # |
+
+  user: kickoff

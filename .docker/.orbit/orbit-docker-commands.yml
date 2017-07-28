@@ -1,0 +1,94 @@
+# |--------------------------------------------------------------------------
+# | Orbit Docker commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the Docker commands of your project.
+# | Feel free to add your own commands!
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run toolbox-ash
+  # |--------------------------------------------------------------------------
+  # |
+  # | Connects through ash to the toolbox container.
+  # |
+
+  - use: "toolbox-ash"
+    run:
+      - docker exec --user www-data -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox ash
+
+  # |--------------------------------------------------------------------------
+  # | orbit run traefik-self-signed-certificate
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates the self-signed certificate is current environment is "local".
+  # |
+
+  - use: "traefik-self-signed-certificate"
+    run:
+    {{- if eq "local" .EnvFiles.Kickoff.ENV }}
+      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
+    {{- else if eq .Os "windows" }}
+      - cmd.exe /c echo Skipping self-signed certificate generation ...
+    {{- else }}
+      - echo Skipping self-signed certificate generation ...
+    {{- end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run traefik-htdigest
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates the .htdigest file which is used to authenticate on the Traefik
+  # | dashboard.
+  # |
+  # | Only for environments <> "local".
+  # |
+
+  - use: "traefik-htdigest"
+    run:
+    {{- if ne "local" .EnvFiles.Kickoff.ENV }}
+      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/traefik-htdigest.sh
+    {{- else if eq .Os "windows" }}
+      - cmd.exe /c echo Skipping .htdigest file generation ...
+    {{- else }}
+      - echo Skipping .htdigest file generation ...
+    {{- end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run graylog-health-check
+  # |--------------------------------------------------------------------------
+  # |
+  # | Waits Graylog to be ready.
+  # |
+
+  - use: "graylog-health-check"
+    run:
+      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/graylog-health-check.sh
+
+  # |--------------------------------------------------------------------------
+  # | orbit run graylog-passwords
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates Graylog passwords.
+  # |
+
+  - use: "graylog-passwords"
+    run:
+      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/graylog-passwords.sh
+
+  # |--------------------------------------------------------------------------
+  # | orbit run mysql-cli
+  # |--------------------------------------------------------------------------
+  # |
+  # | Opens the MySQL cli as root.
+  # |
+  # | On environments <> "local", it will ask you the MySQL root password.
+  # |
+
+  - use: "mysql-cli"
+    run:
+      - docker exec -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-mysql mysql -uroot -p{{ if eq "local" .EnvFiles.Kickoff.ENV }}{{ .EnvFiles.Kickoff.MYSQL_ROOT_PASSWORD }}{{ end }}

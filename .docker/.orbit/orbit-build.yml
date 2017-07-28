@@ -1,0 +1,80 @@
+# |--------------------------------------------------------------------------
+# | Orbit build commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the build commands of your project.
+# | Feel free to add your own commands!
+# |
+# | Build order: toolbox-build proxy-build graylog-build build
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run toolbox-build
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates all configuration files plus the toolbox docker-compose file
+  # | and builds the toolbox container.
+  # |
+
+  - use: "toolbox-build"
+    run:
+      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+      - orbit generate -t=.docker/docker-sync.blueprint.yml -o=.docker/docker-sync.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      {{- end }}
+      - orbit generate -t=.docker/toolbox/Dockerfile.blueprint -o=.docker/toolbox/Dockerfile -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      - orbit generate -t=.docker/toolbox/conf.d/memory-limit.blueprint.ini -o=.docker/toolbox/conf.d/memory-limit.ini -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      - orbit generate -t=.docker/docker-compose-toolbox.blueprint.yml -o=.docker/docker-compose-toolbox.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      {{- if eq "linux" .Os }}
+      - /bin/bash .docker/.bin/usermod.sh toolbox
+      {{- end }}
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml build
+
+  # |--------------------------------------------------------------------------
+  # | orbit run proxy-build
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates the configuration and docker-compose files for Traefik.
+  # |
+
+  - use: "proxy-build"
+    run:
+      - orbit generate -t=.docker/traefik/traefik.blueprint.toml -o=.docker/traefik/traefik.toml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      - orbit generate -t=.docker/docker-compose-proxy.blueprint.yml -o=.docker/docker-compose-proxy.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+
+  # |--------------------------------------------------------------------------
+  # | orbit run graylog-build
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates the configuration and docker-compose files for Graylog.
+  # |
+
+  - use: "graylog-build"
+    run:
+      - orbit generate -t=.docker/docker-compose-graylog.blueprint.yml -o=.docker/docker-compose-graylog.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+
+  # |--------------------------------------------------------------------------
+  # | orbit run build
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates all configuration files plus the main docker-compose file and
+  # | builds the NGINX and PHP-FPM containers.
+  # |
+
+  - use: "build"
+    run:
+      - orbit generate -t=.docker/mysql/.secrets/mysql_password.blueprint.txt -o=.docker/mysql/.secrets/mysql_password.txt -e=Kickoff,.env
+      - orbit generate -t=.docker/mysql/.secrets/mysql_root_password.blueprint.txt -o=.docker/mysql/.secrets/mysql_root_password.txt -e=Kickoff,.env
+      - orbit generate -t=.docker/mysql/docker-entrypoint-initdb.d/databases.blueprint.sql -o=.docker/mysql/docker-entrypoint-initdb.d/databases.sql -v=Kickoff,kickoff.yml
+      - orbit generate -t=.docker/php-fpm/conf.d/memory-limit.blueprint.ini -o=.docker/php-fpm/conf.d/memory-limit.ini -e=Kickoff,.env
+      - orbit generate -t=.docker/php-fpm/php-fpm.d/memory-limit.blueprint.conf -o=.docker/php-fpm/php-fpm.d/memory-limit.conf -e=Kickoff,.env
+      - orbit generate -t=.docker/php-fpm/php-fpm.d/security.blueprint.conf -o=.docker/php-fpm/php-fpm.d/security.conf -e=Kickoff,.env
+      - orbit generate -t=.docker/php-fpm/Dockerfile.blueprint -o=.docker/php-fpm/Dockerfile -e=Kickoff,.env
+      - orbit generate -t=.docker/docker-compose.blueprint.yml -o=.docker/docker-compose.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      {{- if eq "linux" .Os }}
+      - /bin/bash .docker/.bin/usermod.sh
+      {{- end }}
+      - docker-compose -f .docker/docker-compose.yml build
