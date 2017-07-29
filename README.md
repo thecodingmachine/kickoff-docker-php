@@ -58,7 +58,7 @@ running commands.
 
 You may now fork this project and clone it or download the latest release from the [releases page](../../releases).
 
-### Additional install for performance gains with Docker Sync (Mac and Windows)
+### Optional install for performance gains with Docker Sync (Mac and Windows)
 
 Download and install the latest release of [Docker Sync](http://docker-sync.io/).
 
