@@ -16,7 +16,9 @@ commands:
   # | orbit run toolbox-down
   # |--------------------------------------------------------------------------
   # |
-  # | Stops the toolbox container.
+  # | Stops the Toolbox container.
+  # |
+  # | It should be the last to stop.
   # |
 
   - use: "toolbox-down"
@@ -27,28 +29,30 @@ commands:
       - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml down
 
   # |--------------------------------------------------------------------------
-  # | orbit run graylog-down
-  # |--------------------------------------------------------------------------
-  # |
-  # | Stops the Graylog containers.
-  # |
-
-  - use: "graylog-down"
-    run:
-      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-graylog.yml down
-
-  # |--------------------------------------------------------------------------
   # | orbit run proxy-down
   # |--------------------------------------------------------------------------
   # |
   # | Stops the Traefik container.
   # |
-  # | If your others containers are still running, make sure you have run "down".
+  # | It should be stop just before the Toolbox container.
   # |
 
   - use: "proxy-down"
     run:
       - docker-compose -p kickoff -f .docker/docker-compose-proxy.yml down
+
+  # |--------------------------------------------------------------------------
+  # | orbit run graylog-down
+  # |--------------------------------------------------------------------------
+  # |
+  # | Stops the Graylog containers.
+  # |
+  # | They should be stop just before the Traefik container.
+  # |
+
+  - use: "graylog-down"
+    run:
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-graylog.yml down
 
   # |--------------------------------------------------------------------------
   # | orbit run down
@@ -57,6 +61,8 @@ commands:
   # | Stops the NGINX, PHP-FPM, MySQL, Redis and RabbitMQ containers.
   # |
   # | On "local" environment, also stops the phpMyAdmin container.
+  # |
+  # | They should be the first to stop.
   # |
 
   - use: "down"

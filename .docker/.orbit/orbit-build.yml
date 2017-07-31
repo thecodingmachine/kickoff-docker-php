@@ -16,8 +16,10 @@ commands:
   # | orbit run toolbox-build
   # |--------------------------------------------------------------------------
   # |
-  # | Generates all configuration files plus the toolbox docker-compose file
-  # | and builds the toolbox container.
+  # | Generates the Toolbox container configuration files and builds it.
+  # |
+  # | If ENABLE_DOCKER_SYNC=true, also generates the Docker Sync configuration
+  # | file.
   # |
 
   - use: "toolbox-build"
@@ -37,7 +39,7 @@ commands:
   # | orbit run proxy-build
   # |--------------------------------------------------------------------------
   # |
-  # | Generates the configuration and docker-compose files for Traefik.
+  # | Generates the Traefik container configuration files.
   # |
 
   - use: "proxy-build"
@@ -49,7 +51,7 @@ commands:
   # | orbit run graylog-build
   # |--------------------------------------------------------------------------
   # |
-  # | Generates the configuration and docker-compose files for Graylog.
+  # | Generates the Graylog containers configuration files.
   # |
 
   - use: "graylog-build"
@@ -60,8 +62,8 @@ commands:
   # | orbit run build
   # |--------------------------------------------------------------------------
   # |
-  # | Generates all configuration files plus the main docker-compose file and
-  # | builds the NGINX and PHP-FPM containers.
+  # | Generates the configuration files of your services and builds the NGINX
+  # | and PHP-FPM containers.
   # |
 
   - use: "build"
@@ -77,4 +79,4 @@ commands:
       {{- if eq "linux" .Os }}
       - /bin/bash .docker/.bin/usermod.sh
       {{- end }}
-      - docker-compose -f .docker/docker-compose.yml build
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose.yml build

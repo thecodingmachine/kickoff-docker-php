@@ -16,7 +16,9 @@ commands:
   # | orbit run toolbox-up
   # |--------------------------------------------------------------------------
   # |
-  # | Starts the toolbox container.
+  # | Starts the Toolbox container.
+  # |
+  # | It should be the first to start.
   # |
 
   - use: "toolbox-up"
@@ -32,6 +34,8 @@ commands:
   # |
   # | Starts the Traefik container.
   # |
+  # | It should be start after the Toolbox container.
+  # |
 
   - use: "proxy-up"
     run:
@@ -42,6 +46,8 @@ commands:
   # |--------------------------------------------------------------------------
   # |
   # | Starts the Graylog containers.
+  # |
+  # | They should be start after the Traefik container.
   # |
 
   - use: "graylog-up"
@@ -56,7 +62,7 @@ commands:
   # |
   # | On "local" environment, also starts the phpMyAdmin container.
   # |
-  # | Make sure you have start other containers!
+  # | They should be the last to start.
   # |
 
   - use: "up"

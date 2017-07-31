@@ -14,7 +14,7 @@ commands:
   # | orbit run kickoff
   # |--------------------------------------------------------------------------
   # |
-  # | Starts all containers
+  # | Generates all configuration files, builds the containers and starts them.
   # |
 
   - use: "kickoff"

@@ -1,6 +1,6 @@
 # Contributing
 
-Hi! Thank your for considering contributing to Orbit. You'll
+Hi! Thank your for considering contributing to kickoff-docker-php. You'll
 find below useful information about how to contribute to the docker-kickoff-php project.
 
 ## Contributing code

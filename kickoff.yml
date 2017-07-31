@@ -47,6 +47,17 @@ traefik:
 
   user: kickoff
 
+graylog:
+
+  # |--------------------------------------------------------------------------
+  # | Graylog user
+  # |--------------------------------------------------------------------------
+  # |
+  # | The Graylog root user.
+  # |
+
+  user: kickoff
+
 mysql:
 
   # |--------------------------------------------------------------------------
@@ -63,7 +74,7 @@ mysql:
   # |--------------------------------------------------------------------------
   # |
   # | List of the databases of your PHP application. If they do not exist,
-  # | they will be created when the MySQL container start.
+  # | they will be created when the MySQL container starts.
   # |
   # | The previous user will have all privileges on these databases.
   # |
@@ -80,17 +91,6 @@ rabbitmq:
   # |--------------------------------------------------------------------------
   # |
   # | The RabbitMQ user of your PHP application.
-  # |
-
-  user: kickoff
-
-graylog:
-
-  # |--------------------------------------------------------------------------
-  # | Graylog user
-  # |--------------------------------------------------------------------------
-  # |
-  # | The Graylog root user.
   # |
 
   user: kickoff
