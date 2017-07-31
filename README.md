@@ -178,7 +178,7 @@ with `yarn`.
 It also generates useful files:
 
 * The self-signed certificate on your local environment
-* The .htdigest file for authentication to the Traefik dashboard on environments <> `local
+* The .htdigest file for authentication to the Traefik dashboard on environments <> `local`
 * The SHA2 password and secret pepper for Graylog authentication
 
 Last but not least, it checks that your Graylog is ready to receive logs from others containers.
