@@ -24,7 +24,7 @@ services:
       - backend
     volumes:
       {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - sync_{{ .EnvFiles.Kickoff.ENV }}_{{ .Values.Kickoff.project.name }}_app:/var/www/html:nocopy
+      - {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
       - ../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}ro{{ end }}
       {{- end }}
@@ -48,7 +48,7 @@ services:
       - traefik.enable=false
     volumes:
       {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - sync_{{ .EnvFiles.Kickoff.ENV }}_{{ .Values.Kickoff.project.name }}_app:/var/www/html:nocopy
+      - {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
       - ../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}ro{{ end }}
       {{- end }}
@@ -207,6 +207,6 @@ volumes:
     driver: local
   {{ end }}
   {{ if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-  sync_{{ .EnvFiles.Kickoff.ENV }}_{{ .Values.Kickoff.project.name }}_app:
+  {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }}_sync_app:
     external: true
   {{- end }}

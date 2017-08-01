@@ -1,3 +1,4 @@
 .env
 .docker-sync
 .idea
+docker-sync.yml

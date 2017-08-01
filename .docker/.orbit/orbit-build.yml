@@ -25,7 +25,7 @@ commands:
   - use: "toolbox-build"
     run:
       {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - orbit generate -t=.docker/docker-sync.blueprint.yml -o=.docker/docker-sync.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      - orbit generate -t=docker-sync.blueprint.yml -o=docker-sync.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
       {{- end }}
       - orbit generate -t=.docker/toolbox/Dockerfile.blueprint -o=.docker/toolbox/Dockerfile -v=Kickoff,kickoff.yml -e=Kickoff,.env
       - orbit generate -t=.docker/toolbox/conf.d/memory-limit.blueprint.ini -o=.docker/toolbox/conf.d/memory-limit.ini -v=Kickoff,kickoff.yml -e=Kickoff,.env
