@@ -85,7 +85,7 @@ Download and install the latest release of [Docker Sync](http://docker-sync.io/)
 
 ## Quick start
 
-Once you've downloaded this project, move to the root directory of this project and copy the file `.env.blueprint` and paste it to a file
+Once you've downloaded this project, move to the root directory and copy the file `.env.blueprint` and paste it to a file
 named `.env`.
 
 | Linux/Mac                	| Windows                    	|
@@ -110,6 +110,8 @@ Now open your hosts file...
 127.0.0.1   rabbitmq.my-awesome-project.local
 127.0.0.1   graylog.my-awesome-project.local
 ```
+
+**Tip:** don't want to update your hosts file? Replace `project.virtualhost.local` with `my-awesome-project.127.0.0.1.xip.io` in your `kickoff.yml` file. You're application will be available under https://www.my-awesome-project.127.0.0.1.xip.io/!
  
 Good :smiley:? We're now done with the configuration! :metal:
 
@@ -126,8 +128,7 @@ and check if everything is OK!
 
 ## How does it works?
 
-This project is mainly composed of templates (`*.blueprint.*`) which will be used to generate files thanks to [Orbit](https://github.com/gulien/orbit)
-and values provided by `kickoff.yml` and `.env` configuration files.
+This project is mainly composed of templates (`*.blueprint.*`) which will be used to generate the configuration files of your containers and Docker using values provided by `kickoff.yml` and `.env` configuration files.
 
 ### Project structure
 
@@ -144,6 +145,10 @@ and values provided by `kickoff.yml` and `.env` configuration files.
 │   └── traefik         # Traefik related configuration files
 └── app # The source code of your PHP application
 ```
+
+Only the configuration files and the application source code are directly mounted in the containers.
+The data of others services (like MySQL) are mounted using named volumes. You can locate these volumes
+on the host by utilizing the `docker inspect` command.
 
 **Tip:** Your `app` folder should be a git submodule.
 
@@ -177,7 +182,7 @@ with `yarn`.
 
 It also generates useful files:
 
-* The self-signed certificate on your local environment
+* The self-signed certificate on your `local` environment
 * The .htdigest file for authentication to the Traefik dashboard on environments <> `local`
 * The SHA2 password and secret pepper for Graylog authentication
 
@@ -267,7 +272,7 @@ have to update it according to the PHP framework you wish to use.
 
 Your PHP application will be accessible under https://my-awesome-project.local/ and https://www.my-awesome-project.local/.
 
-**Note:** on `local` environment, you're also able to use Xdebug.
+**Installed PHP extensions:** apcu, bcmath, gd, intl, mbstring, mcrypt, pdo_mysql, phpredis, opcache, xdebug (`local` environement only!) and zip
 
 #### Configuration
 
@@ -289,7 +294,7 @@ automatically be connected as `root`
 * By running `orbit run mysql-cli`: it will open the MySQL cli and connect you as `root` (on environments <> `local`, it will ask 
 you the MySQL root password)
 * By mapping the container's port `3306` to a host port, you are able to use a more powerful tool like MySQL Workbench using
-`127.0.0.1` as host and the port defined in the variable `MYSQL_HOST_PORT_TO_MAP` in your `.env` file
+`127.0.0.1` (or your server IP) as host and the port defined in the variable `MYSQL_HOST_PORT_TO_MAP` in your `.env` file
 
 #### Configuration
 
