@@ -24,7 +24,7 @@ commands:
   - use: "toolbox-down"
     run:
       {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - docker-sync stop -c=docker-sync.yml
+      - docker-sync clean -c=docker-sync.yml
       {{- end }}
       - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml down
 
