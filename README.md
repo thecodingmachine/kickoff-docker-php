@@ -111,7 +111,7 @@ Now open your hosts file...
 127.0.0.1   graylog.my-awesome-project.local
 ```
 
-**Tip:** don't want to update your hosts file? Replace `project.virtualhost.local` with `my-awesome-project.127.0.0.1.xip.io` in your `kickoff.yml` file. You're application will be available under https://www.my-awesome-project.127.0.0.1.xip.io/!
+**Tip:** don't want to update your hosts file? Set `project.virtualhost.local` to `my-awesome-project.127.0.0.1.xip.io` in your `kickoff.yml` file. You're application will be available under https://www.my-awesome-project.127.0.0.1.xip.io/!
  
 Good :smiley:? We're now done with the configuration! :metal:
 
