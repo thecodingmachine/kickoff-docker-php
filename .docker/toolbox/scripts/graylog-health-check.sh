@@ -1,6 +1,6 @@
 #!/bin/sh
 
-echo Waiting Graylog to be ready ...;
+echo Waiting Graylog ...;
 
 attempts=30;
 while [[ $attempts -ne 0 ]]; do
