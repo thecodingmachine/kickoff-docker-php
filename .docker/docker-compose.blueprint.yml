@@ -50,7 +50,7 @@ services:
       {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
       - {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
-      - ../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}ro{{ end }}
+      - ../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}rw{{ end }}
       {{- end }}
       - ./php-fpm/docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro
       - ./php-fpm/conf.d/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini:ro
