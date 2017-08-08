@@ -187,19 +187,19 @@ Last but not least, it checks that your Graylog is ready to receive logs from ot
 
 #### Available tools
 
-**Composer** - https://getcomposer.org/
+*Composer* - https://getcomposer.org/
 
 > Composer helps you declare, manage and install dependencies of PHP projects.
 
-**npm** - https://www.npmjs.com/
+*npm* - https://www.npmjs.com/
 
 > npm is the package manager for JavaScript and the world’s largest software registry.
 
-**yarn** - https://yarnpkg.com/lang/en/
+*yarn* - https://yarnpkg.com/lang/en/
 
 > FAST, RELIABLE, AND SECURE DEPENDENCY MANAGEMENT
 
-**PHP Coding Standards Fixer** - http://cs.sensiolabs.org/
+*PHP Coding Standards Fixer* - http://cs.sensiolabs.org/
 
 > The PHP Coding Standards Fixer tool fixes most issues in your code when you want to follow the PHP coding standards 
 as defined in the PSR-1 and PSR-2 documents and many more.
