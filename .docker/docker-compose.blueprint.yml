@@ -120,7 +120,7 @@ services:
 {{ end }}
 
   redis:
-    image: redis:3.2-alpine
+    image: redis:3.2.10-alpine
     container_name: {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-redis
     restart: {{ if ne "local" .EnvFiles.Kickoff.ENV }}unless-stopped{{ else }}"no"{{ end }}
     command: redis-server --requirepass {{ .EnvFiles.Kickoff.REDIS_PASSWORD }}
