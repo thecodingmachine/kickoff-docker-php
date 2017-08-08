@@ -107,6 +107,21 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
     apk --no-cache add git
 
 # |--------------------------------------------------------------------------
+# | PHP Coding Standards Fixer
+# |--------------------------------------------------------------------------
+# |
+# | The PHP Coding Standards Fixer tool fixes most issues in your code when
+# | you want to follow the PHP coding standards as defined in the PSR-1 and
+# | PSR-2 documents and many more.
+# |
+
+ENV PHP_CS_FIXER_VERSION 2.4.0
+
+RUN curl -L http://cs.sensiolabs.org/download/php-cs-fixer-v$PHP_CS_FIXER_VERSION.phar -o php-cs-fixer &&\
+    chmod a+x php-cs-fixer &&\
+    mv php-cs-fixer /usr/local/bin/php-cs-fixer
+
+# |--------------------------------------------------------------------------
 # | NodeJS
 # |--------------------------------------------------------------------------
 # |
