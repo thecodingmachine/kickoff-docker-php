@@ -174,11 +174,8 @@ Don't hesitate to take a look at those files, as they are provided with nice com
 
 ### Toolbox
 
-The Toolbox is a container which has many roles. Its PHP configuration is identical to the PHP-FPM configuration, but it also
-adds Composer and NodeJS. We provided a simple command to connect to it: `orbit run toolbox`.
-
-Once you're in the container, you're able to install your PHP dependencies with `composer` and install your frontend dependencies
-with `yarn`.
+The Toolbox is a container which has many roles. Its PHP configuration is identical to the PHP-FPM configuration, but it
+adds useful tools (see below). We provided a simple command to connect to it: `orbit run toolbox`.
 
 It also generates useful files:
 
@@ -187,6 +184,25 @@ It also generates useful files:
 * The SHA2 password and secret pepper for Graylog authentication
 
 Last but not least, it checks that your Graylog is ready to receive logs from others containers.
+
+#### Available tools
+
+**Composer** - https://getcomposer.org/
+
+> Composer helps you declare, manage and install dependencies of PHP projects.
+
+**npm** - https://www.npmjs.com/
+
+> npm is the package manager for JavaScript and the world’s largest software registry.
+
+**yarn** - https://yarnpkg.com/lang/en/
+
+> FAST, RELIABLE, AND SECURE DEPENDENCY MANAGEMENT
+
+**PHP Coding Standards Fixer** - http://cs.sensiolabs.org/
+
+> The PHP Coding Standards Fixer tool fixes most issues in your code when you want to follow the PHP coding standards 
+as defined in the PSR-1 and PSR-2 documents and many more.
 
 #### Configuration
 
