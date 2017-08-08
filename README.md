@@ -190,10 +190,10 @@ Last but not least, it checks that your Graylog is ready to receive logs from ot
 
 #### Configuration
 
-| Variable                 | Location | Description                                                               |
-|--------------------------|----------|---------------------------------------------------------------------------|
-| ENABLE_DOCKER_SYNC       | `.env`   | If true, enable Docker Sync to fix performance issues on Mac and Windows. |
-| TOOLBOX_PHP_MEMORY_LIMIT | `.env`   | Sets the PHP CLI memory limit.                                            |
+| Variable                 | Location | Description                                                                |
+|--------------------------|----------|----------------------------------------------------------------------------|
+| ENABLE_DOCKER_SYNC       | `.env`   | If true, enables Docker Sync to fix performance issues on Mac and Windows. |
+| TOOLBOX_PHP_MEMORY_LIMIT | `.env`   | Sets the PHP CLI memory limit.                                             |
 
 #### Commands
 

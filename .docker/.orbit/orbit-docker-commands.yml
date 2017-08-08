@@ -62,7 +62,7 @@ commands:
   # | orbit run graylog-health-check
   # |--------------------------------------------------------------------------
   # |
-  # | Waits Graylog to be ready.
+  # | Waits Graylog.
   # |
 
   - use: "graylog-health-check"
