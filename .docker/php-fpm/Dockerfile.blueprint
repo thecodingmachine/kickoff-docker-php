@@ -46,10 +46,10 @@ RUN set -xe &&\
 # | Installs the APCu extension for PHP.
 # |
 
-ENV APCU_VERSION v5.1.8
+ENV APCU_VERSION 5.1.8
 
 RUN mkdir -p /usr/src/php/ext/apcu &&\
-    curl -L https://github.com/krakjoe/apcu/archive/$APCU_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/apcu --strip 1 &&\
+    curl -L https://github.com/krakjoe/apcu/archive/v$APCU_VERSION.tar.gz | tar xvz -C /usr/src/php/ext/apcu --strip 1 &&\
     echo 'apcu' >> /usr/src/php-available-exts &&\
     docker-php-ext-install apcu
 
