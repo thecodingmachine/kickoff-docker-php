@@ -39,6 +39,7 @@ If you're interested, you can still take a look at the [first version](https://g
 * A powerful **reverse-proy** ([Traefik](https://traefik.io/)) which can handle automatic HTTPS (via [Let's Encrypt](https://letsencrypt.org/))
 on your production environment
 * **Performance gains** on Mac and Windows using [Docker Sync](http://docker-sync.io/) or Docker for Mac's user-guided cache
+* **Lightweight** images, mostly based on Alpine
 * **Customizable** thanks to [Orbit](https://github.com/gulien/orbit)
 
 And more to come! :smiley:
@@ -111,7 +112,11 @@ Now open your hosts file...
 127.0.0.1   graylog.my-awesome-project.local
 ```
 
-**Tip:** don't want to update your hosts file? Set `project.virtualhost.local` to `my-awesome-project.127.0.0.1.xip.io` in your `kickoff.yml` file. You're application will be available under https://www.my-awesome-project.127.0.0.1.xip.io/!
+**Note:** Set `project.virtualhost.local` with your own virtual host in your `kickoff.yml` file, unless you wish to use 
+`my-awesome-project.local` of course :smile:.
+
+**Tip:** don't want to update your hosts file? Set `project.virtualhost.local` with `my-awesome-project.127.0.0.1.xip.io` 
+in your `kickoff.yml` file. You're application will be available under https://www.my-awesome-project.127.0.0.1.xip.io/!
  
 Good :smiley:? We're now done with the configuration! :metal:
 
@@ -288,7 +293,8 @@ have to update it according to the PHP framework you wish to use.
 
 Your PHP application will be accessible under https://my-awesome-project.local/ and https://www.my-awesome-project.local/.
 
-**Installed PHP extensions:** apcu, bcmath, gd, intl, mbstring, mcrypt, pdo_mysql, phpredis, opcache, xdebug (`local` environement only!) and zip
+**Installed PHP extensions:** apcu, bcmath, gd, intl, mbstring, mcrypt, pdo_mysql, phpredis, opcache, 
+xdebug (`local` environement only!), soap and zip
 
 #### Configuration
 
@@ -360,6 +366,10 @@ You may access to the RabbitMQ dashboard (https://rabbitmq.my-awesome-project.lo
 |-------------------|---------------|-------------------------------------------------------------|
 | rabbitmq.user     | `kickoff.yml` | The RabbitMQ user of your PHP application.                  |
 | RABBITMQ_PASSWORD | `.env`        | The password of the user defined in the `kickoff.yml` file. |
+
+**Note:** the credentials will only be set the first time the RabbitMQ container is launched. If you want to update them 
+after, use the RabbitMQ dashboard. You could also delete the RabbitMQ named volume, but proceed with caution: it will also 
+delete all your queues, messages and so on.
 
 ## Contributing
 

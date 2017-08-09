@@ -1,4 +1,5 @@
 conf.d/memory-limit.ini
 generated/graylog/.env
-generated/traefik
+generated/traefik/certs/*.crt
+generated/traefik/certs/*.key
 Dockerfile

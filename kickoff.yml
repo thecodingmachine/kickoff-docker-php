@@ -92,5 +92,10 @@ rabbitmq:
   # |
   # | The RabbitMQ user of your PHP application.
   # |
+  # | Note: it will only be set the first time the RabbitMQ container is launched.
+  # | If you want to update it after, use the RabbitMQ dashboard. You could also
+  # | delete the RabbitMQ named volume, but proceed with caution: it will also
+  # | delete all your queues, messages and so on.
+  # |
 
   user: kickoff
