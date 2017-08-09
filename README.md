@@ -115,7 +115,7 @@ Now open your hosts file...
 **Note:** Set `project.virtualhost.local` with your own virtual host in your `kickoff.yml` file, unless you wish to use 
 `my-awesome-project.local` of course :smile:.
 
-**Tip:** don't want to update your hosts file? Set `project.virtualhost.local` with `my-awesome-project.127.0.0.1.xip.io` 
+**Tip:** Don't want to update your hosts file? Set `project.virtualhost.local` with `my-awesome-project.127.0.0.1.xip.io` 
 in your `kickoff.yml` file. You're application will be available under https://www.my-awesome-project.127.0.0.1.xip.io/!
  
 Good :smiley:? We're now done with the configuration! :metal:
@@ -342,7 +342,7 @@ Redis is the database cache of this stack and it has been configured as the defa
 The hostname of Redis in your PHP-FPM container is equal to `redis`. To configure Redis to be the cache handler of your PHP
 application, you should refer to the documentation provided by your PHP framework.
 
-**Note:** you should not use [predis](https://github.com/nrk/predis), as [phpredis](https://github.com/phpredis/phpredis) 
+**Note:** You should not use [predis](https://github.com/nrk/predis), as [phpredis](https://github.com/phpredis/phpredis) 
 is installed by default.
 
 #### Configuration
@@ -367,7 +367,7 @@ You may access to the RabbitMQ dashboard (https://rabbitmq.my-awesome-project.lo
 | rabbitmq.user     | `kickoff.yml` | The RabbitMQ user of your PHP application.                  |
 | RABBITMQ_PASSWORD | `.env`        | The password of the user defined in the `kickoff.yml` file. |
 
-**Note:** the credentials will only be set the first time the RabbitMQ container is launched. If you want to update them 
+**Note:** The credentials will only be set the first time the RabbitMQ container is launched. If you want to update them 
 after, use the RabbitMQ dashboard. You could also delete the RabbitMQ named volume, but proceed with caution: it will also 
 delete all your queues, messages and so on.
 
