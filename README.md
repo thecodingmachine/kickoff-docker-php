@@ -155,7 +155,7 @@ Only the configuration files and the application source code are directly mounte
 The data of others services (like MySQL) are mounted using named volumes. You can locate these volumes
 on the host by utilizing the `docker inspect` command.
 
-**Note:** For now, the credentials will only be set the first time the Graylog, MySQL, RabbitMQ container are launched. 
+**Note:** For now, the credentials will only be set the first time the Graylog, MySQL, RabbitMQ containers are launched. 
 If you want to update them after, use the considered dashboard. You could also delete the named volumes, but proceed with 
 caution: it will also delete all your data.
 
