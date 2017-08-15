@@ -1,0 +1,28 @@
+language: ruby
+
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+  - sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"
+  - sudo apt-get update
+  - sudo apt-get -y install docker-ce
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - wget https://github.com/gulien/orbit/releases/download/v1.0.0-beta2/orbit_Linux_x86_64.tar.gz && tar -xzf orbit*.tar.gz orbit && rm -f orbit*.tar.gz
+  - sudo mv ./orbit /usr/local/bin && chmod +x /usr/local/bin/orbit
+
+script:
+  - cp .env.blueprint .env
+  - orbit run kickoff
+  - docker ps
+  - orbit run shutdown
+  - docker ps
+
+notifications:
+  email: false

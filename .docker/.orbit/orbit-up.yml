@@ -5,7 +5,7 @@
 # | This file describes the up commands of your project.
 # | Feel free to add your own commands!
 # |
-# | Up order: toolbox-up proxy-up graylog-up up
+# | Up order: proxy-up graylog-up up
 # |
 # | https://github.com/gulien/orbit/
 # |
@@ -13,49 +13,35 @@
 commands:
 
   # |--------------------------------------------------------------------------
-  # | orbit run toolbox-up
+  # | orbit run proxy-up
   # |--------------------------------------------------------------------------
   # |
-  # | Starts the Toolbox container.
+  # | Starts the Traefik container and calls the Toolbox container to generate
+  # | the self-signed certificate on your "local" environment or the .htdigest
+  # | file in others environments.
   # |
   # | It should be the first to start.
   # |
 
-  - use: "toolbox-up"
-    run:
-      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - docker-sync start -c=docker-sync.yml
-      {{- end }}
-      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml up -d
-      - orbit run traefik-self-signed-certificate -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
-      - orbit run traefik-htdigest -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
-      - orbit run graylog-passwords -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
-
-
-  # |--------------------------------------------------------------------------
-  # | orbit run proxy-up
-  # |--------------------------------------------------------------------------
-  # |
-  # | Starts the Traefik container.
-  # |
-  # | It should be start after the Toolbox container.
-  # |
-
   - use: "proxy-up"
     run:
+      - orbit run traefik-self-signed-certificate -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+      - orbit run traefik-htdigest -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
       - docker-compose -p kickoff -f .docker/docker-compose-proxy.yml up -d
 
   # |--------------------------------------------------------------------------
   # | orbit run graylog-up
   # |--------------------------------------------------------------------------
   # |
-  # | Starts the Graylog containers.
+  # | Starts the Graylog containers and calls the Toolbox container to generate
+  # | the Graylog secrets.
   # |
   # | They should be start after the Traefik container.
   # |
 
   - use: "graylog-up"
     run:
+      - orbit run graylog-secrets -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
       - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-graylog.yml up -d
 
   # |--------------------------------------------------------------------------
@@ -63,6 +49,8 @@ commands:
   # |--------------------------------------------------------------------------
   # |
   # | Starts the NGINX, PHP-FPM, MySQL, Redis and RabbitMQ containers.
+  # |
+  # | If ENABLE_DOCKER_SYNC=true, starts Docker Sync.
   # |
   # | On "local" environment, also starts the phpMyAdmin container.
   # |
@@ -72,4 +60,7 @@ commands:
   - use: "up"
     run:
       - orbit run graylog-health-check -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+      - docker-sync start -c=docker-sync.yml
+      {{- end }}
       - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose.yml up -d

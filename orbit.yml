@@ -19,8 +19,8 @@ commands:
 
   - use: "kickoff"
     run:
-      - orbit run toolbox-build proxy-build graylog-build build toolbox-up proxy-up graylog-up up -s
-      - orbit run rkt -c=.docker/.orbit/orbit-misc.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+      - orbit run toolbox-build proxy-build graylog-build build proxy-up graylog-up up -s
+      - orbit run rkt -c=.docker/.orbit/orbit-misc.yml
 
   # |--------------------------------------------------------------------------
   # | orbit run shutdown
@@ -31,7 +31,7 @@ commands:
 
   - use: "shutdown"
     run:
-      - orbit run down graylog-down proxy-down toolbox-down -s
+      - orbit run down graylog-down proxy-down -s
 
   # |--------------------------------------------------------------------------
   # | Build commands
@@ -63,10 +63,6 @@ commands:
   # | See .docker/.orbit/orbit-up.yml for more information.
   # |
 
-  - use: "toolbox-up"
-    run:
-      - orbit run toolbox-up -c=.docker/.orbit/orbit-up.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
-
   - use: "proxy-up"
     run:
       - orbit run proxy-up -c=.docker/.orbit/orbit-up.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
@@ -85,10 +81,6 @@ commands:
   # |
   # | See .docker/.orbit/orbit-down.yml for more information.
   # |
-
-  - use: "toolbox-down"
-    run:
-      - orbit run toolbox-down -c=.docker/.orbit/orbit-down.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
 
   - use: "proxy-down"
     run:
@@ -109,9 +101,9 @@ commands:
   # | See .docker/.orbit/orbit-docker-commands.yml for more information.
   # |
 
-  - use: "toolbox"
+  - use: "workspace"
     run:
-      - orbit run toolbox-ash -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
+      - orbit run workspace -c=.docker/.orbit/orbit-docker-commands.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env -s
 
   - use: "mysql-cli"
     run:

@@ -8,7 +8,8 @@ services:
     build:
       context: ./nginx
       args:
-        - UID={{ if eq "linux" .Os }}${UID}{{ else }}1000{{ end }}
+        - UID={{ if eq "linux" .Os }}${UID}{{ else }}82{{ end }}
+        - GID={{ if eq "linux" .Os }}${GID}{{ else }}82{{ end }}
     container_name: {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-nginx
     restart: {{ if ne "local" .EnvFiles.Kickoff.ENV }}unless-stopped{{ else }}"no"{{ end }}
     labels:
@@ -43,7 +44,8 @@ services:
     networks:
       - backend
     environment:
-      - UID={{ if eq "linux" .Os }}${UID}{{ else }}1000{{ end }}
+      - UID={{ if eq "linux" .Os }}${UID}{{ else }}82{{ end }}
+      - GID={{ if eq "linux" .Os }}${GID}{{ else }}82{{ end }}
     labels:
       - traefik.enable=false
     volumes:

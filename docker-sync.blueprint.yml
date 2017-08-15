@@ -7,3 +7,4 @@ syncs:
   {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }}_sync_app:
     src: './app/'
     sync_strategy: {{ if eq "darwin" .Os }}'native_osx'{{ else }}'unison'{{ end }}
+    sync_excludes: ['.idea']

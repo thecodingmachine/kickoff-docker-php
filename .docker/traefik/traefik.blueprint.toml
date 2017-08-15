@@ -9,10 +9,17 @@ entryPoint = "https"
 [entryPoints.https]
 address = ":443"
 [entryPoints.https.tls]
-{{- if eq "local" .EnvFiles.Kickoff.ENV }}
 [[entryPoints.https.tls.certificates]]
+{{- if eq "local" .EnvFiles.Kickoff.ENV }}
 certFile = "tests/{{ .Values.Kickoff.project.virtualhost.local }}.crt"
 keyFile = "tests/{{ .Values.Kickoff.project.virtualhost.local }}.key"
+{{- else }}
+{{- range $env, $virtualhost := .Values.Kickoff.project.virtualhost }}
+{{- if eq $env $.EnvFiles.Kickoff.ENV }}
+certFile = "certs/{{ $virtualhost }}.crt"
+keyFile = "certs/{{ $virtualhost }}.key"
+{{- end }}
+{{- end }}
 {{ end }}
 
 # API backend

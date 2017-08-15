@@ -16,24 +16,12 @@ commands:
   # | orbit run toolbox-build
   # |--------------------------------------------------------------------------
   # |
-  # | Generates the Toolbox container configuration files and builds it.
-  # |
-  # | If ENABLE_DOCKER_SYNC=true, also generates the Docker Sync configuration
-  # | file.
+  # | Generates the Toolbox container configuration files.
   # |
 
   - use: "toolbox-build"
     run:
-      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - orbit generate -t=docker-sync.blueprint.yml -o=docker-sync.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
-      {{- end }}
-      - orbit generate -t=.docker/toolbox/Dockerfile.blueprint -o=.docker/toolbox/Dockerfile -v=Kickoff,kickoff.yml -e=Kickoff,.env
-      - orbit generate -t=.docker/toolbox/conf.d/memory-limit.blueprint.ini -o=.docker/toolbox/conf.d/memory-limit.ini -v=Kickoff,kickoff.yml -e=Kickoff,.env
       - orbit generate -t=.docker/docker-compose-toolbox.blueprint.yml -o=.docker/docker-compose-toolbox.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
-      {{- if eq "linux" .Os }}
-      - /bin/bash .docker/.bin/usermod.sh toolbox
-      {{- end }}
-      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml build
 
   # |--------------------------------------------------------------------------
   # | orbit run proxy-build
@@ -65,18 +53,28 @@ commands:
   # | Generates the configuration files of your services and builds the NGINX
   # | and PHP-FPM containers.
   # |
+  # | If ENABLE_DOCKER_SYNC=true, also generates the Docker Sync configuration
+  # | file.
+  # |
 
   - use: "build"
     run:
+      # Docker Sync
+      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+      - orbit generate -t=docker-sync.blueprint.yml -o=docker-sync.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
+      {{- end }}
+      # MySQL
       - orbit generate -t=.docker/mysql/.secrets/mysql_password.blueprint.txt -o=.docker/mysql/.secrets/mysql_password.txt -e=Kickoff,.env
       - orbit generate -t=.docker/mysql/.secrets/mysql_root_password.blueprint.txt -o=.docker/mysql/.secrets/mysql_root_password.txt -e=Kickoff,.env
       - orbit generate -t=.docker/mysql/docker-entrypoint-initdb.d/databases.blueprint.sql -o=.docker/mysql/docker-entrypoint-initdb.d/databases.sql -v=Kickoff,kickoff.yml
+      # PHP-FPM
       - orbit generate -t=.docker/php-fpm/conf.d/memory-limit.blueprint.ini -o=.docker/php-fpm/conf.d/memory-limit.ini -e=Kickoff,.env
       - orbit generate -t=.docker/php-fpm/php-fpm.d/memory-limit.blueprint.conf -o=.docker/php-fpm/php-fpm.d/memory-limit.conf -e=Kickoff,.env
       - orbit generate -t=.docker/php-fpm/php-fpm.d/security.blueprint.conf -o=.docker/php-fpm/php-fpm.d/security.conf -e=Kickoff,.env
       - orbit generate -t=.docker/php-fpm/Dockerfile.blueprint -o=.docker/php-fpm/Dockerfile -e=Kickoff,.env
+      # Docker
       - orbit generate -t=.docker/docker-compose.blueprint.yml -o=.docker/docker-compose.yml -v=Kickoff,kickoff.yml -e=Kickoff,.env
       {{- if eq "linux" .Os }}
-      - /bin/bash .docker/.bin/usermod.sh
+      - /bin/bash .docker/.bin/linux-fix-permissions.sh
       {{- end }}
       - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose.yml build

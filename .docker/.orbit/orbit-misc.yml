@@ -19,4 +19,4 @@ commands:
 
   - use: "rkt"
     run:
-      - orbit generate -t=.docker/.misc/rkt.txt -v=Rkt,.docker/.misc/rkt.yml
+      - orbit generate -t=.docker/.misc/rkt.txt

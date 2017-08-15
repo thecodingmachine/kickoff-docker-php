@@ -5,14 +5,9 @@ services:
 
 
   toolbox:
-    build:
-      context: ./toolbox
-      args:
-        - UID={{ if eq "linux" .Os }}${UID}{{ else }}1000{{ end }}
+    image: gulnap/kickoff-docker-php-images:toolbox-3.6-rc1
     container_name: {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox
-    restart: {{ if ne "local" .EnvFiles.Kickoff.ENV }}unless-stopped{{ else }}"no"{{ end }}
-    tty: true
-    working_dir: /var/www/html
+    restart: "no"
     networks:
       - backend
     environment:
@@ -29,12 +24,6 @@ services:
     labels:
       - traefik.enable=false
     volumes:
-      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }}_sync_app:/var/www/html:nocopy
-      {{- else }}
-      - ../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}rw{{ end }}
-      {{- end }}
-      - ./toolbox/conf.d/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini:ro
       - ./toolbox/generated:/generated:rw
       - ./toolbox/scripts:/scripts:ro
 
@@ -44,11 +33,3 @@ networks:
 
   backend:
     driver: bridge
-
-{{ if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-volumes:
-
-
-  {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }}_sync_app:
-    external: true
-{{- end }}

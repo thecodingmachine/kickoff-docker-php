@@ -9,10 +9,7 @@ sedi()
 }
 
 # permissions issues workaround for Linux
-if [ "$1" == "toolbox" ]; then
-    sedi "s/\${UID}/$(id -u)/g" ${ROOT}/.docker/docker-compose-toolbox.yml;
-else
-    sedi "s/\${UID}/$(id -u)/g" ${ROOT}/.docker/docker-compose.yml;
-fi;
+sedi "s/\${UID}/$(id -u)/g" ${ROOT}/.docker/docker-compose.yml;
+sedi "s/\${GID}/$(id -g)/g" ${ROOT}/.docker/docker-compose.yml;
 
 exit 0;

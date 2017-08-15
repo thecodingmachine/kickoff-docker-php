@@ -11,15 +11,15 @@
 commands:
 
   # |--------------------------------------------------------------------------
-  # | orbit run toolbox-ash
+  # | orbit run workspace
   # |--------------------------------------------------------------------------
   # |
-  # | Connects through ash to the Toolbox container.
+  # | Connects through ash to the PHP-FPM container.
   # |
 
-  - use: "toolbox-ash"
+  - use: "workspace"
     run:
-      - docker exec --user www-data -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox ash
+      - docker exec --user www-data -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-php-fpm ash
 
   # |--------------------------------------------------------------------------
   # | orbit run traefik-self-signed-certificate
@@ -31,7 +31,7 @@ commands:
   - use: "traefik-self-signed-certificate"
     run:
     {{- if eq "local" .EnvFiles.Kickoff.ENV }}
-      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml run toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
     {{- else if eq .Os "windows" }}
       - cmd.exe /c echo Skipping self-signed certificate generation ...
     {{- else }}
@@ -51,7 +51,7 @@ commands:
   - use: "traefik-htdigest"
     run:
     {{- if ne "local" .EnvFiles.Kickoff.ENV }}
-      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/traefik-htdigest.sh
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml run toolbox /bin/sh -c /scripts/traefik-htdigest.sh
     {{- else if eq .Os "windows" }}
       - cmd.exe /c echo Skipping .htdigest file generation ...
     {{- else }}
@@ -67,18 +67,18 @@ commands:
 
   - use: "graylog-health-check"
     run:
-      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/graylog-health-check.sh
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml run toolbox /bin/sh -c /scripts/graylog-health-check.sh
 
   # |--------------------------------------------------------------------------
-  # | orbit run graylog-passwords
+  # | orbit run graylog-secrets
   # |--------------------------------------------------------------------------
   # |
-  # | Generates Graylog passwords.
+  # | Generates Graylog secrets.
   # |
 
-  - use: "graylog-passwords"
+  - use: "graylog-secrets"
     run:
-      - docker exec --user root -ti {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox /bin/sh -c /scripts/graylog-passwords.sh
+      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml run toolbox /bin/sh -c /scripts/graylog-secrets.sh
 
   # |--------------------------------------------------------------------------
   # | orbit run mysql-cli

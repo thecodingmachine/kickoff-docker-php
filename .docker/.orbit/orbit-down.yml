@@ -5,7 +5,7 @@
 # | This file describes the down commands of your project.
 # | Feel free to add your own commands!
 # |
-# | Down order: down graylog-down proxy-down toolbox-down
+# | Down order: down graylog-down proxy-down
 # |
 # | https://github.com/gulien/orbit/
 # |
@@ -13,28 +13,12 @@
 commands:
 
   # |--------------------------------------------------------------------------
-  # | orbit run toolbox-down
-  # |--------------------------------------------------------------------------
-  # |
-  # | Stops the Toolbox container.
-  # |
-  # | It should be the last to stop.
-  # |
-
-  - use: "toolbox-down"
-    run:
-      - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose-toolbox.yml down
-      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
-      - docker-sync clean -c=docker-sync.yml
-      {{- end }}
-
-  # |--------------------------------------------------------------------------
   # | orbit run proxy-down
   # |--------------------------------------------------------------------------
   # |
   # | Stops the Traefik container.
   # |
-  # | It should be stop just before the Toolbox container.
+  # | It should be the last to stop.
   # |
 
   - use: "proxy-down"
@@ -47,7 +31,7 @@ commands:
   # |
   # | Stops the Graylog containers.
   # |
-  # | They should be stop just before the Traefik container.
+  # | They should be stop before the Traefik container.
   # |
 
   - use: "graylog-down"
@@ -60,6 +44,8 @@ commands:
   # |
   # | Stops the NGINX, PHP-FPM, MySQL, Redis and RabbitMQ containers.
   # |
+  # | If ENABLE_DOCKER_SYNC=true, stops Docker Sync
+  # |
   # | On "local" environment, also stops the phpMyAdmin container.
   # |
   # | They should be the first to stop.
@@ -68,3 +54,6 @@ commands:
   - use: "down"
     run:
       - docker-compose -p {{ .EnvFiles.Kickoff.ENV }}{{ .Values.Kickoff.project.name }} -f .docker/docker-compose.yml down
+      {{- if eq "true" .EnvFiles.Kickoff.ENABLE_DOCKER_SYNC }}
+      - docker-sync clean -c=docker-sync.yml
+      {{- end }}

@@ -20,4 +20,4 @@
      .'    / (_  )
       _. :(.   )8P  `
 
- {{ .Values.Rkt.success }}
+ Your project has been successfully launched!
