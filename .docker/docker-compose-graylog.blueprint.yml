@@ -5,7 +5,7 @@ services:
 
 
   graylog-mongo:
-    image: mongo:3.4.6
+    image: mongo:3.4.7
     container_name: {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-graylog-mongo
     restart: {{ if ne "local" .EnvFiles.Kickoff.ENV }}unless-stopped{{ else }}"no"{{ end }}
     networks:
