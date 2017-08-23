@@ -5,7 +5,7 @@ services:
 
 
   toolbox:
-    image: gulnap/kickoff-docker-php-images:toolbox-3.6-rc2
+    image: gulnap/kickoff-docker-php-images:toolbox-3.6-rc3
     container_name: {{ .EnvFiles.Kickoff.ENV }}-{{ .Values.Kickoff.project.name }}-toolbox
     restart: "no"
     networks:

@@ -276,7 +276,10 @@ Your PHP application will be accessible under https://your-virtualhost.local/ an
 
 #### Installed PHP extensions
 
-apcu, bcmath, gd, intl, mbstring, mcrypt, pdo_mysql, phpredis, opcache, xdebug (`local` environment only!), soap and zip.
+apcu, bcmath, gd, intl, mbstring, mcrypt, pdo_mysql, phpredis, opcache, soap, xdebug (`local` environment only!), yaml,
+zip and more!
+
+You are able to find all installed PHP extensions by running `php -m` inside your workspace.
 
 #### Available tools
 

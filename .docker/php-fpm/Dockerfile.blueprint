@@ -1,4 +1,4 @@
-FROM gulnap/kickoff-docker-php-images:php-fpm-7.1.8-rc2
+FROM gulnap/kickoff-docker-php-images:php-fpm-7.1.8-rc3
 
 # |--------------------------------------------------------------------------
 # | PHP extension for Redis
