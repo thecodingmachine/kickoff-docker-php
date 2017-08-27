@@ -1,0 +1,37 @@
+# |--------------------------------------------------------------------------
+# | Project name
+# |--------------------------------------------------------------------------
+# |
+# | Its the main identifier of your project. It will be used to name many
+# | variables which will be useful to help identifying your project among
+# | others Docker projects.
+# |
+# | Caution: use only alphabetical character
+# |
+
+name: myawesomeproject
+
+# |--------------------------------------------------------------------------
+# | Project base virtual host
+# |--------------------------------------------------------------------------
+# |
+# | The base virtual host of your project according to your environments.
+# |
+# | The following URLs will be available:
+# | - {virtualhost}, www.{virtualhost}: the URLs of your PHP application.
+# | - traefik.{virtualhost}: the URL of the Traefik dashboard.
+# | - graylog.{virtualhost}: the URL of the Graylog dashboard.
+# | - rabbitmq.{virtualhost}: the URL of the RabbitMQ dashboard.
+# | - phpadmin.{virtualhost} : the URL of the phpMyAdmin dashboard.
+# |
+# | The later will only be available on your "local" environment.
+# | Also, don't forget to update your "hosts" file with the previous URLs.
+# | If you don't want to update your "hosts" file, set the "local" virtual
+# | host with your-virtualhost.127.0.0.1.xip.io!
+# |
+
+virtualhost:
+  local: my-awesome-project.local
+  test: my-awesome-project.local
+  staging: my-awesome-project.com
+  production: my-awesome-project.com

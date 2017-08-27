@@ -1,0 +1,45 @@
+version: '3.3'
+
+
+services:
+
+
+  proxy:
+    image: traefik:1.3.6-alpine
+    container_name: kickoff-proxy
+    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    command: --docker --logLevel={{ .EnvFiles.Config.TRAEFIK_LOG_LEVEL }}
+    networks:
+      - proxy
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
+      {{- if eq $env $.EnvFiles.Config.ENV }}
+      - traefik.frontend.rule=Host:traefik.{{ $virtualhost }}
+      {{- end }}
+      {{- end }}
+      - traefik.port=8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.toml:/traefik.toml:ro
+      {{- if eq "local" .EnvFiles.Config.ENV }}
+      - ../toolbox/generated/traefik/certs:/certs:ro
+      {{- else }}
+      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
+      {{- if eq $env $.EnvFiles.Config.ENV }}
+      - {{ $.EnvFiles.Config.TRAEFIK_CERT_FILE_PATH }}:/certs/{{ $virtualhost }}.crt:ro
+      - {{ $.EnvFiles.Config.TRAEFIK_KEY_FILE_PATH }}:/certs/{{ $virtualhost }}.key:ro
+      {{- end }}
+      {{- end }}
+      {{- end }}
+      {{- if ne "local" .EnvFiles.Config.ENV }}
+      - ../toolbox/generated/traefik/auth/:/auth/:ro
+      {{ end }}
+
+networks:
+
+
+  proxy:
+    driver: bridge

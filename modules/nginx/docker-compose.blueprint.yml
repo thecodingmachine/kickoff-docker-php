@@ -1,0 +1,60 @@
+version: '3.3'
+
+
+services:
+
+
+  nginx:
+    build:
+      context: .
+      args:
+        - UID={{ if eq "linux" .Os }}${UID}{{ else }}82{{ end }}
+        - GID={{ if eq "linux" .Os }}${GID}{{ else }}82{{ end }}
+    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-nginx
+    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    labels:
+      - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-nginx
+      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
+      {{- if and (eq $env $.EnvFiles.Config.ENV) (eq "true" $.EnvFiles.Config.TRAEFIK_PREFIX) }}
+      - traefik.frontend.rule=Host:{{ $env }}.{{ $virtualhost }},www-{{ $env }}.{{ $virtualhost }}
+      {{- else if eq $env $.EnvFiles.Config.ENV }}
+      - traefik.frontend.rule=Host:{{ $virtualhost }},www.{{ $virtualhost }}
+      {{- end }}
+      {{- end }}
+      - traefik.docker.network=kickoff_proxy
+    networks:
+      - proxy
+      - backend
+    volumes:
+      {{- if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+      - {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:/var/www/html:nocopy
+      {{- else }}
+      - ../../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}ro{{ end }}
+      {{- end }}
+      - ./conf.d/php-fpm.conf:/etc/nginx/conf.d/php-fpm.conf:ro
+    {{- if eq true .Values.Modules.graylog.enable }}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+    {{ end }}
+
+networks:
+
+
+  proxy:
+    external:
+      name: kickoff_proxy
+
+
+  backend:
+    external:
+      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+
+{{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+volumes:
+
+
+  {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:
+    external: true
+{{- end }}

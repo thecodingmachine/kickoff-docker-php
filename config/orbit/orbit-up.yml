@@ -1,0 +1,146 @@
+# |--------------------------------------------------------------------------
+# | Orbit up commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the up commands of your project.
+# | Feel free to add your own commands!
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run docker-sync-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts Docker Sync.
+  # |
+
+  - use: "docker-sync-up"
+    run:
+      {{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+      - docker-sync start
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping Docker Sync startup ...
+      {{ else }}
+      - echo Skipping Docker Sync startup ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run traefik-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the Traefik container.
+  # |
+  # | It should be the first to start.
+  # |
+
+  - use: "traefik-up"
+    run:
+      - docker-compose -p kickoff -f modules/traefik/docker-compose.yml up -d
+
+  # |--------------------------------------------------------------------------
+  # | orbit run graylog-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the Graylog containers.
+  # |
+  # | They should be start after the Traefik container.
+  # |
+
+  - use: "graylog-up"
+    run:
+      {{ if eq true .Values.Modules.graylog.enable }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/graylog/docker-compose.yml up -d
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping Graylog containers startup ...
+      {{ else }}
+      - echo Skipping Graylog containers startup ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run php-fpm-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the PHP-FPM container.
+  # |
+  # | It should be start after the Graylog containers.
+  # |
+
+  - use: "php-fpm-up"
+    run:
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/php-fpm/docker-compose.yml up -d
+
+
+  # |--------------------------------------------------------------------------
+  # | orbit run nginx-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the NGINX container.
+  # |
+  # | It should be start after the Graylog and PHP-FPM containers.
+  # |
+
+  - use: "nginx-up"
+    run:
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/nginx/docker-compose.yml up -d
+
+  # |--------------------------------------------------------------------------
+  # | orbit run mysql-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the MySQL container.
+  # |
+  # | On "local" environment, also starts the phpMyAdmin container.
+  # |
+  # | They should be start after the Graylog containers.
+  # |
+
+  - use: "mysql-up"
+    run:
+      {{ if eq true .Values.Modules.mysql.enable }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/mysql/docker-compose.yml up -d
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping MySQL container startup ...
+      {{ else }}
+      - echo Skipping MySQL container startup ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run redis-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the Redis container.
+  # |
+  # | It should be start after the Graylog containers.
+  # |
+
+  - use: "redis-up"
+    run:
+      {{ if eq true .Values.Modules.redis.enable }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/redis/docker-compose.yml up -d
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping Redis container startup ...
+      {{ else }}
+      - echo Skipping Redis container startup ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run rabbitmq-up
+  # |--------------------------------------------------------------------------
+  # |
+  # | Starts the RabbitMQ container.
+  # |
+  # | It should be start after the Graylog containers.
+  # |
+
+  - use: "rabbitmq-up"
+    run:
+      {{ if eq true .Values.Modules.rabbitmq.enable }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/rabbitmq/docker-compose.yml up -d
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping RabbitMQ container startup ...
+      {{ else }}
+      - echo Skipping RabbitMQ container startup ...
+      {{ end }}

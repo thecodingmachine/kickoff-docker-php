@@ -1,0 +1,100 @@
+version: '3.3'
+
+
+services:
+
+
+  mysql:
+    image: mysql:5.7
+    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-mysql
+    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    networks:
+      - backend
+    {{- if eq "true" .EnvFiles.Config.MYSQL_ENABLE_PORTS_MAPPING }}
+    ports:
+      - "{{ .EnvFiles.Config.MYSQL_HOST_PORT_TO_MAP }}:3306"
+    {{- end }}
+    environment:
+      - MYSQL_USER={{ .Values.Modules.mysql.user }}
+      - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
+      - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
+    secrets:
+      - mysql_password
+      - mysql_root_password
+    labels:
+      - traefik.enable=false
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./conf.d/utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf:ro
+      - ./docker-entrypoint-initdb.d/databases.sql:/docker-entrypoint-initdb.d/databases.sql:ro
+    {{- if eq true .Values.Modules.graylog.enable }}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+    {{ end }}
+  {{ if eq "local" .EnvFiles.Config.ENV }}
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.7
+    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-phpmyadmin
+    restart: "no"
+    networks:
+      - proxy
+      - backend
+    environment:
+      - PMA_HOST=mysql
+      - PMA_USER=root
+      - PMA_PASSWORD={{ .EnvFiles.Config.MYSQL_ROOT_PASSWORD }}
+    labels:
+      - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-phpmyadmin
+      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
+      {{- if and (eq $env $.EnvFiles.Config.ENV) (eq "true" $.EnvFiles.Config.TRAEFIK_PREFIX) }}
+      - traefik.frontend.rule=Host:phpadmin-{{ $env }}.{{ $virtualhost }}
+      {{- else if eq $env $.EnvFiles.Config.ENV }}
+      - traefik.frontend.rule=Host:phpadmin.{{ $virtualhost }}
+      {{- end }}
+      {{- end }}
+      - traefik.docker.network=kickoff_proxy
+    volumes:
+      - phpmyadmin_data:/sessions
+    {{- if eq true .Values.Modules.graylog.enable }}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+    {{ end }}
+  {{ end }}
+networks:
+
+
+  proxy:
+    external:
+      name: kickoff_proxy
+
+
+  backend:
+    external:
+      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+
+
+secrets:
+
+
+  mysql_password:
+    file: ./secrets/mysql_password.txt
+
+
+  mysql_root_password:
+    file: ./secrets/mysql_root_password.txt
+
+
+volumes:
+
+
+  mysql_data:
+    driver: local
+
+  {{ if eq "local" .EnvFiles.Config.ENV }}
+  phpmyadmin_data:
+    driver: local
+  {{ end }}

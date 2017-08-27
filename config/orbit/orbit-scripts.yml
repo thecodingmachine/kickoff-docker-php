@@ -1,0 +1,110 @@
+# |--------------------------------------------------------------------------
+# | Orbit scripts commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the scripts commands of your project.
+# | Feel free to add your own commands!
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-linux-fix-permissions-nginx
+  # |--------------------------------------------------------------------------
+  # |
+  # | Fixes "www-data" permissions issues on Linux for NGINX.
+  # |
+
+  - use: "script-linux-fix-permissions-nginx"
+    run:
+      {{ if eq "linux" .Os }}
+      - /bin/bash config/scripts/linux-fix-permissions.sh NGINX
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping for "www-data" permissions issues on Linux for NGINX container ...
+      {{ else }}
+      - echo Skipping fix for "www-data" permissions issues on Linux for NGINX container ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-linux-fix-permissions-php-fpm
+  # |--------------------------------------------------------------------------
+  # |
+  # | Fixes "www-data" permissions issues on Linux for PHP-FPM.
+  # |
+
+  - use: "script-linux-fix-permissions-php-fpm"
+    run:
+      {{ if eq "linux" .Os }}
+      - /bin/bash config/scripts/linux-fix-permissions.sh PHP-FPM
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping for "www-data" permissions issues on Linux for PHP-FPM container ...
+      {{ else }}
+      - echo Skipping fix for "www-data" permissions issues on Linux for PHP-FPM container ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-traefik-self-signed-certificate
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates the self-signed certificate if current environment is "local".
+  # |
+
+  - use: "script-traefik-self-signed-certificate"
+    run:
+      {{ if eq "local" .EnvFiles.Config.ENV }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping self-signed certificate generation ...
+      {{ else }}
+      - echo Skipping self-signed certificate generation ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-traefik-htdigest
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates the .htdigest file which is used to authenticate on the Traefik
+  # | dashboard.
+  # |
+  # | Only for environments <> "local".
+  # |
+
+  - use: "script-traefik-htdigest"
+    run:
+      {{ if ne "local" .EnvFiles.Config.ENV }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c  /scripts/traefik-htdigest.sh
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping .htdigest file generation ...
+      {{ else }}
+      - echo Skipping .htdigest file generation ...
+      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-graylog-secrets
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates Graylog secrets.
+  # |
+
+  - use: "script-graylog-secrets"
+    run:
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/graylog-secrets.sh
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-graylog-health-check
+  # |--------------------------------------------------------------------------
+  # |
+  # | Generates Graylog secrets.
+  # |
+
+  - use: "script-graylog-health-check"
+    run:
+      {{ if eq true .Values.Modules.graylog.enable }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/graylog-health-check.sh
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo Skipping Graylog healtch check ...
+      {{ else }}
+      - echo Skipping Skipping Graylog healtch check ...
+      {{ end }}

@@ -4,9 +4,8 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/RC-2.0-yellow.svg" alt="RC release: 2.0"></a>
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v1.0.3"><img src="https://img.shields.io/badge/unstable-master-red.svg" alt="Unstable release: master"></a>
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v1.0.3"><img src="https://img.shields.io/badge/stable-1.0.3-green.svg" alt="Stable release: 1.0.3"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.0.0"><img src="https://img.shields.io/badge/stable-v2.0.0-green.svg" alt="Stable release: v2.0.0"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
 
@@ -26,25 +25,28 @@ following goals in mind:
 * [Features](#features)
 * [Install](#install)
 * [Quick start](#quick-start)
-* [How does it works?](#how-does-it-works)
-* [Dive in](#dive-in)
-* [Useful Docker commands](#useful-docker-commands)
+* [Orbit commands](#orbit-commands)
+* [Project structure](#project-structure)
+* [Configuration](#configuration)
+* [Modules](#modules)
+* [Advanced](#advanced)
 * [Contributing](#contributing)
 * [Credits](#credits)
 
 ## Features
 
 * **Cross-platform:** Windows, Mac, Linux
-* **A complete stack:** NGINX, PHP-FPM 7.1, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ and more
+* **A complete stack:** NGINX, PHP-FPM 7.1, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ and more to come!
 * **Centralized logging** with Graylog
 * Automatic **HTTPS** on your local environment
 * A powerful **reverse-proy** ([Traefik](https://traefik.io/)) which can handle automatic HTTPS (via [Let's Encrypt](https://letsencrypt.org/))
 on your production environment
 * **Performance gains** on Mac and Windows using [Docker Sync](http://docker-sync.io/) or Docker for Mac's user-guided cache
 * **Lightweight** images, mostly based on Alpine
+* **Easily configurable:** disable the modules you don't need, set your own users and so on!
 * **Customizable** thanks to [Orbit](https://github.com/gulien/orbit)
 
-And more to come! :smiley:
+And more! :smiley:
 
 ## Install
 
@@ -69,7 +71,7 @@ Download and install the latest release of [Docker Sync](http://docker-sync.io/)
 
 ## Quick start
 
-Once you've downloaded this project, move to the root directory and copy the file `.env.blueprint` and paste it to a file
+Once you've downloaded this project, move to the `config` folder and copy the file `.env.blueprint` and paste it to a file
 named `.env`.
 
 | Linux/Mac                	| Windows                    	|
@@ -78,10 +80,12 @@ named `.env`.
 
 **Note:** If you wish to enable Docker Sync, don't forget to set `ENABLE_DOCKER_SYNC` to `true` in your `.env` file.
 
-Next, set `project.virtualhost.local` with your own virtual host in your `kickoff.yml` file, unless you wish to use 
-`my-awesome-project.local` of course :smile:.
+In the same folder, open the file `project.yml` and set the following variables:
 
-Now open your hosts file...
+* `virtualhost.local` with your own virtual host
+* `name` with your project name
+
+Now open your `hosts` file...
  
 | Linux/Mac              | Windows                                                                                             |
 |------------------------|-----------------------------------------------------------------------------------------------------|
@@ -98,12 +102,13 @@ Now open your hosts file...
 127.0.0.1   graylog.your-virtualhost.local
 ```
 
-**Tip:** Don't want to update your hosts file? Set `project.virtualhost.local` with `your-virtualhost.127.0.0.1.xip.io` 
-in your `kickoff.yml` file. Your applications will be available under `*.your-virtualhost.127.0.0.1.xip.io/`!
+**Tip:** Don't want to update your `hosts` file? Set `virtualhost.local` with `your-virtualhost.127.0.0.1.xip.io` 
+in your `project.yml` file. Your applications will be available under `*.your-virtualhost.127.0.0.1.xip.io/`!
  
 Good :smiley:? We're now done with the configuration! :metal:
 
-Last but not least, **shutdown your local Apache or anything which could use your 80 and 443 ports**, and run:
+Last but not least, move to the root directory, **shutdown your local Apache or anything which could use your 80 
+and 443 ports**, and run:
 
 ```
 orbit run kickoff
@@ -114,36 +119,32 @@ The installation might take some time, so go for a coffee break! :coffee:
 Once everything has been installed, open your favorite web browser and copy / paste https://www.your-virtualhost.local 
 and check if everything is OK!
 
-## How does it works?
+## Orbit commands
 
-The `kickoff` command is actually a combo of others [Orbit](https://github.com/gulien/orbit)'s commands. Indeed, you can
-achieve the same result by running `orbit run toolbox-build proxy-build graylog-build build proxy-up graylog-up up`!
+| Command                | description                                                                                                                                              |
+|------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `orbit run kickoff`    | Generates all configuration files, builds the NGINX and PHP-FPM images and starts the containers. It's a combo of `build`, `proxy-up` and `up` commands. |
+| `orbit run shutdown`   | Stops all containers. It's a combo of  `down` and `proxy-down` commands.                                                                                 |
+| `orbit run build`      | Generates all configuration files and builds the NGINX and PHP-FPM images.                                                                               |
+| `orbit run proxy-up`   | Starts the Traefik container.                                                                                                                            |
+| `orbit run up`         | Starts all containers without the Traefik container.                                                                                                     |
+| `orbit run proxy-down` | Stops the Traefik container.                                                                                                                             |
+| `orbit run down`       | Stops all containers without the Traefik container.                                                                                                      |
+| `orbit run workspace`  | Connects through ash to the PHP-FPM container. This is where you're able to run useful commands like `composer` and `yarn`.                              |
+| `orbit run mysql-cli`  | Opens the MySQL cli as `root`. On environments <> `local`, it will ask you the MySQL `root` password.                                                    |
 
-So, what's happening? 
-
-The `*-build` commands generate the configuration files of your containers and the *Docker compose* files using values 
-provided by your `kickoff.yml` and `.env` files. The `build` command also builds the NGINX and PHP-FPM containers and 
-if `ENABLE_DOCKER_SYNC=true` generates the Docker Sync configuration file.
-
-Once done, it starts the Traefik container with `proxy-up`, then the Graylog containers with `graylog-up` and finally
-the others containers with `up`. Also:
-
-* the `proxy-up` command calls the Toolbox container to generate the self-signed certificate on your `local` environment 
-or the `.htdigest` file in others environments
-* the `graylog-up` command calls the Toolbox container to generate the Graylog secrets
-* the `up` commands calls the Toolbox container to check if the Graylog server is ready to received logs from
-others containers. If `ENABLE_DOCKER_SYNC=true`, also starts Docker Sync
-
-### Project structure
+## Project structure
 
 ```
-├── .docker # Docker and kickoff related files
+├── config  # Kickoff related configuration files
+├── modules # Modules related configuration files
 └── app     # The source code of your PHP application
 ```
 
-Only the configuration files and the application source code are directly mounted in the containers.
-The data of others services (like MySQL) are mounted using named volumes. You can locate these volumes
-on the host by utilizing the `docker inspect` command.
+Only the configuration files of your modules and the application source code are directly mounted in the containers.
+The data of modules like MySQL are stored inside named volumes. You can see those named volumes by running 
+`docker volume ls` command. They are named using the project name, your current environment and the considered module.
+If you want to locate those volumes on the host, run  `docker inspect {volume name}` command.
 
 **Note:** For now, the credentials will only be set the first time the Graylog, MySQL, RabbitMQ containers are launched. 
 If you want to update them after, use the considered dashboard. You could also delete the named volumes, but proceed with 
@@ -151,25 +152,29 @@ caution: it will delete all your data.
 
 **Tip:** Your `app` folder should be a git submodule.
 
-### Configuration files
+## Configuration
 
-| File          | Description                                    |
-|---------------|------------------------------------------------|
-| `kickoff.yml` | Contains data like the MySQL user and so on.   |
-| `.env`        | Contains all sensitive data like passwords.    |
-| `orbit.yml`   | Contains the Orbit's commands of this project. |
+| File                 | Description                                                                          |
+|----------------------|--------------------------------------------------------------------------------------|
+| `config/project.yml` | Your project configuration values.                                                   |
+| `config/modules.yml` | The cross-environments configuration values of your modules.                         |
+| `config/app.yml`     | The cross-environments configuration values of your PHP application.                 |
+| `config/.env`        | The sensitive and environment specific configuration values of your modules.         |
+| `config/.app.env`    | The sensitive and environment specific configuration values of your PHP application. |
+| `orbit.yml`          | The Orbit's commands of your project.                                                |
 
 Don't hesitate to take a look at those files, as they are provided with nice comments!
 
-### Main Orbit's commands
+## Modules
 
-| Command               | Description                                                                                                                 |
-|-----------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| `orbit run kickoff`   | Generates all configuration files, builds the containers and starts them.                                                   |
-| `orbit run shutdown`  | Stops all the containers.                                                                                                   |
-| `orbit run workspace` | Connects through ash to the PHP-FPM container. This is where you're able to run useful commands like `composer` and `yarn`. |
-
-## Dive in
+* [Toolbox](#toolbox)
+* [Traefik](#traefik)
+* [Graylog](#graylog)
+* [NGINX](#nginx)
+* [PHP-FPM](#php-fpm)
+* [MySQL](#mysql)
+* [Redis](#redis)
+* [RabbitMQ](#rabbitmq)
 
 ### Toolbox
 
@@ -180,13 +185,7 @@ The Toolbox is a simple container which is used to:
 * Generates the SHA2 password and secret pepper for Graylog authentication
 * Checks if Graylog is ready to receive logs from others containers
 
-#### Command
-
-| Command                   | Description                                          |
-|---------------------------|------------------------------------------------------|
-| `orbit run toolbox-build` | Generates the Toolbox container configuration files. |
-
-### Traefik (reverse-proxy)
+### Traefik
 
 The [Traefik](https://traefik.io/) container is used as a reverse-proxy: it's the entry door which will redirect clients requests
 to the correct frontend.
@@ -196,31 +195,24 @@ It provides a nice dashboard (https://traefik.your-virtualhost.local/) which req
 #### HTTPS
 
 On your `local` environment, the Toolbox container will automatically generate a self-signed certificate according to the
-virtual host specified in your `kickoff.yml` file.
+virtual host specified in your `project.yml` file.
 
 On others environment, we provided `TRAEFIK_CERT_FILE_PATH` and `TRAEFIK_KEY_FILE_PATH` variables in your `.env` file 
 to let you specified the absolute path of your certifications. You could also customize the Traefik configuration located at 
-`.docker/traefik/traefik.blueprint.toml` with [ACME configuration](https://docs.traefik.io/toml/#acme-lets-encrypt-configuration)
+`modules/traefik/traefik.blueprint.toml` with [ACME configuration](https://docs.traefik.io/toml/#acme-lets-encrypt-configuration)
 to enable automatic HTTPS. 
 
 #### Configuration
 
-| Variable               | Location      | Description                                                                                            |
-|------------------------|---------------|--------------------------------------------------------------------------------------------------------|
-| project.virtualhost.*  | `kickoff.yml` | The virtual host to use according to your environments.                                                |
-| traefik.user           | `kickoff.yml` | The Traefik user used for generating the .htdigest file. Only required for environments <> `local`.    |
-| TRAEFIK_LOG_LEVEL      | `.env`        | Defines the log level of the Traefik container.                                                        |
-| TRAEFIK_PASSWORD       | `.env`        | The password of the user defined in the `kickoff.yml` file. Only required for environments <> `local`. |
-| TRAEFIK_CERT_FILE_PATH | `.env`        | The `.crt` absolute file path. Only required for environments <> `local`.                              |
-| TRAEFIK_KEY_FILE_PATH  | `.env`        | The `.key` absolute file path. Only required for environments <> `local`.                              |
-
-#### Commands
-
-| Command                 | Description                                                    |
-|-------------------------|----------------------------------------------------------------|
-| `orbit run proxy-build` | Generates the Traefik container configuration files.           |
-| `orbit run proxy-up`    | Starts the Traefik container and calls the Toolbox container to generate the self-signed certificate on your `local` environment or the `.htdigest` file in others environments. It should be the first to start. |
-| `orbit run proxy-down`  | Stops the Traefik container. It should be the last to stop.    |
+| Variable               | Location             | Description                                                                                                                                 |
+|------------------------|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------|
+| virtualhost.*          | `config/project.yml` | The virtual host to use according to your environments.                                                                                     |
+| traefik.user           | `config/modules.yml` | The Traefik user used for generating the .htdigest file. Only required for environments <> `local`.                                         |
+| TRAEFIK_PREFIX         | `config/.env`        | If `true`, your URLs will be prefixed with your current environment. This is useful if you wish to have many environments on the same host. |
+| TRAEFIK_LOG_LEVEL      | `config/.env`        | Defines the log level of the Traefik container.                                                                                             |
+| TRAEFIK_PASSWORD       | `config/.env`        | The password of the user defined in the `project.yml` file. Only required for environments <> `local`.                                      |
+| TRAEFIK_CERT_FILE_PATH | `config/.env`        | The `.crt` absolute file path. Only required for environments <> `local`.                                                                   |
+| TRAEFIK_KEY_FILE_PATH  | `config/.env`        | The `.key` absolute file path. Only required for environments <> `local`.                                                                   |
 
 ### Graylog
 
@@ -232,38 +224,20 @@ You may access to the Graylog dashboard (https://graylog.your-virtualhost.local/
 
 #### Configuration
 
-| Variable                 | Location      | Description                                                 |
-|--------------------------|---------------|-------------------------------------------------------------|
-| graylog.user             | `kickoff.yml` | The Graylog root user.                                      |
-| GRAYLOG_PASSWORD         | `.env`        | The password of the user defined in the `kickoff.yml` file. |
-| GRAYLOG_SERVER_JAVA_OPTS | `.env`        | The Java options for the Graylog server.                    |
-| GRAYLOG_ES_JAVA_OPTS     | `.env`        | The Java options for Elasticsearch.                         |
-
-#### Commands
-
-| Command                   | Description                                                                                                                                      |
-|---------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
-| `orbit run graylog-build` | Generates the Graylog containers configuration files.                                                                                            |
-| `orbit run graylog-up`    | Starts the Graylog containers and calls the Toolbox container to generate the Graylog secrets. They should be start after the Traefik container. |
-| `orbit run graylog-down`  | Stops the Graylog containers. They should be stop before the Traefik container.                                                                  |
-
----
-
-The following containers compose the main services of your PHP application.
-
-#### Commands
-
-| Command           | Description                                                                                                                                                                                                        |
-|-------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `orbit run build` | Generates the configuration files of your services and builds the NGINX and PHP-FPM containers. If `ENABLE_DOCKER_SYNC=true`, also generates the Docker Sync configuration file.                                   |
-| `orbit run up`    | Starts the NGINX, PHP-FPM, MySQL, Redis and RabbitMQ containers. If `ENABLE_DOCKER_SYNC=true`, starts Docker Sync. On `local` environment, also starts the phpMyAdmin container. They should be the last to start. |
-| `orbit run down`  | Stops the NGINX, PHP-FPM, MySQL, Redis and RabbitMQ containers. If `ENABLE_DOCKER_SYNC=true`, stops Docker Sync. On `local` environment, also stops the phpMyAdmin container. They should be the first to stop.    |
+| Variable                 | Location             | Description                                                                    |
+|--------------------------|----------------------|--------------------------------------------------------------------------------|
+| graylog.enable           | `config/modules.yml` | If `true`, enables Graylog.                                                    |
+| graylog.user             | `config/modules.yml` | The Graylog `root` user.                                                       |
+| GRAYLOG_PORT             | `config/.env`        | The port on which the Graylog server will receive logs from others containers. |
+| GRAYLOG_PASSWORD         | `config/.env`        | The password of the user defined in the `project.yml` file.                    |
+| GRAYLOG_SERVER_JAVA_OPTS | `config/.env`        | The Java options for the Graylog server.                                       |
+| GRAYLOG_ES_JAVA_OPTS     | `config/.env`        | The Java options for Elasticsearch.                                            |
 
 ### NGINX
 
 NGINX is the web server of your PHP application.
 
-The NGINX configuration located at `.docker/nginx/conf.d/php-fpm.conf` provides good security defaults. Still, you might 
+The NGINX configuration located at `modules/nginx/conf.d/php-fpm.conf` provides good security defaults. Still, you might 
 have to update it according to the PHP framework you wish to use.
 
 ### PHP-FPM
@@ -306,23 +280,17 @@ as defined in the PSR-1 and PSR-2 documents and many more.
 
 #### Configuration
 
-| Variable             | Location | Description                                                |
-|----------------------|----------|------------------------------------------------------------|
-| PHP_MEMORY_LIMIT     | `.env`   | Defines the PHP memory limit of the PHP-FPM container.     |
-| PHP_FPM_MEMORY_LIMIT | `.env`   | Defines the PHP-FPM memory limit of the PHP-FPM container. |
-
-#### Command
-
-| Command               | Description                                                                                                                 |
-|-----------------------|-----------------------------------------------------------------------------------------------------------------------------|
-| `orbit run workspace` | Connects through ash to the PHP-FPM container. This is where you're able to run useful commands like `composer` and `yarn`. |
+| Variable             | Location      | Description                                                |
+|----------------------|---------------|------------------------------------------------------------|
+| PHP_MEMORY_LIMIT     | `config/.env` | Defines the PHP memory limit of the PHP-FPM container.     |
+| PHP_FPM_MEMORY_LIMIT | `config/.env` | Defines the PHP-FPM memory limit of the PHP-FPM container. |
 
 ### MySQL
 
 The MySQL container is the DBMS of this stack.
 
 In your PHP-FPM container, the hostname of the MySQL DBMS is equal to `mysql`. Also, just use the port `3306` and the
-credentials defined in the `kickoff.yml` and `.env` files.
+credentials defined in the `modules.yml` and `.env` files.
 
 There are also three ways to manage MySQL:
 
@@ -336,20 +304,15 @@ using `127.0.0.1` (or your server IP) as host and the port defined in the variab
 
 #### Configuration
 
-| Variable                   | Location      | Description                                                                                                                                                                               |
-|----------------------------|---------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| mysql.user                 | `kickoff.yml` | The MySQL user of your PHP application.                                                                                                                                                   |
-| mysql.databases            | `kickoff.yml` | List of the databases of your PHP application. If they do not exist, they will be created when the MySQL container starts. The previous user will have all privileges on these databases. |
-| MYSQL_PASSWORD             | `.env`        | The password of the user defined in the `kickoff.yml` file.                                                                                                                               |
-| MYSQL_ROOT_PASSWORD        | `.env`        | The MySQL `root` password.                                                                                                                                                                |
-| MYSQL_ENABLE_PORTS_MAPPING | `.env`        | If true, it will map the port `3306` of the MySQL container with the host port defined below.                                                                                             |
-| MYSQL_HOST_PORT_TO_MAP     | `.env`        | The host port to map.                                                                                                                                                                     |
-
-#### Command
-
-| Command               | Description                                                                                           |
-|-----------------------|-------------------------------------------------------------------------------------------------------|
-| `orbit run mysql-cli` | Opens the MySQL cli as `root`. On environments <> `local`, it will ask you the MySQL `root` password. |
+| Variable                   | Location             | Description                                                                                                                                                                               |
+|----------------------------|----------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| mysql.enable               | `config/modules.yml` | If `true`, enables MySQL.                                                                                                                                                                 |
+| mysql.user                 | `config/modules.yml` | The MySQL user of your PHP application.                                                                                                                                                   |
+| mysql.databases            | `config/modules.yml` | List of the databases of your PHP application. If they do not exist, they will be created when the MySQL container starts. The previous user will have all privileges on these databases. |
+| MYSQL_PASSWORD             | `config/.env`        | The password of the user defined in the `modules.yml` file.                                                                                                                               |
+| MYSQL_ROOT_PASSWORD        | `config/.env`        | The MySQL `root` password.                                                                                                                                                                |
+| MYSQL_ENABLE_PORTS_MAPPING | `config/.env`        | If true, it will map the port `3306` of the MySQL container with the host port defined below.                                                                                             |
+| MYSQL_HOST_PORT_TO_MAP     | `config/.env`        | The host port to map.                                                                                                                                                                     |
 
 ### Redis
 
@@ -363,9 +326,10 @@ is installed by default.
 
 #### Configuration
 
-| Variable       | Location | Description                                |
-|----------------|----------|--------------------------------------------|
-| REDIS_PASSWORD | `.env`   | The auth used to access to the Redis DBMS. |
+| Variable       | Location             | Description                                |
+|----------------|----------------------|--------------------------------------------|
+| redis.enable   | `config/modules.yml` | If `true`, enables Redis.                  |
+| REDIS_PASSWORD | `.env`               | The auth used to access to the Redis DBMS. |
 
 ### RabbitMQ
 
@@ -379,22 +343,46 @@ your configuration files.
 
 #### Configuration
 
-| Variable          | Location      | Description                                                 |
-|-------------------|---------------|-------------------------------------------------------------|
-| rabbitmq.user     | `kickoff.yml` | The RabbitMQ user of your PHP application.                  |
-| RABBITMQ_PASSWORD | `.env`        | The password of the user defined in the `kickoff.yml` file. |
+| Variable          | Location             | Description                                                 |
+|-------------------|----------------------|-------------------------------------------------------------|
+| rabbitmq.enable   | `config/modules.yml` | If `true`, enables RabbitMQ.                                |
+| rabbitmq.user     | `config/modules.yml` | The RabbitMQ user of your PHP application.                  |
+| RABBITMQ_PASSWORD | `config/.env`        | The password of the user defined in the `modules.yml` file. |
 
-## Useful Docker commands
+## Advanced
 
-| Command                          | Description                                                                  |
-|----------------------------------|------------------------------------------------------------------------------|
-| `docker ps`                      | Lists all your active containers.                                            |
-| `docker volume ls`               | Lists all your active volumes.                                               |
-| `docker inspect volume`          | Displays useful information about a volume.                                  |
-| `docker volume rm volume`        | Deletes a specific volume. It should not be attached to an active container. |
-| `docker image ls`                | Lists all active images.                                                     |
-| `docker rmi $(docker images -q)` | Deletes all active images.                                                   |
-| `docker system prune`            | Cleans up stopped containers, volumes, networks and dangling images.         |
+### Restart strategy
+
+On your `local` environment, your containers will not restart automatically.
+
+On others environments, if you have enable Graylog, they will also not restart automatically. Indeed, we have to check 
+that Graylog is ready to receive logs from others containers before we start them. In your production environment, you 
+should configure your host to restart in the right order your containers after Docker startup. Indeed, your host provider
+might restart your server from time to time. Of course, if Graylog is not enable, your containers have been configured 
+to restart automatically. :wink:
+
+### Many environments on the same host
+
+Let's say you want your `staging` and `production` environments to run on the same host. You have cloned two projects,
+one per environment.
+
+First, check that you have the same virtual host on both environments. 
+
+Then, start your production environment by running `orbit run kickoff`.
+
+Once done, move to the `staging` environment project folder, and update the following variables in your `.env` file:
+
+* `TRAEFIK_PREFIX` to `true`
+* `GRAYLOG_PORT` to another port than the one used by your `production` environment
+* If `MYSQL_ENABLE_PORTS_MAPPING=true` on both your environments, update `MYSQL_HOST_PORT_TO_MAP` in your `staging` 
+environment to another port than the one used by your `production` environment
+
+Last but not least, start your `staging` environment by running `orbit run build up`.
+
+**Note:** don't run `kickoff` command, as we only want one Traefik container! 
+
+If your virtual host is `my-awesome-project.com`, your `production` applications will be available under `*.my-awesome-project.com`
+while your `staging` applications will be available under `*-staging.my-awesome-project.com`! :metal:
 
 ## Contributing
 

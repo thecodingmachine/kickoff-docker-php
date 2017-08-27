@@ -1,0 +1,37 @@
+version: '3.3'
+
+
+services:
+
+
+  redis:
+    image: redis:3.2.10-alpine
+    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-redis
+    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    command: redis-server --requirepass {{ .EnvFiles.Config.REDIS_PASSWORD }}
+    networks:
+      - backend
+    labels:
+      - traefik.enable=false
+    volumes:
+      - redis_data:/data
+    {{- if eq true .Values.Modules.graylog.enable }}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+    {{ end }}
+
+networks:
+
+
+  backend:
+    external:
+      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+
+
+volumes:
+
+
+  redis_data:
+    driver: local

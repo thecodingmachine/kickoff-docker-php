@@ -1,0 +1,22 @@
+# |--------------------------------------------------------------------------
+# | Orbit notify command
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the notify command of your project.
+# | Feel free to add your own commands!
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run notify
+  # |--------------------------------------------------------------------------
+  # |
+  # | Prints a nice whale to Stdout.
+  # |
+
+  - use: "notify"
+    run:
+      - orbit generate -t config/orbit/whale.txt -v Messages,config/orbit/messages.yml -r message_id={{ .RawData.message_id }}

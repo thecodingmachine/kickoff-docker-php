@@ -1,0 +1,49 @@
+version: '3.3'
+
+
+services:
+
+
+  php-fpm:
+    build: .
+    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-php-fpm
+    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    entrypoint: /usr/local/bin/docker-entrypoint.sh
+    networks:
+      - backend
+    environment:
+      - UID={{ if eq "linux" .Os }}${UID}{{ else }}82{{ end }}
+      - GID={{ if eq "linux" .Os }}${GID}{{ else }}82{{ end }}
+    labels:
+      - traefik.enable=false
+    volumes:
+      {{- if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+      - {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:/var/www/html:nocopy
+      {{- else }}
+      - ../../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}rw{{ end }}
+      {{- end }}
+      - ./docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro
+      - ./conf.d/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini:ro
+      - ./php-fpm.d/memory-limit.conf:/usr/local/etc/php-fpm.d/memory-limit.conf:ro
+      - ./php-fpm.d/security.conf:/usr/local/etc/php-fpm.d/security.conf:ro
+      - ./php-fpm.d/uploads.conf:/usr/local/etc/php-fpm.d/uploads.conf:ro
+    {{- if eq true .Values.Modules.graylog.enable }}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+    {{ end }}
+
+networks:
+
+  backend:
+    external:
+      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+
+{{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+volumes:
+
+
+  {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:
+    external: true
+{{- end }}

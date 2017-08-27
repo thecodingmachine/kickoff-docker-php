@@ -1,0 +1,53 @@
+version: '3.3'
+
+
+services:
+
+
+  rabbitmq:
+    image: rabbitmq:3.6.11-management-alpine
+    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-rabbitmq
+    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    hostname: rabbitmq
+    networks:
+      - proxy
+      - backend
+    environment:
+      - RABBITMQ_DEFAULT_USER={{ .Values.Modules.rabbitmq.user }}
+      - RABBITMQ_DEFAULT_PASS={{ .EnvFiles.Config.RABBITMQ_PASSWORD }}
+    labels:
+      - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-rabbitmq
+      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
+      {{- if and (eq $env $.EnvFiles.Config.ENV) (eq "true" $.EnvFiles.Config.TRAEFIK_PREFIX) }}
+      - traefik.frontend.rule=Host:rabbitmq-{{ $env }}.{{ $virtualhost }}
+      {{- else if eq $env $.EnvFiles.Config.ENV }}
+      - traefik.frontend.rule=Host:rabbitmq.{{ $virtualhost }}
+      {{- end }}
+      {{- end }}
+      - traefik.port=15672
+      - traefik.docker.network=kickoff_proxy
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    {{- if eq true .Values.Modules.graylog.enable }}
+    logging:
+      driver: gelf
+      options:
+        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+    {{ end }}
+
+networks:
+
+  proxy:
+    external:
+      name: kickoff_proxy
+
+  backend:
+    external:
+      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+
+
+volumes:
+
+
+  rabbitmq_data:
+    driver: local

@@ -1,0 +1,5 @@
+generated/graylog/.env
+generated/traefik/auth/.htdigest
+generated/traefik/certs/*.crt
+generated/traefik/certs/*.key
+docker-compose.yml

@@ -14,15 +14,21 @@ before_install:
   - curl -L https://github.com/docker/compose/releases/download/1.14.0/docker-compose-`uname -s`-`uname -m` > docker-compose
   - chmod +x docker-compose
   - sudo mv docker-compose /usr/local/bin
-  - wget https://github.com/gulien/orbit/releases/download/v1.0.0-beta2/orbit_Linux_x86_64.tar.gz && tar -xzf orbit*.tar.gz orbit && rm -f orbit*.tar.gz
+  - wget https://github.com/gulien/orbit/releases/download/v1.0.0/orbit_Linux_x86_64.tar.gz && tar -xzf orbit*.tar.gz orbit && rm -f orbit*.tar.gz
   - sudo mv ./orbit /usr/local/bin && chmod +x /usr/local/bin/orbit
 
 script:
-  - cp .env.blueprint .env
-  - orbit run kickoff
-  - docker ps
-  - orbit run shutdown
-  - docker ps
+  - cp ./config/.env.blueprint ./config/.env
+  # let's start a simple test without updating the configuration
+  - orbit run kickoff shutdown
+  # alright, now let's mimic a production environment
+  - sed -i -e "s#ENV=local#ENV=test#g" ./config/.env
+  - sed -i -e "s#TRAEFIK_CERT_FILE_PATH=#TRAEFIK_CERT_FILE_PATH=/home/travis/build/thecodingmachine/kickoff-docker-php/modules/toolbox/generated/traefik/certs/my-awesome-project.local.crt#g" ./config/.env
+  - sed -i -e "s#TRAEFIK_KEY_FILE_PATH=#TRAEFIK_KEY_FILE_PATH=/home/travis/build/thecodingmachine/kickoff-docker-php/modules/toolbox/generated/traefik/certs/my-awesome-project.local.key#g" ./config/.env
+  - orbit run kickoff shutdown
+  # last but not least, let's disable optional modules
+  - sed -i -e "s#true#false#g" ./config/modules.yml
+  - orbit run kickoff shutdown
 
 notifications:
   email: false

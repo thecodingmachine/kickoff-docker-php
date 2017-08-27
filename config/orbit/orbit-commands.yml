@@ -1,0 +1,41 @@
+# |--------------------------------------------------------------------------
+# | Orbit commands
+# |--------------------------------------------------------------------------
+# |
+# | This file describes the commands from the containers of your project.
+# | Feel free to add your own commands!
+# |
+# | https://github.com/gulien/orbit/
+# |
+
+commands:
+
+  # |--------------------------------------------------------------------------
+  # | orbit run command-workspace
+  # |--------------------------------------------------------------------------
+  # |
+  # | Connects through ash to the PHP-FPM container.
+  # |
+
+  - use: "command-workspace"
+    run:
+      - docker exec --user www-data -ti {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-php-fpm ash
+
+  # |--------------------------------------------------------------------------
+  # | orbit run command-mysql-cli
+  # |--------------------------------------------------------------------------
+  # |
+  # | Opens the MySQL cli as root.
+  # |
+  # | On environments <> "local", it will ask you the MySQL root password.
+  # |
+
+  - use: "command-mysql-cli"
+    run:
+      {{ if eq true .Values.Modules.mysql.enable }}
+      - docker exec -ti {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-mysql mysql -uroot -p{{ if eq "local" .EnvFiles.Config.ENV }}{{ .EnvFiles.Config.MYSQL_ROOT_PASSWORD }}{{ end }}
+      {{ else if eq "windows" .Os }}
+      - cmd.exe /c echo MySQL is not enable!
+      {{ else }}
+      - echo MySQL is not enable!
+      {{ end }}

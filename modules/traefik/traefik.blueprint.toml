@@ -1,0 +1,31 @@
+# Entry points definition
+defaultEntryPoints = ["http", "https"]
+
+[entryPoints]
+[entryPoints.http]
+address = ":80"
+[entryPoints.http.redirect]
+entryPoint = "https"
+[entryPoints.https]
+address = ":443"
+[entryPoints.https.tls]
+[[entryPoints.https.tls.certificates]]
+{{- if eq "local" .EnvFiles.Config.ENV }}
+certFile = "certs/{{ .Values.Project.virtualhost.local }}.crt"
+keyFile = "certs/{{ .Values.Project.virtualhost.local }}.key"
+{{- else }}
+{{- range $env, $virtualhost := .Values.Project.virtualhost }}
+{{- if eq $env $.EnvFiles.Config.ENV }}
+certFile = "certs/{{ $virtualhost }}.crt"
+keyFile = "certs/{{ $virtualhost }}.key"
+{{- end }}
+{{- end }}
+{{ end }}
+
+# API backend
+[web]
+address = ":8080"
+{{- if ne "local" .EnvFiles.Config.ENV }}
+[web.auth.digest]
+usersFile = "auth/.htdigest"
+{{- end }}

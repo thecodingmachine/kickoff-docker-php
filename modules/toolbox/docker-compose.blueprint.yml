@@ -1,0 +1,34 @@
+version: '3.3'
+
+
+services:
+
+
+  toolbox:
+    image: gulnap/kickoff-docker-php-images:toolbox-3.6-v2.0.0
+    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-toolbox
+    networks:
+      - backend
+    environment:
+      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
+      {{- if eq $env $.EnvFiles.Config.ENV }}
+      - VIRTUAL_HOST={{ $virtualhost }}
+      {{- end }}
+      {{- end }}
+      {{- if ne "local" .EnvFiles.Config.ENV }}
+      - TRAEFIK_USER={{ .Values.Modules.traefik.user }}
+      - TRAEFIK_PASSWORD={{ .EnvFiles.Config.TRAEFIK_PASSWORD }}
+      {{- end }}
+      - GRAYLOG_ROOT_PASSWORD_SHA2={{ .EnvFiles.Config.GRAYLOG_PASSWORD }}
+    labels:
+      - traefik.enable=false
+    volumes:
+      - ./generated:/generated:rw
+      - ./scripts:/scripts:ro
+
+
+networks:
+
+
+  backend:
+    driver: bridge
