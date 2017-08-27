@@ -229,7 +229,7 @@ You may access to the Graylog dashboard (https://graylog.your-virtualhost.local/
 | graylog.enable           | `config/modules.yml` | If `true`, enables Graylog.                                                    |
 | graylog.user             | `config/modules.yml` | The Graylog `root` user.                                                       |
 | GRAYLOG_PORT             | `config/.env`        | The port on which the Graylog server will receive logs from others containers. |
-| GRAYLOG_PASSWORD         | `config/.env`        | The password of the user defined in the `project.yml` file.                    |
+| GRAYLOG_PASSWORD         | `config/.env`        | The password of the user defined in the `modules.yml` file.                    |
 | GRAYLOG_SERVER_JAVA_OPTS | `config/.env`        | The Java options for the Graylog server.                                       |
 | GRAYLOG_ES_JAVA_OPTS     | `config/.env`        | The Java options for Elasticsearch.                                            |
 
