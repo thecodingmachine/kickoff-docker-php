@@ -210,7 +210,7 @@ to enable automatic HTTPS.
 | traefik.user           | `config/modules.yml` | The Traefik user used for generating the .htdigest file. Only required for environments <> `local`.                                         |
 | TRAEFIK_PREFIX         | `config/.env`        | If `true`, your URLs will be prefixed with your current environment. This is useful if you wish to have many environments on the same host. |
 | TRAEFIK_LOG_LEVEL      | `config/.env`        | Defines the log level of the Traefik container.                                                                                             |
-| TRAEFIK_PASSWORD       | `config/.env`        | The password of the user defined in the `project.yml` file. Only required for environments <> `local`.                                      |
+| TRAEFIK_PASSWORD       | `config/.env`        | The password of the user defined in the `modules.yml` file. Only required for environments <> `local`.                                      |
 | TRAEFIK_CERT_FILE_PATH | `config/.env`        | The `.crt` absolute file path. Only required for environments <> `local`.                                                                   |
 | TRAEFIK_KEY_FILE_PATH  | `config/.env`        | The `.key` absolute file path. Only required for environments <> `local`.                                                                   |
 
