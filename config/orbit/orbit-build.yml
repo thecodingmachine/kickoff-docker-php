@@ -85,7 +85,7 @@ commands:
       - orbit generate -t modules/php-fpm/conf.d/memory-limit.blueprint.ini -o modules/php-fpm/conf.d/memory-limit.ini -e Config,config/.env
       - orbit generate -t modules/php-fpm/php-fpm.d/memory-limit.blueprint.conf -o modules/php-fpm/php-fpm.d/memory-limit.conf -e Config,config/.env
       - orbit generate -t modules/php-fpm/php-fpm.d/security.blueprint.conf -o modules/php-fpm/php-fpm.d/security.conf -e Config,config/.env
-      - orbit generate -t modules/php-fpm/Dockerfile.blueprint -o modules/php-fpm/Dockerfile -e Config,config/.env
+      - orbit generate -t modules/php-fpm/Dockerfile.blueprint -o modules/php-fpm/Dockerfile -v Modules,config/modules.yml -e Config,config/.env
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/php-fpm/docker-compose.yml build
 
   # |--------------------------------------------------------------------------

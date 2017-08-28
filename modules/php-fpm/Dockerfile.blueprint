@@ -1,5 +1,6 @@
 FROM gulnap/kickoff-docker-php-images:php-fpm-7.1.8-v2.0.0
 
+{{ if eq true .Values.Modules.redis.enable }}
 # |--------------------------------------------------------------------------
 # | PHP extension for Redis
 # |--------------------------------------------------------------------------
@@ -11,7 +12,7 @@ RUN { \
         echo 'session.save_handler=redis'; \
         echo 'session.save_path="tcp://redis:6379?auth={{ .EnvFiles.Config.REDIS_PASSWORD }}"'; \
     } >> /usr/local/etc/php/conf.d/docker-php-ext-redis.ini
-
+{{ end }}
 {{ if eq "local" .EnvFiles.Config.ENV }}
 # |--------------------------------------------------------------------------
 # | Xdebug
