@@ -11,7 +11,7 @@
 
 ---
 
-We're working on a lof of projects at [TheCodingMachine](https://www.thecodingmachine.com/) and we needed a tool to 
+We're working on a lot of projects at [TheCodingMachine](https://www.thecodingmachine.com/) and we needed a tool to 
 easily start a PHP project with Docker. That's why we started working on the *kickoff-docker-php* stack with the
 following goals in mind:
 
@@ -39,7 +39,7 @@ following goals in mind:
 * **A complete stack:** NGINX, PHP-FPM 7.1, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ and more to come!
 * **Centralized logging** with Graylog
 * Automatic **HTTPS** on your local environment
-* A powerful **reverse-proy** ([Traefik](https://traefik.io/)) which can handle automatic HTTPS (via [Let's Encrypt](https://letsencrypt.org/))
+* A powerful **reverse-proxy** ([Traefik](https://traefik.io/)) which can handle automatic HTTPS (via [Let's Encrypt](https://letsencrypt.org/))
 on your production environment
 * **Performance gains** on Mac and Windows using [Docker Sync](http://docker-sync.io/) or Docker for Mac's user-guided cache
 * **Lightweight** images, mostly based on Alpine
@@ -198,7 +198,7 @@ On your `local` environment, the Toolbox container will automatically generate a
 virtual host specified in your `project.yml` file.
 
 On others environment, we provided `TRAEFIK_CERT_FILE_PATH` and `TRAEFIK_KEY_FILE_PATH` variables in your `.env` file 
-to let you specified the absolute path of your certifications. You could also customize the Traefik configuration located at 
+to let you specify the absolute path to your certificates. You may also customize the Traefik configuration located at 
 `modules/traefik/traefik.blueprint.toml` with [ACME configuration](https://docs.traefik.io/toml/#acme-lets-encrypt-configuration)
 to enable automatic HTTPS. 
 
@@ -220,7 +220,7 @@ The [Graylog](https://www.graylog.org/) containers centralize the Docker's logs 
 phpMyAdmin, Redis and RabbitMQ containers. It's actually composed of three containers: Elasticsearch, MongoDB
 and the Graylog server.
 
-You may access to the Graylog dashboard (https://graylog.your-virtualhost.local/) using the credentials provided in your configuration files.
+You may access the Graylog dashboard (https://graylog.your-virtualhost.local/) using the credentials provided in your configuration files.
 
 #### Configuration
 
@@ -289,12 +289,12 @@ as defined in the PSR-1 and PSR-2 documents and many more.
 
 The MySQL container is the DBMS of this stack.
 
-In your PHP-FPM container, the hostname of the MySQL DBMS is equal to `mysql`. Also, just use the port `3306` and the
+In your PHP-FPM container, the hostname of the MySQL DBMS is `mysql`. Also, just use the port `3306` and the
 credentials defined in the `modules.yml` and `.env` files.
 
 There are also three ways to manage MySQL:
 
-* On `local` environment, you may access to the phpMyAdmin dashboard (https://phpadmin.your-virtualhost.local/); 
+* On `local` environment, you may access the phpMyAdmin dashboard (https://phpadmin.your-virtualhost.local/); 
 you will automatically be connected as `root`
 * By running `orbit run mysql-cli`: it will open the MySQL cli and connect you as `root`. On environments <> `local`, 
 it will ask you the MySQL `root` password
@@ -318,7 +318,7 @@ using `127.0.0.1` (or your server IP) as host and the port defined in the variab
 
 Redis is the database cache of this stack and it has been configured as the default session handler for PHP.
 
-The hostname of Redis in your PHP-FPM container is equal to `redis`. To configure Redis to be the cache handler of 
+The hostname of Redis in your PHP-FPM container is `redis`. To configure Redis to be the cache handler of 
 your PHP application, you should refer to the documentation provided by your PHP framework.
 
 **Note:** You should not use [predis](https://github.com/nrk/predis), as [phpredis](https://github.com/phpredis/phpredis) 
@@ -329,16 +329,16 @@ is installed by default.
 | Variable       | Location             | Description                                |
 |----------------|----------------------|--------------------------------------------|
 | redis.enable   | `config/modules.yml` | If `true`, enables Redis.                  |
-| REDIS_PASSWORD | `.env`               | The auth used to access to the Redis DBMS. |
+| REDIS_PASSWORD | `.env`               | The auth used to access the Redis DBMS.    |
 
 ### RabbitMQ
 
 RabbitMQ is the message broker of this stack.
 
-The hostname of RabbitMQ in your PHP-FPM container is equal to `rabbitmq`. To configure RabbitMQ to be the message 
+The hostname of RabbitMQ in your PHP-FPM container is `rabbitmq`. To configure RabbitMQ to be the message 
 broker of your PHP application, you should refer to the documentation provided by your PHP framework.
 
-You may access to the RabbitMQ dashboard (https://rabbitmq.your-virtualhost.local/) using the credentials provided in 
+You may access the RabbitMQ dashboard (https://rabbitmq.your-virtualhost.local/) using the credentials provided in 
 your configuration files.
 
 #### Configuration
@@ -389,7 +389,7 @@ while your `staging` applications will be available under `*-staging.my-awesome-
 Please read our [contributing guidelines](.github/CONTRIBUTING.md) for instructions.
 
 If you've found a security vulnerability, please e-mail directly: j dot neuhart dot thecodingmachine dot com.
-Provide enough information to verify the bug and make a patch!
+Provide enough information to reproduce the bug and make a patch!
 
 ## Credits
 
