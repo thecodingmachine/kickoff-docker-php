@@ -4,7 +4,7 @@ FROM nginx:1.12-alpine
 # | Permissions issues workaround
 # |--------------------------------------------------------------------------
 # |
-# | On Linux, the UID ang GID args will be set with the UID and GID of the
+# | On Linux and Mac, the UID arg will be set with the UID of the
 # | current user from the host.
 # |
 
