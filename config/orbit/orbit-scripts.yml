@@ -11,38 +11,51 @@
 commands:
 
   # |--------------------------------------------------------------------------
-  # | orbit run script-linux-fix-permissions-nginx
+  # | orbit run script-fix-permissions-docker-sync
   # |--------------------------------------------------------------------------
   # |
-  # | Fixes "www-data" permissions issues on Linux for NGINX.
+  # | Fixes "www-data" permissions issues with Docker Sync.
   # |
 
-  - use: "script-linux-fix-permissions-nginx"
+  - use: "script-fix-permissions-docker-sync"
     run:
-      {{ if eq "linux" .Os }}
-      - /bin/bash config/scripts/linux-fix-permissions.sh NGINX
+      {{ if and (ne "windows" .Os) (eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC) }}
+      - /bin/bash config/scripts/fix-permissions.sh
       {{ else if eq "windows" .Os }}
-      - cmd.exe /c echo Skipping for "www-data" permissions issues on Linux for NGINX container ...
+      - cmd.exe /c echo Skipping UID binding for "www-data" user with Docker Sync ...
       {{ else }}
-      - echo Skipping fix for "www-data" permissions issues on Linux for NGINX container ...
+      - echo Skipping UID binding for "www-data" with Docker Sync ...
       {{ end }}
 
   # |--------------------------------------------------------------------------
-  # | orbit run script-linux-fix-permissions-php-fpm
+  # | orbit run script-fix-permissions-nginx
   # |--------------------------------------------------------------------------
   # |
-  # | Fixes "www-data" permissions issues on Linux for PHP-FPM.
+  # | Fixes "www-data" permissions issues in the NGINX container.
   # |
 
-  - use: "script-linux-fix-permissions-php-fpm"
+  - use: "script-fix-permissions-nginx"
     run:
-      {{ if eq "linux" .Os }}
-      - /bin/bash config/scripts/linux-fix-permissions.sh PHP-FPM
-      {{ else if eq "windows" .Os }}
-      - cmd.exe /c echo Skipping for "www-data" permissions issues on Linux for PHP-FPM container ...
-      {{ else }}
-      - echo Skipping fix for "www-data" permissions issues on Linux for PHP-FPM container ...
-      {{ end }}
+       {{ if ne "windows" .Os }}
+       - /bin/bash config/scripts/fix-permissions.sh NGINX
+       {{ else }}
+       - cmd.exe /c echo Skipping UID binding for "www-data" user in the NGINX container ...
+       {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-fix-permissions-php-fpm
+  # |--------------------------------------------------------------------------
+  # |
+  # | Fixes "www-data" permissions issues in the PHP-FPM container.
+  # |
+
+  - use: "script-fix-permissions-php-fpm"
+    run:
+       {{ if ne "windows" .Os }}
+       - /bin/bash config/scripts/fix-permissions.sh PHP-FPM
+       {{ else }}
+       - cmd.exe /c echo Skipping UID binding for "www-data" user in the PHP-FPM container ...
+       {{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run script-traefik-self-signed-certificate

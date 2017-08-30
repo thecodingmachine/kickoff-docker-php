@@ -10,8 +10,7 @@ FROM nginx:1.12-alpine
 
 # 82 is the standard uid/gid for "www-data" in Alpine
 ARG UID=82
-ARG GID=82
 
-RUN addgroup -g $GID -S www-data &&\
+RUN addgroup -g 82 -S www-data &&\
     adduser -u $UID -D -S -G www-data www-data &&\
     rm /etc/nginx/conf.d/default.conf

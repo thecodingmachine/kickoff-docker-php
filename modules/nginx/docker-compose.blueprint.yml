@@ -8,8 +8,7 @@ services:
     build:
       context: .
       args:
-        - UID={{ if eq "linux" .Os }}${UID}{{ else }}82{{ end }}
-        - GID={{ if eq "linux" .Os }}${GID}{{ else }}82{{ end }}
+        - UID={{ if ne "windows" .Os }}${UID}{{ else }}82{{ end }}
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-nginx
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     labels:
