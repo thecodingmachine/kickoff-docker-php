@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.0.1"><img src="https://img.shields.io/badge/stable-v2.0.1-green.svg" alt="Stable release: v2.0.1"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.0.2"><img src="https://img.shields.io/badge/stable-v2.0.2-green.svg" alt="Stable release: v2.0.2"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
@@ -302,6 +302,9 @@ it will ask you the MySQL `root` password
 using `127.0.0.1` (or your server IP) as host and the port defined in the variable `MYSQL_HOST_PORT_TO_MAP` in your
 `.env` file
 
+**Note:** On `production` environments, we strongly advise to not put the MySQL port on a public facing port. 
+This should be used only in others environments.
+
 #### Configuration
 
 | Variable                   | Location             | Description                                                                                                                                                                               |
@@ -376,6 +379,9 @@ Once done, move to the `staging` environment project folder, and update the foll
 * `GRAYLOG_PORT` to another port than the one used by your `production` environment
 * If `MYSQL_ENABLE_PORTS_MAPPING=true` on both your environments, update `MYSQL_HOST_PORT_TO_MAP` in your `staging` 
 environment to another port than the one used by your `production` environment
+
+**Reminder:** On `production` environments, we strongly advise to not put the MySQL port on a public facing port. 
+This should be used only in others environments.
 
 Last but not least, start your `staging` environment by running `orbit run build up`.
 

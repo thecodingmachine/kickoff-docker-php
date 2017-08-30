@@ -21,6 +21,7 @@ commands:
     run:
       {{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
       - orbit generate -t docker-sync.blueprint.yml -o docker-sync.yml -v Project,config/project.yml -e Config,config/.env
+      - orbit run script-fix-permissions-docker-sync -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
       {{ else if eq "windows" .Os }}
       - cmd.exe /c echo Skipping Docker Sync configuration file generation ...
       {{ else }}
@@ -81,7 +82,7 @@ commands:
   - use: "php-fpm-build"
     run:
       - orbit generate -t modules/php-fpm/docker-compose.blueprint.yml -o modules/php-fpm/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run script-linux-fix-permissions-php-fpm -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
+      - orbit run script-fix-permissions-php-fpm -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
       - orbit generate -t modules/php-fpm/conf.d/memory-limit.blueprint.ini -o modules/php-fpm/conf.d/memory-limit.ini -e Config,config/.env
       - orbit generate -t modules/php-fpm/php-fpm.d/memory-limit.blueprint.conf -o modules/php-fpm/php-fpm.d/memory-limit.conf -e Config,config/.env
       - orbit generate -t modules/php-fpm/php-fpm.d/security.blueprint.conf -o modules/php-fpm/php-fpm.d/security.conf -e Config,config/.env
@@ -98,7 +99,7 @@ commands:
   - use: "nginx-build"
     run:
       - orbit generate -t modules/nginx/docker-compose.blueprint.yml -o modules/nginx/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run script-linux-fix-permissions-nginx -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
+      - orbit run script-fix-permissions-nginx -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/nginx/docker-compose.yml build
 
   # |--------------------------------------------------------------------------
