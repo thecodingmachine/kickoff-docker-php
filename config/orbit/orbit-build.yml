@@ -114,6 +114,8 @@ commands:
       {{ if eq true .Values.Modules.mysql.enable }}
       - orbit generate -t modules/mysql/docker-compose.blueprint.yml -o modules/mysql/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
       - orbit generate -t modules/mysql/docker-entrypoint-initdb.d/databases.blueprint.sql -o modules/mysql/docker-entrypoint-initdb.d/databases.sql -v Modules,config/modules.yml -e Config,config/.env
+      - orbit generate -t modules/mysql/secrets/mysql_password.blueprint.txt -o modules/mysql/secrets/mysql_password.txt -e Config,config/.env
+      - orbit generate -t modules/mysql/secrets/mysql_root_password.blueprint.txt -o modules/mysql/secrets/mysql_root_password.txt -e Config,config/.env
       {{ else if eq "windows" .Os }}
       - cmd.exe /c echo Skipping MySQL configuration files generation ...
       {{ else }}

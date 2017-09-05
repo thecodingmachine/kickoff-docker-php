@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.0.2"><img src="https://img.shields.io/badge/stable-v2.0.2-green.svg" alt="Stable release: v2.0.2"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.0.3"><img src="https://img.shields.io/badge/stable-v2.0.3-green.svg" alt="Stable release: v2.0.3"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
@@ -385,7 +385,7 @@ This should be used only in others environments.
 
 Last but not least, start your `staging` environment by running `orbit run build up`.
 
-**Note:** don't run `kickoff` command, as we only want one Traefik container! 
+**Note:** Don't run `kickoff` command, as we only want one Traefik container! 
 
 If your virtual host is `my-awesome-project.com`, your `production` applications will be available under `*.my-awesome-project.com`
 while your `staging` applications will be available under `*-staging.my-awesome-project.com`! :metal:
