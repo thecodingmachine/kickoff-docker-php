@@ -66,13 +66,7 @@ commands:
 
   - use: "script-traefik-self-signed-certificate"
     run:
-      {{ if eq "local" .EnvFiles.Config.ENV }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
-      {{ else if eq "windows" .Os }}
-      - cmd.exe /c echo Skipping self-signed certificate generation ...
-      {{ else }}
-      - echo Skipping self-signed certificate generation ...
-      {{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run script-traefik-htdigest
@@ -86,13 +80,7 @@ commands:
 
   - use: "script-traefik-htdigest"
     run:
-      {{ if ne "local" .EnvFiles.Config.ENV }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c  /scripts/traefik-htdigest.sh
-      {{ else if eq "windows" .Os }}
-      - cmd.exe /c echo Skipping .htdigest file generation ...
-      {{ else }}
-      - echo Skipping .htdigest file generation ...
-      {{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run script-graylog-secrets
@@ -109,15 +97,20 @@ commands:
   # | orbit run script-graylog-health-check
   # |--------------------------------------------------------------------------
   # |
-  # | Generates Graylog secrets.
+  # | Checks if Graylog is correctly running.
   # |
 
   - use: "script-graylog-health-check"
     run:
-      {{ if eq true .Values.Modules.graylog.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/graylog-health-check.sh
-      {{ else if eq "windows" .Os }}
-      - cmd.exe /c echo Skipping Graylog healtch check ...
-      {{ else }}
-      - echo Skipping Skipping Graylog healtch check ...
-      {{ end }}
+
+  # |--------------------------------------------------------------------------
+  # | orbit run script-others-modules-health-check
+  # |--------------------------------------------------------------------------
+  # |
+  # | Checks if others modules are correctly running.
+  # |
+
+  - use: "script-others-modules-health-check"
+    run:
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/others-modules-health-check.sh

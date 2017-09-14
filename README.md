@@ -184,6 +184,7 @@ The Toolbox is a simple container which is used to:
 * Generates the `.htdigest` file for authentication to the Traefik dashboard on environments <> `local`
 * Generates the SHA2 password and secret pepper for Graylog authentication
 * Checks if Graylog is ready to receive logs from others containers
+* Checks if others containers have been successfully started
 
 ### Traefik
 

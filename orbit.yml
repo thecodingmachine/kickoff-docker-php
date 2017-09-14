@@ -89,6 +89,7 @@ commands:
       - orbit run mysql-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
       - orbit run redis-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
       - orbit run rabbitmq-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
+      - orbit run script-others-modules-health-check -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
       - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=up_success
       - docker ps
       

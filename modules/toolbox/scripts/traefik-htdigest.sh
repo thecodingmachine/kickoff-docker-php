@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "$ENV" == "local" ]; then
+    echo Skipping .htdigest file generation ...;
+    exit 0;
+fi;
+
 echo Generating .htdigest file ...;
 
 rm -f /generated/traefik/auth/.htdigest;

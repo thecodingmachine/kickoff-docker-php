@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "$ENV" != "local" ]; then
+    echo Skipping self-signed certificate generation ...;
+    exit 0;
+fi;
+
 if [ ! -f "/generated/traefik/certs/$VIRTUAL_HOST.key" ]; then
     echo Generating the self-signed certificate ...
 

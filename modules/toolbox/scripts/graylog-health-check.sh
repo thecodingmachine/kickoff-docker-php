@@ -1,17 +1,12 @@
 #!/bin/sh
 
-echo Waiting Graylog ...;
+if [ "$GRAYLOG_ENABLED" == "false" ]; then
+    echo Skipping Graylog health check ...;
+    exit 0;
+fi;
 
-attempts=30;
-while [[ $attempts -ne 0 ]]; do
-    nc -z graylog-server 9000 > /dev/null 2>&1;
-    if [[ $? -eq 0 ]]; then
-       exit 0;
-    fi;
-    sleep 5s;
-    attempts=`expr $attempts - 1`;
-    echo .;
-done;
+if ! /bin/sh -c "/scripts/health-check.sh Graylog graylog-server 9000"; then
+    exit 1;
+fi;
 
-echo Graylog has not started, aborting other containers startup ...;
-exit 1;
+exit 0;

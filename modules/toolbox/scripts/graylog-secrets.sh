@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ "$GRAYLOG_ENABLED" == "false" ]; then
+    echo Skipping Graylog secrets generation ...;
+    exit 0;
+fi;
+
 sedi()
 {
     sed --version >/dev/null 2>&1 && sed -i -- "$@" || sed -i "" "$@";
