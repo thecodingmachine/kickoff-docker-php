@@ -58,7 +58,7 @@ On Linux, you also have to install [Docker compose](https://docs.docker.com/comp
 come with by default. Also add your current user to the `docker` group and don't forget to logout/login from your current 
 session.
 
-Then download and install [Orbit](https://github.com/gulien/orbit), a tool for generating files from templates and 
+Then download and install [Orbit](https://github.com/gulien/orbit) (**1.0.0***), a tool for generating files from templates and 
 running commands.
 
 You may now fork this project and clone it or download the latest release from the [releases page](../../releases).
