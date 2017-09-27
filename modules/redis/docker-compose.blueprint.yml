@@ -5,7 +5,7 @@ services:
 
 
   redis:
-    image: redis:3.2.10-alpine
+    image: redis:3.2.11-alpine
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-redis
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     command: redis-server --requirepass {{ .EnvFiles.Config.REDIS_PASSWORD }}

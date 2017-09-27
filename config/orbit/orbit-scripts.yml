@@ -17,11 +17,11 @@ commands:
   # | Fixes "www-data" permissions issues with Docker Sync.
   # |
 
-  - use: "script-fix-permissions-docker-sync"
+  - use: script-fix-permissions-docker-sync
     run:
-      {{ if and (ne "windows" .Os) (eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC) }}
+      {{ if and (ne "windows" os) (eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC) }}
       - /bin/bash config/scripts/fix-permissions.sh
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping UID binding for "www-data" user with Docker Sync ...
       {{ else }}
       - echo Skipping UID binding for "www-data" with Docker Sync ...
@@ -34,9 +34,9 @@ commands:
   # | Fixes "www-data" permissions issues in the NGINX container.
   # |
 
-  - use: "script-fix-permissions-nginx"
+  - use: script-fix-permissions-nginx
     run:
-       {{ if ne "windows" .Os }}
+       {{ if ne "windows" os }}
        - /bin/bash config/scripts/fix-permissions.sh NGINX
        {{ else }}
        - cmd.exe /c echo Skipping UID binding for "www-data" user in the NGINX container ...
@@ -49,9 +49,9 @@ commands:
   # | Fixes "www-data" permissions issues in the PHP-FPM container.
   # |
 
-  - use: "script-fix-permissions-php-fpm"
+  - use: script-fix-permissions-php-fpm
     run:
-       {{ if ne "windows" .Os }}
+       {{ if ne "windows" os }}
        - /bin/bash config/scripts/fix-permissions.sh PHP-FPM
        {{ else }}
        - cmd.exe /c echo Skipping UID binding for "www-data" user in the PHP-FPM container ...
@@ -64,9 +64,9 @@ commands:
   # | Generates the self-signed certificate if current environment is "local".
   # |
 
-  - use: "script-traefik-self-signed-certificate"
+  - use: script-traefik-self-signed-certificate
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
 
   # |--------------------------------------------------------------------------
   # | orbit run script-traefik-htdigest
@@ -78,9 +78,9 @@ commands:
   # | Only for environments <> "local".
   # |
 
-  - use: "script-traefik-htdigest"
+  - use: script-traefik-htdigest
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c  /scripts/traefik-htdigest.sh
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c  /scripts/traefik-htdigest.sh
 
   # |--------------------------------------------------------------------------
   # | orbit run script-graylog-secrets
@@ -89,28 +89,6 @@ commands:
   # | Generates Graylog secrets.
   # |
 
-  - use: "script-graylog-secrets"
+  - use: script-graylog-secrets
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/graylog-secrets.sh
-
-  # |--------------------------------------------------------------------------
-  # | orbit run script-graylog-health-check
-  # |--------------------------------------------------------------------------
-  # |
-  # | Checks if Graylog is correctly running.
-  # |
-
-  - use: "script-graylog-health-check"
-    run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/graylog-health-check.sh
-
-  # |--------------------------------------------------------------------------
-  # | orbit run script-others-modules-health-check
-  # |--------------------------------------------------------------------------
-  # |
-  # | Checks if others modules are correctly running.
-  # |
-
-  - use: "script-others-modules-health-check"
-    run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run toolbox /bin/sh -c /scripts/others-modules-health-check.sh
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c /scripts/graylog-secrets.sh

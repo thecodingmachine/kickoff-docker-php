@@ -1,3 +1,4 @@
+{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
 version: '3.3'
 
 
@@ -47,12 +48,10 @@ services:
       - PMA_PASSWORD={{ .EnvFiles.Config.MYSQL_ROOT_PASSWORD }}
     labels:
       - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-phpmyadmin
-      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
-      {{- if and (eq $env $.EnvFiles.Config.ENV) (eq "true" $.EnvFiles.Config.TRAEFIK_PREFIX) }}
-      - traefik.frontend.rule=Host:phpadmin-{{ $env }}.{{ $virtualhost }}
-      {{- else if eq $env $.EnvFiles.Config.ENV }}
+      {{- if eq "true" .EnvFiles.Config.TRAEFIK_PREFIX }}
+      - traefik.frontend.rule=Host:phpadmin-{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }}
+      {{- else }}
       - traefik.frontend.rule=Host:phpadmin.{{ $virtualhost }}
-      {{- end }}
       {{- end }}
       - traefik.docker.network=kickoff_proxy
     volumes:

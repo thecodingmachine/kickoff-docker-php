@@ -1,3 +1,4 @@
+{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
 version: '3.3'
 
 
@@ -5,24 +6,17 @@ services:
 
 
   toolbox:
-    image: gulnap/kickoff-docker-php-images:toolbox-3.6-v2.0.0
+    image: gulnap/kickoff-docker-php-images:toolbox-3.6-v2.1.0
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-toolbox
     networks:
       - backend
     environment:
-      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
-      {{- if eq $env $.EnvFiles.Config.ENV }}
       - VIRTUAL_HOST={{ $virtualhost }}
-      {{- end }}
-      {{- end }}
       - ENV={{ .EnvFiles.Config.ENV }}
       - TRAEFIK_USER={{ .Values.Modules.traefik.user }}
       - TRAEFIK_PASSWORD={{ .EnvFiles.Config.TRAEFIK_PASSWORD }}
       - GRAYLOG_ROOT_PASSWORD_SHA2={{ .EnvFiles.Config.GRAYLOG_PASSWORD }}
       - GRAYLOG_ENABLED={{ .Values.Modules.graylog.enable }}
-      - MYSQL_ENABLED={{ .Values.Modules.mysql.enable }}
-      - REDIS_ENABLED={{ .Values.Modules.redis.enable }}
-      - RABBITMQ_ENABLED={{ .Values.Modules.rabbitmq.enable }}
     labels:
       - traefik.enable=false
     volumes:

@@ -13,7 +13,7 @@ while [ $attempts -ne 0 ]; do
     nc -z $HOST $PORT > /dev/null 2>&1;
 
     if [ $? -eq 0 ]; then
-        printf "\r[success] $SERVICE is ready!\n";
+        printf "\r[OK] $SERVICE is running!\n";
         exit 0;
     fi;
 

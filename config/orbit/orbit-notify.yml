@@ -17,6 +17,6 @@ commands:
   # | Prints a nice whale to Stdout.
   # |
 
-  - use: "notify"
+  - use: notify
     run:
-      - orbit generate -t config/orbit/whale.txt -v Messages,config/orbit/messages.yml -r message_id={{ .RawData.message_id }}
+      - orbit generate -t config/orbit/whale.txt -v Messages,config/orbit/messages.yml -r message_id={{ .RawData.message_id }} {{ if debug }}-d{{ end }}

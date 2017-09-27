@@ -7,5 +7,5 @@ syncs:
   {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:
     src: './app/'
     sync_userid: ${UID}
-    sync_strategy: {{ if eq "darwin" .Os }}'native_osx'{{ else }}'unison'{{ end }}
+    sync_strategy: {{ if eq "darwin" os }}'native_osx'{{ else }}'unison'{{ end }}
     sync_excludes: ['.idea']

@@ -1,3 +1,4 @@
+{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
 version: '3.3'
 
 
@@ -8,17 +9,15 @@ services:
     build:
       context: .
       args:
-        - UID={{ if ne "windows" .Os }}${UID}{{ else }}82{{ end }}
+        - UID={{ if ne "windows" os }}${UID}{{ else }}82{{ end }}
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-nginx
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     labels:
       - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-nginx
-      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
-      {{- if and (eq $env $.EnvFiles.Config.ENV) (eq "true" $.EnvFiles.Config.TRAEFIK_PREFIX) }}
-      - traefik.frontend.rule=Host:{{ $env }}.{{ $virtualhost }},www-{{ $env }}.{{ $virtualhost }}
-      {{- else if eq $env $.EnvFiles.Config.ENV }}
+      {{- if eq "true" .EnvFiles.Config.TRAEFIK_PREFIX }}
+      - traefik.frontend.rule=Host:{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }},www-{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }}
+      {{- else }}
       - traefik.frontend.rule=Host:{{ $virtualhost }},www.{{ $virtualhost }}
-      {{- end }}
       {{- end }}
       - traefik.docker.network=kickoff_proxy
     networks:
@@ -28,7 +27,7 @@ services:
       {{- if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
       - {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
-      - ../../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}ro{{ end }}
+      - ../../app:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}ro{{ end }}
       {{- end }}
       - ./conf.d/php-fpm.conf:/etc/nginx/conf.d/php-fpm.conf:ro
     {{- if eq true .Values.Modules.graylog.enable }}

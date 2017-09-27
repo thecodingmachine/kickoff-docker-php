@@ -17,11 +17,11 @@ commands:
   # | Stops Docker Sync.
   # |
 
-  - use: "docker-sync-down"
+  - use: docker-sync-down
     run:
       {{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
       - docker-sync clean
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping Docker Sync shutdown ...
       {{ else }}
       - echo Skipping Docker Sync shutdown ...
@@ -31,11 +31,10 @@ commands:
   # | orbit run toolbox-down
   # |--------------------------------------------------------------------------
   # |
-  # | Only useful to remove properly the backend network and run instances
-  # | created while calling the Toolbox container.
+  # | Only useful to remove properly the backend network.
   # |
 
-  - use: "toolbox-down"
+  - use: toolbox-down
     run:
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml down
 
@@ -48,7 +47,7 @@ commands:
   # | It should be the last to stop.
   # |
 
-  - use: "traefik-down"
+  - use: traefik-down
     run:
       - docker-compose -p kickoff -f modules/traefik/docker-compose.yml down
 
@@ -61,11 +60,11 @@ commands:
   # | They should be stop before the Traefik container.
   # |
 
-  - use: "graylog-down"
+  - use: graylog-down
     run:
       {{ if eq true .Values.Modules.graylog.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/graylog/docker-compose.yml down
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping Graylog containers shutdown ...
       {{ else }}
       - echo Skipping Graylog containers shutdown ...
@@ -80,7 +79,7 @@ commands:
   # | It should be stop before the Graylog containers.
   # |
 
-  - use: "php-fpm-down"
+  - use: php-fpm-down
     run:
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/php-fpm/docker-compose.yml down
 
@@ -93,7 +92,7 @@ commands:
   # | It should be stop before the Graylog containers.
   # |
 
-  - use: "nginx-down"
+  - use: nginx-down
     run:
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/nginx/docker-compose.yml down
 
@@ -108,11 +107,11 @@ commands:
   # | They should be stop before the Graylog containers.
   # |
 
-  - use: "mysql-down"
+  - use: mysql-down
     run:
       {{ if eq true .Values.Modules.mysql.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/mysql/docker-compose.yml down
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping MySQL container shutdown ...
       {{ else }}
       - echo Skipping MySQL container shutdown ...
@@ -127,11 +126,11 @@ commands:
   # | It should be stop before the Graylog containers.
   # |
 
-  - use: "redis-down"
+  - use: redis-down
     run:
       {{ if eq true .Values.Modules.redis.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/redis/docker-compose.yml down
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping Redis container shutdown ...
       {{ else }}
       - echo Skipping Redis container shutdown ...
@@ -146,11 +145,11 @@ commands:
   # | It should be stop after the Graylog containers.
   # |
 
-  - use: "rabbitmq-down"
+  - use: rabbitmq-down
     run:
       {{ if eq true .Values.Modules.rabbitmq.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/rabbitmq/docker-compose.yml down
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping RabbitMQ container shutdown ...
       {{ else }}
       - echo Skipping RabbitMQ container shutdown ...

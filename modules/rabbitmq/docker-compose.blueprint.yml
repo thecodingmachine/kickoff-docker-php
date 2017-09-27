@@ -1,3 +1,4 @@
+{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
 version: '3.3'
 
 
@@ -5,7 +6,7 @@ services:
 
 
   rabbitmq:
-    image: rabbitmq:3.6.11-management-alpine
+    image: rabbitmq:3.6.12-management-alpine
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-rabbitmq
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     hostname: rabbitmq
@@ -17,12 +18,10 @@ services:
       - RABBITMQ_DEFAULT_PASS={{ .EnvFiles.Config.RABBITMQ_PASSWORD }}
     labels:
       - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-rabbitmq
-      {{- range $env, $virtualhost := .Values.Project.virtualhost }}
-      {{- if and (eq $env $.EnvFiles.Config.ENV) (eq "true" $.EnvFiles.Config.TRAEFIK_PREFIX) }}
-      - traefik.frontend.rule=Host:rabbitmq-{{ $env }}.{{ $virtualhost }}
-      {{- else if eq $env $.EnvFiles.Config.ENV }}
+      {{- if eq "true" .EnvFiles.Config.TRAEFIK_PREFIX }}
+      - traefik.frontend.rule=Host:rabbitmq-{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }}
+      {{- else }}
       - traefik.frontend.rule=Host:rabbitmq.{{ $virtualhost }}
-      {{- end }}
       {{- end }}
       - traefik.port=15672
       - traefik.docker.network=kickoff_proxy

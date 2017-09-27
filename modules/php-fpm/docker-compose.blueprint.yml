@@ -12,14 +12,14 @@ services:
     networks:
       - backend
     environment:
-      - UID={{ if ne "windows" .Os }}${UID}{{ else }}82{{ end }}
+      - UID={{ if ne "windows" os }}${UID}{{ else }}82{{ end }}
     labels:
       - traefik.enable=false
     volumes:
       {{- if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
       - {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
-      - ../../app:/var/www/html:{{ if eq "darwin" .Os }}cached{{ else }}rw{{ end }}
+      - ../../app:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}rw{{ end }}
       {{- end }}
       - ./docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro
       - ./conf.d/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini:ro

@@ -18,9 +18,10 @@ commands:
   # | and starts the containers.
   # |
 
-  - use: "kickoff"
+  - use: kickoff
+    short: Generates all configuration files, builds the NGINX and PHP-FPM images and starts the containers
     run:
-      - orbit run build proxy-up up
+      - orbit run build proxy-up up {{ if debug }}-d{{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run shutdown
@@ -29,9 +30,10 @@ commands:
   # | Stops all containers.
   # |
 
-  - use: "shutdown"
+  - use: shutdown
+    short: Stops all containers
     run:
-      - orbit run down proxy-down
+      - orbit run down proxy-down {{ if debug }}-d{{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run build
@@ -43,18 +45,19 @@ commands:
   # | See config/orbit/orbit-build.yml for more information.
   # |
 
-  - use: "build"
+  - use: build
+    short: Generates all configuration files and builds the NGINX and PHP-FPM images
     run:
-      - orbit run docker-sync-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run toolbox-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run traefik-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run graylog-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run php-fpm-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run nginx-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run mysql-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run redis-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run rabbitmq-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=build_success
+      - orbit run docker-sync-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run toolbox-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run traefik-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run graylog-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run php-fpm-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run nginx-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run mysql-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run redis-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run rabbitmq-build -c config/orbit/orbit-build.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=build_success {{ if debug }}-d{{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run proxy-up
@@ -65,9 +68,10 @@ commands:
   # | See config/orbit/orbit-up.yml for more information.
   # |
 
-  - use: "proxy-up"
+  - use: proxy-up
+    short: Starts the Traefik container
     run:
-      - orbit run traefik-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
+      - orbit run traefik-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
       - docker ps
 
   # |--------------------------------------------------------------------------
@@ -79,18 +83,17 @@ commands:
   # | See config/orbit/orbit-up.yml for more information.
   # |
 
-  - use: "up"
+  - use: up
+    short: Starts all containers without the Traefik container
     run:
-      - orbit run graylog-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run script-graylog-health-check -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run docker-sync-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run php-fpm-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run nginx-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run mysql-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run redis-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run rabbitmq-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run script-others-modules-health-check -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=up_success
+      - orbit run graylog-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run docker-sync-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run php-fpm-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run nginx-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run mysql-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run redis-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run rabbitmq-up -c config/orbit/orbit-up.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=up_success {{ if debug }}-d{{ end }}
       - docker ps
       
   # |--------------------------------------------------------------------------
@@ -102,10 +105,11 @@ commands:
   # | See config/orbit/orbit-down.yml for more information.
   # |
 
-  - use: "proxy-down"
+  - use: proxy-down
+    short: Stops the Traefik container
     run:
-      - orbit run traefik-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=traefik_down_success
+      - orbit run traefik-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=traefik_down_success {{ if debug }}-d{{ end }}
       - docker ps
 
   # |--------------------------------------------------------------------------
@@ -117,17 +121,18 @@ commands:
   # | See config/orbit/orbit-down.yml for more information.
   # |
 
-  - use: "down"
+  - use: down
+    short: Stops all containers without the Traefik container
     run:
-      - orbit run graylog-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run php-fpm-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run nginx-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run docker-sync-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run mysql-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run redis-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run rabbitmq-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run toolbox-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
-      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=down_success
+      - orbit run graylog-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run php-fpm-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run nginx-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run docker-sync-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run mysql-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run redis-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run rabbitmq-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run toolbox-down -c config/orbit/orbit-down.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run notify -c config/orbit/orbit-notify.yml -r message_id=down_success {{ if debug }}-d{{ end }}
       - docker ps
 
   # |--------------------------------------------------------------------------
@@ -137,10 +142,12 @@ commands:
   # | See config/orbit//orbit-commands.yml for more information.
   # |
 
-  - use: "workspace"
+  - use: workspace
+    short: Connects through ash to the PHP-FPM container
     run:
-      - orbit run command-workspace -c config/orbit/orbit-commands.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
+      - orbit run command-workspace -c config/orbit/orbit-commands.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
 
-  - use: "mysql-cli"
+  - use: mysql-cli
+    short: Opens the MySQL CLI as root
     run:
-      - orbit run command-mysql-cli -c config/orbit/orbit-commands.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env
+      - orbit run command-mysql-cli -c config/orbit/orbit-commands.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}

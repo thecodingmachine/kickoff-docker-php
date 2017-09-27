@@ -17,11 +17,11 @@ commands:
   # | Starts Docker Sync.
   # |
 
-  - use: "docker-sync-up"
+  - use: docker-sync-up
     run:
       {{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
       - docker-sync start
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping Docker Sync startup ...
       {{ else }}
       - echo Skipping Docker Sync startup ...
@@ -36,7 +36,7 @@ commands:
   # | It should be the first to start.
   # |
 
-  - use: "traefik-up"
+  - use: traefik-up
     run:
       - docker-compose -p kickoff -f modules/traefik/docker-compose.yml up -d
 
@@ -49,11 +49,12 @@ commands:
   # | They should be start after the Traefik container.
   # |
 
-  - use: "graylog-up"
+  - use: graylog-up
     run:
       {{ if eq true .Values.Modules.graylog.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/graylog/docker-compose.yml up -d
-      {{ else if eq "windows" .Os }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh Graylog graylog-server 9000"
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping Graylog containers startup ...
       {{ else }}
       - echo Skipping Graylog containers startup ...
@@ -68,9 +69,10 @@ commands:
   # | It should be start after the Graylog containers.
   # |
 
-  - use: "php-fpm-up"
+  - use: php-fpm-up
     run:
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/php-fpm/docker-compose.yml up -d
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh PHP-FPM php-fpm 9000"
 
 
   # |--------------------------------------------------------------------------
@@ -82,9 +84,10 @@ commands:
   # | It should be start after the Graylog and PHP-FPM containers.
   # |
 
-  - use: "nginx-up"
+  - use: nginx-up
     run:
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/nginx/docker-compose.yml up -d
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh NGINX nginx 80"
 
   # |--------------------------------------------------------------------------
   # | orbit run mysql-up
@@ -97,11 +100,15 @@ commands:
   # | They should be start after the Graylog containers.
   # |
 
-  - use: "mysql-up"
+  - use: mysql-up
     run:
       {{ if eq true .Values.Modules.mysql.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/mysql/docker-compose.yml up -d
-      {{ else if eq "windows" .Os }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh MySQL mysql 3306"
+      {{ if eq "local" .EnvFiles.Config.ENV }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh phpMyAdmin phpmyadmin 80"
+      {{ end }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping MySQL container startup ...
       {{ else }}
       - echo Skipping MySQL container startup ...
@@ -116,11 +123,12 @@ commands:
   # | It should be start after the Graylog containers.
   # |
 
-  - use: "redis-up"
+  - use: redis-up
     run:
       {{ if eq true .Values.Modules.redis.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/redis/docker-compose.yml up -d
-      {{ else if eq "windows" .Os }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh Redis redis 6379"
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping Redis container startup ...
       {{ else }}
       - echo Skipping Redis container startup ...
@@ -135,11 +143,12 @@ commands:
   # | It should be start after the Graylog containers.
   # |
 
-  - use: "rabbitmq-up"
+  - use: rabbitmq-up
     run:
       {{ if eq true .Values.Modules.rabbitmq.enable }}
       - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/rabbitmq/docker-compose.yml up -d
-      {{ else if eq "windows" .Os }}
+      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh RabbitMQ rabbitmq 15672"
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo Skipping RabbitMQ container startup ...
       {{ else }}
       - echo Skipping RabbitMQ container startup ...

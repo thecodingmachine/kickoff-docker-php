@@ -17,7 +17,7 @@ commands:
   # | Connects through ash to the PHP-FPM container.
   # |
 
-  - use: "command-workspace"
+  - use: command-workspace
     run:
       - docker exec --user www-data -ti {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-php-fpm ash
 
@@ -25,16 +25,16 @@ commands:
   # | orbit run command-mysql-cli
   # |--------------------------------------------------------------------------
   # |
-  # | Opens the MySQL cli as root.
+  # | Opens the MySQL CLI as root.
   # |
   # | On environments <> "local", it will ask you the MySQL root password.
   # |
 
-  - use: "command-mysql-cli"
+  - use: command-mysql-cli
     run:
       {{ if eq true .Values.Modules.mysql.enable }}
       - docker exec -ti {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-mysql mysql -uroot -p{{ if eq "local" .EnvFiles.Config.ENV }}{{ .EnvFiles.Config.MYSQL_ROOT_PASSWORD }}{{ end }}
-      {{ else if eq "windows" .Os }}
+      {{ else if eq "windows" os }}
       - cmd.exe /c echo MySQL is not enable!
       {{ else }}
       - echo MySQL is not enable!
