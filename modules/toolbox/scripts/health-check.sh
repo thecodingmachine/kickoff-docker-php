@@ -7,7 +7,7 @@ PORT=$3;
 spin='-\|/';
 i=0;
 
-attempts=600;
+attempts=6000;
 while [ $attempts -ne 0 ]; do
 
     nc -z $HOST $PORT > /dev/null 2>&1;
