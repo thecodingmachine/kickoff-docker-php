@@ -20,6 +20,8 @@ following goals in mind:
 * Switching quickly between our projects
 * Easy to use
 
+<a href="https://asciinema.org/a/143718" target="_blank"><img src="https://asciinema.org/a/143718.png" /></a>
+
 # Menu
 
 * [Features](#features)
