@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.1.1"><img src="https://img.shields.io/badge/stable-v2.1.1-green.svg" alt="Stable release: v2.1.1"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.2.0"><img src="https://img.shields.io/badge/stable-v2.2.0-green.svg" alt="Stable release: v2.2.0"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
@@ -36,7 +36,7 @@ following goals in mind:
 ## Features
 
 * **Cross-platform:** Windows, Mac, Linux
-* **A complete stack:** NGINX, PHP-FPM 7.1, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ and more to come!
+* **A complete stack:** NGINX, PHP-FPM 7.1, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ
 * **Centralized logging** with Graylog
 * Automatic **HTTPS** on your local environment
 * A powerful **reverse-proxy** ([Traefik](https://traefik.io/)) which can handle automatic HTTPS (via [Let's Encrypt](https://letsencrypt.org/))
@@ -244,6 +244,8 @@ NGINX is the web server of your PHP application.
 The NGINX configuration located at `modules/nginx/conf.d/php-fpm.conf` provides good security defaults. Still, you might 
 have to update it according to the PHP framework you wish to use.
 
+Example for a Symfony application: https://gist.github.com/gulien/64d8c94c5d0e294ac121ea810794757e.
+
 ### PHP-FPM
 
 The PHP-FPM container has many roles. First, it handles requests from the NGINX container to execute your PHP files.
@@ -258,6 +260,12 @@ apcu, bcmath, gd, intl, mbstring, mcrypt, pdo_mysql, phpredis, opcache, soap, xd
 zip and more!
 
 You are able to find all installed PHP extensions by running `php -m` inside your workspace.
+
+#### Xdebug
+
+Xdebug is a tool for easily debugging your PHP code. We provided simple variables in your `.env` file as described below.
+
+Example with PhpStorm: https://gist.github.com/gulien/d0933d8f90587a95cec5fd750da41b87.
 
 #### Available tools
 
@@ -284,10 +292,12 @@ as defined in the PSR-1 and PSR-2 documents and many more.
 
 #### Configuration
 
-| Variable             | Location      | Description                                                |
-|----------------------|---------------|------------------------------------------------------------|
-| PHP_MEMORY_LIMIT     | `config/.env` | Defines the PHP memory limit of the PHP-FPM container.     |
-| PHP_FPM_MEMORY_LIMIT | `config/.env` | Defines the PHP-FPM memory limit of the PHP-FPM container. |
+| Variable             | Location      | Description                                                         |
+|----------------------|---------------|---------------------------------------------------------------------|
+| PHP_MEMORY_LIMIT     | `config/.env` | Defines the PHP memory limit of the PHP-FPM container.              |
+| PHP_FPM_MEMORY_LIMIT | `config/.env` | Defines the PHP-FPM memory limit of the PHP-FPM container.          |
+| XDEBUG_ENABLED       | `config/.env` | If true, enables Xdebug.                                            |
+| XDEBUG_REMOTE_HOST   | `config/.env` | If Xdebug is enabled, set this variable with your local IP address. |
 
 ### MySQL
 
@@ -323,7 +333,7 @@ This should be used only in others environments.
 
 ### Redis
 
-Redis is the database cache of this stack and it has been configured as the default session handler for PHP.
+Redis is the cache store of this stack.
 
 The hostname of Redis in your PHP-FPM container is `redis`. To configure Redis to be the cache handler of 
 your PHP application, you should refer to the documentation provided by your PHP framework.

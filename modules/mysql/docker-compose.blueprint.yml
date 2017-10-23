@@ -6,7 +6,7 @@ services:
 
 
   mysql:
-    image: mysql:5.7
+    image: mysql:5.7.20
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-mysql
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     networks:
@@ -36,7 +36,7 @@ services:
     {{ end }}
   {{ if eq "local" .EnvFiles.Config.ENV }}
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:4.7
+    image: phpmyadmin/phpmyadmin:4.7.4-1
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-phpmyadmin
     restart: "no"
     networks:
