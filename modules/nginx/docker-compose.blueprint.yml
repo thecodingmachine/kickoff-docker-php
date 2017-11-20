@@ -27,7 +27,7 @@ services:
       {{- if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
       - {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
-      - ../../app:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}ro{{ end }}
+      - ../../{{ .EnvFiles.Config.DIR }}:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}ro{{ end }}
       {{- end }}
       - ./conf.d/php-fpm.conf:/etc/nginx/conf.d/php-fpm.conf:ro
     {{- if eq true .Values.Modules.graylog.enable }}

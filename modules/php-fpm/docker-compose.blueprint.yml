@@ -23,7 +23,7 @@ services:
       {{- if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
       - {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
-      - ../../app:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}rw{{ end }}
+      - ../../{{ .EnvFiles.Config.DIR }}:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}rw{{ end }}
       {{- end }}
       - ./docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro
       - ./conf.d/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini:ro
