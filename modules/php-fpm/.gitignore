@@ -2,4 +2,3 @@ conf.d/memory-limit.ini
 php-fpm.d/memory-limit.conf
 php-fpm.d/security.conf
 docker-compose.yml
-Dockerfile

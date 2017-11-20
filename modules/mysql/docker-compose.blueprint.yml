@@ -36,7 +36,7 @@ services:
     {{ end }}
   {{ if eq "local" .EnvFiles.Config.ENV }}
   phpmyadmin:
-    image: phpmyadmin/phpmyadmin:4.7.4-1
+    image: phpmyadmin/phpmyadmin:4.7.5-1
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-phpmyadmin
     restart: "no"
     networks:

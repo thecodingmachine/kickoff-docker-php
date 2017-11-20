@@ -6,7 +6,7 @@ services:
 
 
   rabbitmq:
-    image: rabbitmq:3.6.12-management-alpine
+    image: rabbitmq:3.6.14-management-alpine
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-rabbitmq
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     hostname: rabbitmq

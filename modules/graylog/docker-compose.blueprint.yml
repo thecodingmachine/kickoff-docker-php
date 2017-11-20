@@ -6,7 +6,7 @@ services:
 
 
   graylog-mongo:
-    image: mongo:3.4.9
+    image: mongo:3.4.10
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog-mongo
     restart: "no"
     networks:

@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.2.0"><img src="https://img.shields.io/badge/stable-v2.2.0-green.svg" alt="Stable release: v2.2.0"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.3.0"><img src="https://img.shields.io/badge/stable-v2.3.0-green.svg" alt="Stable release: v2.3.0"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
@@ -123,20 +123,30 @@ and check if everything is OK!
 
 ## Orbit commands
 
+**Note:** You can use the `-d` flag to have a more detailed output.
+
+### Main commands
+
 | Command                | Description                                                                                                                                              |
 |------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `orbit run`            | Displays available Orbit commands.                                                                                                                       |
 | `orbit run kickoff`    | Generates all configuration files, builds the NGINX and PHP-FPM images and starts the containers. It's a combo of `build`, `proxy-up` and `up` commands. |
 | `orbit run shutdown`   | Stops all containers. It's a combo of  `down` and `proxy-down` commands.                                                                                 |
+| `orbit run workspace`  | Connects through ash to the PHP-FPM container. This is where you're able to run useful commands like `composer` and `yarn`.                              |
+| `orbit run mysql-cli`  | Opens the MySQL cli as `root`. On environments <> `local`, it will ask you the MySQL `root` password.                                                    |
+
+### Others commands
+
+**Note:** you should not use them, unless you know what you're doing!
+
+| Command                | Description                                                                                                                                              |
+|------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `orbit run build`      | Generates all configuration files and builds the NGINX and PHP-FPM images.                                                                               |
 | `orbit run proxy-up`   | Starts the Traefik container.                                                                                                                            |
 | `orbit run up`         | Starts all containers without the Traefik container.                                                                                                     |
 | `orbit run proxy-down` | Stops the Traefik container.                                                                                                                             |
 | `orbit run down`       | Stops all containers without the Traefik container.                                                                                                      |
-| `orbit run workspace`  | Connects through ash to the PHP-FPM container. This is where you're able to run useful commands like `composer` and `yarn`.                              |
-| `orbit run mysql-cli`  | Opens the MySQL cli as `root`. On environments <> `local`, it will ask you the MySQL `root` password.                                                    |
 
-**Note:** You can use the `-d` flag to have a more detailed output.
 
 ## Project structure
 
@@ -163,9 +173,7 @@ caution: it will delete all your data.
 |----------------------|--------------------------------------------------------------------------------------|
 | `config/project.yml` | Your project configuration values.                                                   |
 | `config/modules.yml` | The cross-environments configuration values of your modules.                         |
-| `config/app.yml`     | The cross-environments configuration values of your PHP application.                 |
 | `config/.env`        | The sensitive and environment specific configuration values of your modules.         |
-| `config/.app.env`    | The sensitive and environment specific configuration values of your PHP application. |
 | `orbit.yml`          | The Orbit's commands of your project.                                                |
 
 Don't hesitate to take a look at those files, as they are provided with nice comments!
