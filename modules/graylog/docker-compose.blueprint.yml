@@ -6,7 +6,7 @@ services:
 
 
   graylog-mongo:
-    image: mongo:3.4.10
+    image: mongo:3.6.1-jessie
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog-mongo
     restart: "no"
     networks:
@@ -33,7 +33,7 @@ services:
 
 
   graylog-server:
-    image: graylog2/server:2.3.2-2
+    image: graylog2/server:2.4.0-1
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog
     restart: "no"
     networks:

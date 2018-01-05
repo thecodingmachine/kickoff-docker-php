@@ -5,7 +5,7 @@ services:
 
 
   php-fpm:
-    image: gulnap/kickoff-docker-php-images:php-fpm-7.1.11-v2.3.0
+    image: gulnap/kickoff-docker-php-images:php-fpm-7.1.12-v2.3.1
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-php-fpm
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     entrypoint: /usr/local/bin/docker-entrypoint.sh

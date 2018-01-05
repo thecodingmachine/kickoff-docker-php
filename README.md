@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.3.0"><img src="https://img.shields.io/badge/stable-v2.3.0-green.svg" alt="Stable release: v2.3.0"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.3.1"><img src="https://img.shields.io/badge/stable-v2.3.1-green.svg" alt="Stable release: v2.3.1"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
@@ -177,6 +177,9 @@ caution: it will delete all your data.
 | `orbit.yml`          | The Orbit's commands of your project.                                                |
 
 Don't hesitate to take a look at those files, as they are provided with nice comments!
+
+**Note:** If you need to update some values in those files, make sure you have stopped your containers using
+`orbit run shutdown`.
 
 ## Modules
 

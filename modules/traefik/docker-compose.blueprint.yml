@@ -6,7 +6,7 @@ services:
 
 
   proxy:
-    image: traefik:1.4.3-alpine
+    image: traefik:1.4.6-alpine
     container_name: kickoff-proxy
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     command: --docker --logLevel={{ .EnvFiles.Config.TRAEFIK_LOG_LEVEL }}
