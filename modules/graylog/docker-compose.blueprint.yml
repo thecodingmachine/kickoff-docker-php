@@ -33,7 +33,7 @@ services:
 
 
   graylog-server:
-    image: graylog2/server:2.4.0-1
+    image: graylog2/server:2.4.3-1
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog
     restart: "no"
     networks:

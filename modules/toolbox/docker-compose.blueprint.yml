@@ -6,7 +6,7 @@ services:
 
 
   toolbox:
-    image: gulnap/kickoff-docker-php-images:toolbox-3.6-v2.3.0
+    image: gulnap/kickoff-docker-php-images:toolbox-3.7-v2.4.0
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-toolbox
     networks:
       - backend

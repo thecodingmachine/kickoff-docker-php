@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.3.1"><img src="https://img.shields.io/badge/stable-v2.3.1-green.svg" alt="Stable release: v2.3.1"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.4.0"><img src="https://img.shields.io/badge/stable-v2.4.0-green.svg" alt="Stable release: v2.4.0"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
@@ -38,7 +38,7 @@ following goals in mind:
 ## Features
 
 * **Cross-platform:** Windows, Mac, Linux
-* **A complete stack:** NGINX, PHP-FPM 7.1, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ
+* **A complete stack:** NGINX, PHP-FPM 7.2, MySQL 5.7, phpMyAdmin, Redis, RabbitMQ
 * **Centralized logging** with Graylog
 * Automatic **HTTPS** on your local environment
 * A powerful **reverse-proxy** ([Traefik](https://traefik.io/)) which can handle automatic HTTPS (via [Let's Encrypt](https://letsencrypt.org/))
@@ -217,7 +217,9 @@ virtual host specified in your `project.yml` file.
 On others environment, we provided `TRAEFIK_CERT_FILE_PATH` and `TRAEFIK_KEY_FILE_PATH` variables in your `.env` file 
 to let you specify the absolute path to your certificates. You may also customize the Traefik configuration located at 
 `modules/traefik/traefik.blueprint.toml` with [ACME configuration](https://docs.traefik.io/toml/#acme-lets-encrypt-configuration)
-to enable automatic HTTPS. 
+to enable automatic HTTPS.
+
+How to enable automatic HTTPS on your production environment: https://gist.github.com/gulien/8fe9debbcb30d97091406a24ef5eea82 
 
 #### Configuration
 
@@ -269,7 +271,7 @@ Your PHP application will be accessible under https://your-virtualhost.local/ an
 
 #### Installed PHP extensions
 
-apcu, bcmath, gd, intl, mbstring, mcrypt, pdo_mysql, phpredis, opcache, soap, xdebug (`local` environment only!), yaml,
+apcu, bcmath, gd, intl, mbstring, pdo_mysql, phpredis, opcache, soap, xdebug, yaml,
 zip and more!
 
 You are able to find all installed PHP extensions by running `php -m` inside your workspace.

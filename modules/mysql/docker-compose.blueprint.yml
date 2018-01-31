@@ -6,7 +6,7 @@ services:
 
 
   mysql:
-    image: mysql:5.7.20
+    image: mysql:5.7.21
     container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-mysql
     restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     networks:
