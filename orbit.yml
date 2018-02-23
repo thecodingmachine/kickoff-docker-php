@@ -56,7 +56,7 @@ tasks:
       - orbit run mysql-build -f config/orbit/orbit-build.yml {{ if debug }}-d{{ end }}
       - orbit run redis-build -f config/orbit/orbit-build.yml {{ if debug }}-d{{ end }}
       - orbit run rabbitmq-build -f config/orbit/orbit-build.yml {{ if debug }}-d{{ end }}
-      - orbit generate -f config/orbit/whale.txt -p Notification,"Your configuration files have been successfully generated!" {{ if debug }}-d{{ end }}
+      - orbit generate -f config/orbit/whale.txt -p "Notification,Your configuration files have been successfully generated!" {{ if debug }}-d{{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run proxy-up
@@ -92,7 +92,7 @@ tasks:
       - orbit run mysql-up -f config/orbit/orbit-up.yml {{ if debug }}-d{{ end }}
       - orbit run redis-up -f config/orbit/orbit-up.yml {{ if debug }}-d{{ end }}
       - orbit run rabbitmq-up -f config/orbit/orbit-up.yml {{ if debug }}-d{{ end }}
-      - orbit generate -f config/orbit/whale.txt -p Notification,"Your containers have been successfully started!" {{ if debug }}-d{{ end }}
+      - orbit generate -f config/orbit/whale.txt -p "Notification,Your containers have been successfully started!" {{ if debug }}-d{{ end }}
       - docker ps
       
   # |--------------------------------------------------------------------------
@@ -108,7 +108,7 @@ tasks:
     short: Stops the Traefik container
     run:
       - orbit run traefik-down -f config/orbit/orbit-down.yml {{ if debug }}-d{{ end }}
-      - orbit generate -f config/orbit/whale.txt -p Notification,"Your reverse proxy has been successfully stopped!" {{ if debug }}-d{{ end }}
+      - orbit generate -f config/orbit/whale.txt -p "Notification,Your reverse proxy has been successfully stopped!" {{ if debug }}-d{{ end }}
       - docker ps
 
   # |--------------------------------------------------------------------------
@@ -131,7 +131,7 @@ tasks:
       - orbit run redis-down -f config/orbit/orbit-down.yml {{ if debug }}-d{{ end }}
       - orbit run rabbitmq-down -f config/orbit/orbit-down.yml {{ if debug }}-d{{ end }}
       - orbit run toolbox-down -f config/orbit/orbit-down.yml {{ if debug }}-d{{ end }}
-      - orbit generate -f config/orbit/whale.txt -p Notification,"Your containers have been successfully stopped!" {{ if debug }}-d{{ end }}
+      - orbit generate -f config/orbit/whale.txt -p "Notification,Your containers have been successfully stopped!" {{ if debug }}-d{{ end }}
       - docker ps
 
   # |--------------------------------------------------------------------------
