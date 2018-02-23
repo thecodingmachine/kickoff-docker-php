@@ -1,4 +1,4 @@
-{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
+{{- $virtualhost := index (pick .Orbit.Project.virtualhost .Orbit.EnvFile.ENV) .Orbit.EnvFile.ENV -}}
 # Entry points definition
 defaultEntryPoints = ["http", "https"]
 
@@ -17,7 +17,7 @@ keyFile = "certs/{{ $virtualhost }}.key"
 # API backend
 [web]
 address = ":8080"
-{{- if ne "local" .EnvFiles.Config.ENV }}
+{{- if ne "local" .Orbit.EnvFile.ENV }}
 [web.auth.digest]
 usersFile = "auth/.htdigest"
 {{- end }}

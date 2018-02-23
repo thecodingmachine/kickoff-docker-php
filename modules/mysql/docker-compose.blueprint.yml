@@ -1,4 +1,4 @@
-{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
+{{- $virtualhost := index (pick .Orbit.Project.virtualhost .Orbit.EnvFile.ENV) .Orbit.EnvFile.ENV -}}
 version: '3.3'
 
 
@@ -7,16 +7,16 @@ services:
 
   mysql:
     image: mysql:5.7.21
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-mysql
-    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    container_name: {{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-mysql
+    restart: {{ if and (ne "local" .Orbit.EnvFile.ENV) (eq false .Orbit.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     networks:
       - backend
-    {{- if eq "true" .EnvFiles.Config.MYSQL_ENABLE_PORTS_MAPPING }}
+    {{- if eq "true" .Orbit.EnvFile.MYSQL_ENABLE_PORTS_MAPPING }}
     ports:
-      - "{{ .EnvFiles.Config.MYSQL_HOST_PORT_TO_MAP }}:3306"
+      - "{{ .Orbit.EnvFile.MYSQL_HOST_PORT_TO_MAP }}:3306"
     {{- end }}
     environment:
-      - MYSQL_USER={{ .Values.Modules.mysql.user }}
+      - MYSQL_USER={{ .Orbit.Modules.mysql.user }}
       - MYSQL_PASSWORD_FILE=/run/secrets/mysql_password
       - MYSQL_ROOT_PASSWORD_FILE=/run/secrets/mysql_root_password
     secrets:
@@ -28,16 +28,16 @@ services:
       - mysql_data:/var/lib/mysql
       - ./conf.d/utf8mb4.cnf:/etc/mysql/conf.d/utf8mb4.cnf:ro
       - ./docker-entrypoint-initdb.d/databases.sql:/docker-entrypoint-initdb.d/databases.sql:ro
-    {{- if eq true .Values.Modules.graylog.enable }}
+    {{- if eq true .Orbit.Modules.graylog.enable }}
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+        gelf-address: udp://localhost:{{ .Orbit.EnvFile.GRAYLOG_PORT }}
     {{ end }}
-  {{ if eq "local" .EnvFiles.Config.ENV }}
+  {{ if eq "local" .Orbit.EnvFile.ENV }}
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:4.7.7-1
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-phpmyadmin
+    container_name: {{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-phpmyadmin
     restart: "no"
     networks:
       - proxy
@@ -45,22 +45,22 @@ services:
     environment:
       - PMA_HOST=mysql
       - PMA_USER=root
-      - PMA_PASSWORD={{ .EnvFiles.Config.MYSQL_ROOT_PASSWORD }}
+      - PMA_PASSWORD={{ .Orbit.EnvFile.MYSQL_ROOT_PASSWORD }}
     labels:
-      - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-phpmyadmin
-      {{- if eq "true" .EnvFiles.Config.TRAEFIK_PREFIX }}
-      - traefik.frontend.rule=Host:phpadmin-{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }}
+      - traefik.backend={{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-phpmyadmin
+      {{- if eq "true" .Orbit.EnvFile.TRAEFIK_PREFIX }}
+      - traefik.frontend.rule=Host:phpadmin-{{ .Orbit.EnvFile.ENV }}.{{ $virtualhost }}
       {{- else }}
       - traefik.frontend.rule=Host:phpadmin.{{ $virtualhost }}
       {{- end }}
       - traefik.docker.network=kickoff_proxy
     volumes:
       - phpmyadmin_data:/sessions
-    {{- if eq true .Values.Modules.graylog.enable }}
+    {{- if eq true .Orbit.Modules.graylog.enable }}
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+        gelf-address: udp://localhost:{{ .Orbit.EnvFile.GRAYLOG_PORT }}
     {{ end }}
   {{ end }}
 networks:
@@ -73,7 +73,7 @@ networks:
 
   backend:
     external:
-      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+      name: {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}_backend
 
 
 secrets:
@@ -93,7 +93,7 @@ volumes:
   mysql_data:
     driver: local
 
-  {{ if eq "local" .EnvFiles.Config.ENV }}
+  {{ if eq "local" .Orbit.EnvFile.ENV }}
   phpmyadmin_data:
     driver: local
   {{ end }}

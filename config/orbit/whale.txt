@@ -1,6 +1,5 @@
-{{- range $messageId, $message := .Values.Messages }}
-{{- if eq $messageId $.RawData.message_id }}
-< {{ $message }} >
+
+< {{ .Orbit.Notification }} >
        \\
                       ##         .
                 ## ## ##        ==
@@ -10,5 +9,3 @@
          \______ o           __/
            \    \         __/
             \____\_______/
-{{ end }}
-{{- end }}

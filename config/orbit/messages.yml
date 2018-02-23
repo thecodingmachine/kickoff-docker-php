@@ -1,5 +1,0 @@
-build_success: Your configuration files have been successfully generated!
-traefik_up_success: Your reverse proxy has been successfully started!
-up_success: Your containers have been successfully started!
-traefik_down_success: Your reverse proxy has been successfully stopped!
-down_success: Your containers have been successfully stopped!

@@ -1,4 +1,4 @@
-{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
+{{- $virtualhost := index (pick .Orbit.Project.virtualhost .Orbit.EnvFile.ENV) .Orbit.EnvFile.ENV -}}
 version: '3.3'
 
 
@@ -7,19 +7,19 @@ services:
 
   rabbitmq:
     image: rabbitmq:3.7.2-management-alpine
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-rabbitmq
-    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    container_name: {{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-rabbitmq
+    restart: {{ if and (ne "local" .Orbit.EnvFile.ENV) (eq false .Orbit.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     hostname: rabbitmq
     networks:
       - proxy
       - backend
     environment:
-      - RABBITMQ_DEFAULT_USER={{ .Values.Modules.rabbitmq.user }}
-      - RABBITMQ_DEFAULT_PASS={{ .EnvFiles.Config.RABBITMQ_PASSWORD }}
+      - RABBITMQ_DEFAULT_USER={{ .Orbit.Modules.rabbitmq.user }}
+      - RABBITMQ_DEFAULT_PASS={{ .Orbit.EnvFile.RABBITMQ_PASSWORD }}
     labels:
-      - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-rabbitmq
-      {{- if eq "true" .EnvFiles.Config.TRAEFIK_PREFIX }}
-      - traefik.frontend.rule=Host:rabbitmq-{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }}
+      - traefik.backend={{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-rabbitmq
+      {{- if eq "true" .Orbit.EnvFile.TRAEFIK_PREFIX }}
+      - traefik.frontend.rule=Host:rabbitmq-{{ .Orbit.EnvFile.ENV }}.{{ $virtualhost }}
       {{- else }}
       - traefik.frontend.rule=Host:rabbitmq.{{ $virtualhost }}
       {{- end }}
@@ -27,11 +27,11 @@ services:
       - traefik.docker.network=kickoff_proxy
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
-    {{- if eq true .Values.Modules.graylog.enable }}
+    {{- if eq true .Orbit.Modules.graylog.enable }}
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+        gelf-address: udp://localhost:{{ .Orbit.EnvFile.GRAYLOG_PORT }}
     {{ end }}
 
 networks:
@@ -42,7 +42,7 @@ networks:
 
   backend:
     external:
-      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+      name: {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}_backend
 
 
 volumes:

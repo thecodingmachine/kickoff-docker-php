@@ -1,14 +1,14 @@
 # |--------------------------------------------------------------------------
-# | Orbit build commands
+# | Build tasks
 # |--------------------------------------------------------------------------
 # |
-# | This file describes the build commands of your project.
-# | Feel free to add your own commands!
+# | This file describes the build tasks of your project.
+# | Feel free to add your own tasks!
 # |
 # | https://github.com/gulien/orbit/
 # |
 
-commands:
+tasks:
 
   # |--------------------------------------------------------------------------
   # | orbit run docker-sync-build
@@ -19,11 +19,9 @@ commands:
 
   - use: docker-sync-build
     run:
-      {{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
-      - orbit generate -t docker-sync.blueprint.yml -o docker-sync.yml -v Project,config/project.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit run script-fix-permissions-docker-sync -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Docker Sync configuration file generation ...
+      {{ if eq "true" .Orbit.EnvFile.ENABLE_DOCKER_SYNC }}
+      - orbit generate -f docker-sync.blueprint.yml -o docker-sync.yml {{ if debug }}-d{{ end }}
+      - orbit run script-fix-permissions-docker-sync -f config/orbit/orbit-scripts.yml {{ if debug }}-d{{ end }}
       {{ else }}
       - echo Skipping Docker Sync configuration file generation ...
       {{ end }}
@@ -37,7 +35,7 @@ commands:
 
   - use: toolbox-build
     run:
-      - orbit generate -t modules/toolbox/docker-compose.blueprint.yml -o modules/toolbox/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/toolbox/docker-compose.blueprint.yml -o modules/toolbox/docker-compose.yml {{ if debug }}-d{{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run traefik-build
@@ -48,10 +46,10 @@ commands:
 
   - use: traefik-build
     run:
-      - orbit run script-traefik-self-signed-certificate -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit run script-traefik-htdigest -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/traefik/traefik.blueprint.toml -o modules/traefik/traefik.toml -v Project,config/project.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/traefik/docker-compose.blueprint.yml -o modules/traefik/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit run script-traefik-self-signed-certificate -f config/orbit/orbit-scripts.yml {{ if debug }}-d{{ end }}
+      - orbit run script-traefik-htdigest -f config/orbit/orbit-scripts.yml {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/traefik/traefik.blueprint.toml -o modules/traefik/traefik.toml {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/traefik/docker-compose.blueprint.yml -o modules/traefik/docker-compose.yml {{ if debug }}-d{{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run graylog-build
@@ -62,12 +60,10 @@ commands:
 
   - use: graylog-build
     run:
-      {{ if eq true .Values.Modules.graylog.enable }}
-      - orbit generate -t modules/graylog/docker-compose.blueprint.yml -o modules/graylog/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/graylog/udp-input.blueprint.json -o modules/graylog/udp-input.json -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit run script-graylog-secrets -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Graylog configuration files generation ...
+      {{ if eq true .Orbit.Modules.graylog.enable }}
+      - orbit generate -f modules/graylog/docker-compose.blueprint.yml -o modules/graylog/docker-compose.yml {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/graylog/udp-input.blueprint.json -o modules/graylog/udp-input.json {{ if debug }}-d{{ end }}
+      - orbit run script-graylog-secrets -f config/orbit/orbit-scripts.yml {{ if debug }}-d{{ end }}
       {{ else }}
       - echo Skipping Graylog configuration files generation ...
       {{ end }}
@@ -76,16 +72,16 @@ commands:
   # | orbit run php-fpm-build
   # |--------------------------------------------------------------------------
   # |
-  # | Generates PHP-FPM configuration files and builds the image.
+  # | Generates PHP-FPM configuration files.
   # |
 
   - use: php-fpm-build
     run:
-      - orbit generate -t modules/php-fpm/docker-compose.blueprint.yml -o modules/php-fpm/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit run script-fix-permissions-php-fpm -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/php-fpm/conf.d/memory-limit.blueprint.ini -o modules/php-fpm/conf.d/memory-limit.ini -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/php-fpm/php-fpm.d/memory-limit.blueprint.conf -o modules/php-fpm/php-fpm.d/memory-limit.conf -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/php-fpm/php-fpm.d/security.blueprint.conf -o modules/php-fpm/php-fpm.d/security.conf -e Config,config/.env {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/php-fpm/docker-compose.blueprint.yml -o modules/php-fpm/docker-compose.yml {{ if debug }}-d{{ end }}
+      - orbit run script-fix-permissions-php-fpm -f config/orbit/orbit-scripts.yml {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/php-fpm/conf.d/memory-limit.blueprint.ini -o modules/php-fpm/conf.d/memory-limit.ini {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/php-fpm/php-fpm.d/memory-limit.blueprint.conf -o modules/php-fpm/php-fpm.d/memory-limit.conf {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/php-fpm/php-fpm.d/security.blueprint.conf -o modules/php-fpm/php-fpm.d/security.conf {{ if debug }}-d{{ end }}
 
   # |--------------------------------------------------------------------------
   # | orbit run nginx-build
@@ -96,9 +92,9 @@ commands:
 
   - use: nginx-build
     run:
-      - orbit generate -t modules/nginx/docker-compose.blueprint.yml -o modules/nginx/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit run script-fix-permissions-nginx -c config/orbit/orbit-scripts.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/nginx/docker-compose.yml build
+      - orbit generate -f modules/nginx/docker-compose.blueprint.yml -o modules/nginx/docker-compose.yml {{ if debug }}-d{{ end }}
+      - orbit run script-fix-permissions-nginx -f config/orbit/orbit-scripts.yml {{ if debug }}-d{{ end }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/nginx/docker-compose.yml build
 
   # |--------------------------------------------------------------------------
   # | orbit run mysql-build
@@ -109,13 +105,11 @@ commands:
 
   - use: mysql-build
     run:
-      {{ if eq true .Values.Modules.mysql.enable }}
-      - orbit generate -t modules/mysql/docker-compose.blueprint.yml -o modules/mysql/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/mysql/docker-entrypoint-initdb.d/databases.blueprint.sql -o modules/mysql/docker-entrypoint-initdb.d/databases.sql -v Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/mysql/secrets/mysql_password.blueprint.txt -o modules/mysql/secrets/mysql_password.txt -e Config,config/.env {{ if debug }}-d{{ end }}
-      - orbit generate -t modules/mysql/secrets/mysql_root_password.blueprint.txt -o modules/mysql/secrets/mysql_root_password.txt -e Config,config/.env {{ if debug }}-d{{ end }}
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping MySQL configuration files generation ...
+      {{ if eq true .Orbit.Modules.mysql.enable }}
+      - orbit generate -f modules/mysql/docker-compose.blueprint.yml -o modules/mysql/docker-compose.yml {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/mysql/docker-entrypoint-initdb.d/databases.blueprint.sql -o modules/mysql/docker-entrypoint-initdb.d/databases.sql {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/mysql/secrets/mysql_password.blueprint.txt -o modules/mysql/secrets/mysql_password.txt {{ if debug }}-d{{ end }}
+      - orbit generate -f modules/mysql/secrets/mysql_root_password.blueprint.txt -o modules/mysql/secrets/mysql_root_password.txt {{ if debug }}-d{{ end }}
       {{ else }}
       - echo Skipping MySQL configuration files generation ...
       {{ end }}
@@ -129,10 +123,8 @@ commands:
 
   - use: redis-build
     run:
-      {{ if eq true .Values.Modules.redis.enable }}
-      - orbit generate -t modules/redis/docker-compose.blueprint.yml -o modules/redis/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Redis configuration files generation ...
+      {{ if eq true .Orbit.Modules.redis.enable }}
+      - orbit generate -f modules/redis/docker-compose.blueprint.yml -o modules/redis/docker-compose.yml {{ if debug }}-d{{ end }}
       {{ else }}
       - echo Skipping Redis configuration files generation ...
       {{ end }}
@@ -146,10 +138,8 @@ commands:
 
   - use: rabbitmq-build
     run:
-      {{ if eq true .Values.Modules.rabbitmq.enable }}
-      - orbit generate -t modules/rabbitmq/docker-compose.blueprint.yml -o modules/rabbitmq/docker-compose.yml -v Project,config/project.yml;Modules,config/modules.yml -e Config,config/.env {{ if debug }}-d{{ end }}
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping RabbitMQ configuration files generation ...
+      {{ if eq true .Orbit.Modules.rabbitmq.enable }}
+      - orbit generate -f modules/rabbitmq/docker-compose.blueprint.yml -o modules/rabbitmq/docker-compose.yml {{ if debug }}-d{{ end }}
       {{ else }}
       - echo Skipping RabbitMQ configuration files generation ...
       {{ end }}

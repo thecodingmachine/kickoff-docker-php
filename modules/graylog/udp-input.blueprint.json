@@ -1,6 +1,6 @@
 {
-  "name": "UDP GELF input on {{ .EnvFiles.Config.GRAYLOG_PORT }}",
-  "description": "Adds a global UDP GELF input on port {{ .EnvFiles.Config.GRAYLOG_PORT }}",
+  "name": "UDP GELF input on {{ .Orbit.EnvFile.GRAYLOG_PORT }}",
+  "description": "Adds a global UDP GELF input on port {{ .Orbit.EnvFile.GRAYLOG_PORT }}",
   "category": "Inputs",
   "inputs": [
     {
@@ -9,7 +9,7 @@
         "override_source": null,
         "recv_buffer_size": 262144,
         "bind_address": "0.0.0.0",
-        "port": {{ .EnvFiles.Config.GRAYLOG_PORT }},
+        "port": {{ .Orbit.EnvFile.GRAYLOG_PORT }},
         "decompress_size_limit": 8388608
       },
       "static_fields": {},

@@ -1,14 +1,14 @@
 # |--------------------------------------------------------------------------
-# | Orbit commands
+# | Tasks for commands
 # |--------------------------------------------------------------------------
 # |
 # | This file describes the commands from the containers of your project.
-# | Feel free to add your own commands!
+# | Feel free to add your own tasks!
 # |
 # | https://github.com/gulien/orbit/
 # |
 
-commands:
+tasks:
 
   # |--------------------------------------------------------------------------
   # | orbit run command-workspace
@@ -19,7 +19,7 @@ commands:
 
   - use: command-workspace
     run:
-      - docker exec --user www-data -ti {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-php-fpm ash
+      - docker exec --user www-data -ti {{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-php-fpm ash
 
   # |--------------------------------------------------------------------------
   # | orbit run command-mysql-cli
@@ -32,10 +32,8 @@ commands:
 
   - use: command-mysql-cli
     run:
-      {{ if eq true .Values.Modules.mysql.enable }}
-      - docker exec -ti {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-mysql mysql -uroot -p{{ if eq "local" .EnvFiles.Config.ENV }}{{ .EnvFiles.Config.MYSQL_ROOT_PASSWORD }}{{ end }}
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo MySQL is not enable!
+      {{ if eq true .Orbit.Modules.mysql.enable }}
+      - docker exec -ti {{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-mysql mysql -uroot -p{{ if eq "local" .Orbit.EnvFile.ENV }}{{ .Orbit.EnvFile.MYSQL_ROOT_PASSWORD }}{{ end }}
       {{ else }}
       - echo MySQL is not enable!
       {{ end }}

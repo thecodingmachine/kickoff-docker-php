@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.4.0"><img src="https://img.shields.io/badge/stable-v2.4.0-green.svg" alt="Stable release: v2.4.0"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.5.0"><img src="https://img.shields.io/badge/stable-v2.5.0-green.svg" alt="Stable release: v2.5.0"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
@@ -27,7 +27,7 @@ following goals in mind:
 * [Features](#features)
 * [Install](#install)
 * [Quick start](#quick-start)
-* [Orbit commands](#orbit-commands)
+* [Orbit tasks](#orbit-tasks)
 * [Project structure](#project-structure)
 * [Configuration](#configuration)
 * [Modules](#modules)
@@ -60,7 +60,7 @@ On Linux, you also have to install [Docker compose](https://docs.docker.com/comp
 come with by default. Also add your current user to the `docker` group and don't forget to logout/login from your current 
 session.
 
-Then download and install [Orbit](https://github.com/gulien/orbit) (**>= 2.0.0**), a tool for generating files from templates and 
+Then download and install [Orbit](https://github.com/gulien/orbit) (**>= 3.0.0**), a tool for generating files from templates and 
 running commands.
 
 You may now fork this project and clone it or download the latest release from the [releases page](../../releases).
@@ -121,21 +121,21 @@ The installation might take some time, so go for a coffee break! :coffee:
 Once everything has been installed, open your favorite web browser and copy / paste https://www.your-virtualhost.local 
 and check if everything is OK!
 
-## Orbit commands
+## Orbit tasks
 
 **Note:** You can use the `-d` flag to have a more detailed output.
 
-### Main commands
+### Main tasks
 
 | Command                | Description                                                                                                                                              |
 |------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `orbit run`            | Displays available Orbit commands.                                                                                                                       |
+| `orbit run`            | Displays available tasks.                                                                                                                       |
 | `orbit run kickoff`    | Generates all configuration files, builds the NGINX and PHP-FPM images and starts the containers. It's a combo of `build`, `proxy-up` and `up` commands. |
 | `orbit run shutdown`   | Stops all containers. It's a combo of  `down` and `proxy-down` commands.                                                                                 |
 | `orbit run workspace`  | Connects through ash to the PHP-FPM container. This is where you're able to run useful commands like `composer` and `yarn`.                              |
 | `orbit run mysql-cli`  | Opens the MySQL cli as `root`. On environments <> `local`, it will ask you the MySQL `root` password.                                                    |
 
-### Others commands
+### Others tasks
 
 **Note:** you should not use them, unless you know what you're doing!
 

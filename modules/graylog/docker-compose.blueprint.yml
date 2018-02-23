@@ -1,4 +1,4 @@
-{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
+{{- $virtualhost := index (pick .Orbit.Project.virtualhost .Orbit.EnvFile.ENV) .Orbit.EnvFile.ENV -}}
 version: '3.3'
 
 
@@ -7,7 +7,7 @@ services:
 
   graylog-mongo:
     image: mongo:3.6.1-jessie
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog-mongo
+    container_name: {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}-graylog-mongo
     restart: "no"
     networks:
       - backend
@@ -19,13 +19,13 @@ services:
 
   graylog-elasticsearch:
     image: elasticsearch:2.4.5-alpine
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog-elasticsearch
+    container_name: {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}-graylog-elasticsearch
     restart: "no"
     command: elasticsearch -Des.cluster.name='graylog'
     networks:
       - backend
     environment:
-      - ES_JAVA_OPTS={{ .EnvFiles.Config.GRAYLOG_ES_JAVA_OPTS }}
+      - ES_JAVA_OPTS={{ .Orbit.EnvFile.GRAYLOG_ES_JAVA_OPTS }}
     labels:
       - traefik.enable=false
     volumes:
@@ -34,17 +34,17 @@ services:
 
   graylog-server:
     image: graylog2/server:2.4.3-1
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog
+    container_name: {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}-graylog
     restart: "no"
     networks:
       - proxy
       - backend
     ports:
-      - "{{ .EnvFiles.Config.GRAYLOG_PORT }}:{{ .EnvFiles.Config.GRAYLOG_PORT }}/udp"
+      - "{{ .Orbit.EnvFile.GRAYLOG_PORT }}:{{ .Orbit.EnvFile.GRAYLOG_PORT }}/udp"
     environment:
-      - GRAYLOG_ROOT_USERNAME={{ .Values.Modules.graylog.user }}
-      {{- if eq "true" .EnvFiles.Config.TRAEFIK_PREFIX }}
-      - GRAYLOG_WEB_ENDPOINT_URI=https://graylog-{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }}/api/
+      - GRAYLOG_ROOT_USERNAME={{ .Orbit.Modules.graylog.user }}
+      {{- if eq "true" .Orbit.EnvFile.TRAEFIK_PREFIX }}
+      - GRAYLOG_WEB_ENDPOINT_URI=https://graylog-{{ .Orbit.EnvFile.ENV }}.{{ $virtualhost }}/api/
       {{- else }}
       - GRAYLOG_WEB_ENDPOINT_URI=https://graylog.{{ $virtualhost }}/api/
       {{- end }}
@@ -53,12 +53,12 @@ services:
       - GRAYLOG_CONTENT_PACKS_AUTO_LOAD=udp-input.json
       - GRAYLOG_CONTENT_PACKS_LOADER_ENABLED=true
       - GRAYLOG_CONTENT_PACKS_DIR=data/contentpacks
-      - GRAYLOG_SERVER_JAVA_OPTS={{ .EnvFiles.Config.GRAYLOG_SERVER_JAVA_OPTS }}
+      - GRAYLOG_SERVER_JAVA_OPTS={{ .Orbit.EnvFile.GRAYLOG_SERVER_JAVA_OPTS }}
     env_file: ../toolbox/generated/graylog/.env
     labels:
-      - traefik.backend={{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-graylog
-      {{- if eq "true" .EnvFiles.Config.TRAEFIK_PREFIX }}
-      - traefik.frontend.rule=Host:graylog-{{ .EnvFiles.Config.ENV }}.{{ $virtualhost }}
+      - traefik.backend={{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-graylog
+      {{- if eq "true" .Orbit.EnvFile.TRAEFIK_PREFIX }}
+      - traefik.frontend.rule=Host:graylog-{{ .Orbit.EnvFile.ENV }}.{{ $virtualhost }}
       {{- else }}
       - traefik.frontend.rule=Host:graylog.{{ $virtualhost }}
       {{- end }}
@@ -94,4 +94,4 @@ networks:
 
   backend:
     external:
-      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+      name: {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}_backend

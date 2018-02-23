@@ -1,14 +1,14 @@
 # |--------------------------------------------------------------------------
-# | Orbit down commands
+# | Down tasks
 # |--------------------------------------------------------------------------
 # |
-# | This file describes the down commands of your project.
-# | Feel free to add your own commands!
+# | This file describes the down tasks of your project.
+# | Feel free to add your own tasks!
 # |
 # | https://github.com/gulien/orbit/
 # |
 
-commands:
+tasks:
 
   # |--------------------------------------------------------------------------
   # | orbit run docker-sync-down
@@ -19,10 +19,8 @@ commands:
 
   - use: docker-sync-down
     run:
-      {{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+      {{ if eq "true" .Orbit.EnvFile.ENABLE_DOCKER_SYNC }}
       - docker-sync clean
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Docker Sync shutdown ...
       {{ else }}
       - echo Skipping Docker Sync shutdown ...
       {{ end }}
@@ -36,7 +34,7 @@ commands:
 
   - use: toolbox-down
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml down
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml down
 
   # |--------------------------------------------------------------------------
   # | orbit run traefik-down
@@ -62,10 +60,8 @@ commands:
 
   - use: graylog-down
     run:
-      {{ if eq true .Values.Modules.graylog.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/graylog/docker-compose.yml down
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Graylog containers shutdown ...
+      {{ if eq true .Orbit.Modules.graylog.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/graylog/docker-compose.yml down
       {{ else }}
       - echo Skipping Graylog containers shutdown ...
       {{ end }}
@@ -81,7 +77,7 @@ commands:
 
   - use: php-fpm-down
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/php-fpm/docker-compose.yml down
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/php-fpm/docker-compose.yml down
 
   # |--------------------------------------------------------------------------
   # | orbit run nginx-down
@@ -94,7 +90,7 @@ commands:
 
   - use: nginx-down
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/nginx/docker-compose.yml down
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/nginx/docker-compose.yml down
 
   # |--------------------------------------------------------------------------
   # | orbit run mysql-down
@@ -109,10 +105,8 @@ commands:
 
   - use: mysql-down
     run:
-      {{ if eq true .Values.Modules.mysql.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/mysql/docker-compose.yml down
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping MySQL container shutdown ...
+      {{ if eq true .Orbit.Modules.mysql.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/mysql/docker-compose.yml down
       {{ else }}
       - echo Skipping MySQL container shutdown ...
       {{ end }}
@@ -128,10 +122,8 @@ commands:
 
   - use: redis-down
     run:
-      {{ if eq true .Values.Modules.redis.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/redis/docker-compose.yml down
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Redis container shutdown ...
+      {{ if eq true .Orbit.Modules.redis.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/redis/docker-compose.yml down
       {{ else }}
       - echo Skipping Redis container shutdown ...
       {{ end }}
@@ -147,10 +139,8 @@ commands:
 
   - use: rabbitmq-down
     run:
-      {{ if eq true .Values.Modules.rabbitmq.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/rabbitmq/docker-compose.yml down
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping RabbitMQ container shutdown ...
+      {{ if eq true .Orbit.Modules.rabbitmq.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/rabbitmq/docker-compose.yml down
       {{ else }}
       - echo Skipping RabbitMQ container shutdown ...
       {{ end }}

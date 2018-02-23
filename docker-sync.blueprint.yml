@@ -4,8 +4,8 @@ options:
   verbose: false
 
 syncs:
-  {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:
-    src: './{{ .EnvFiles.Config.DIR }}/'
+  {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}_sync_app:
+    src: './{{ .Orbit.EnvFile.DIR }}/'
     sync_userid: ${UID}
     sync_strategy: {{ if eq "darwin" os }}'native_osx'{{ else }}'unison'{{ end }}
     sync_excludes: ['.idea']

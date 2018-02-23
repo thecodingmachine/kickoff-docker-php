@@ -1,14 +1,14 @@
 # |--------------------------------------------------------------------------
-# | Orbit scripts commands
+# | Scripts tasks
 # |--------------------------------------------------------------------------
 # |
-# | This file describes the scripts commands of your project.
-# | Feel free to add your own commands!
+# | This file describes the scripts tasks of your project.
+# | Feel free to add your own tasks!
 # |
 # | https://github.com/gulien/orbit/
 # |
 
-commands:
+tasks:
 
   # |--------------------------------------------------------------------------
   # | orbit run script-fix-permissions-docker-sync
@@ -19,10 +19,8 @@ commands:
 
   - use: script-fix-permissions-docker-sync
     run:
-      {{ if and (ne "windows" os) (eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC) }}
-      - /bin/bash config/scripts/fix-permissions.sh
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping UID binding for "www-data" user with Docker Sync ...
+      {{ if and (ne "windows" os) (eq "true" .Orbit.EnvFile.ENABLE_DOCKER_SYNC) }}
+      - config/scripts/fix-permissions.sh
       {{ else }}
       - echo Skipping UID binding for "www-data" with Docker Sync ...
       {{ end }}
@@ -37,9 +35,9 @@ commands:
   - use: script-fix-permissions-nginx
     run:
        {{ if ne "windows" os }}
-       - /bin/bash config/scripts/fix-permissions.sh NGINX
+       - config/scripts/fix-permissions.sh NGINX
        {{ else }}
-       - cmd.exe /c echo Skipping UID binding for "www-data" user in the NGINX container ...
+       - echo Skipping UID binding for "www-data" user in the NGINX container ...
        {{ end }}
 
   # |--------------------------------------------------------------------------
@@ -52,9 +50,9 @@ commands:
   - use: script-fix-permissions-php-fpm
     run:
        {{ if ne "windows" os }}
-       - /bin/bash config/scripts/fix-permissions.sh PHP-FPM
+       - config/scripts/fix-permissions.sh PHP-FPM
        {{ else }}
-       - cmd.exe /c echo Skipping UID binding for "www-data" user in the PHP-FPM container ...
+       - echo Skipping UID binding for "www-data" user in the PHP-FPM container ...
        {{ end }}
 
   # |--------------------------------------------------------------------------
@@ -66,7 +64,7 @@ commands:
 
   - use: script-traefik-self-signed-certificate
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c /scripts/traefik-self-signed-certificate.sh
 
   # |--------------------------------------------------------------------------
   # | orbit run script-traefik-htdigest
@@ -80,7 +78,7 @@ commands:
 
   - use: script-traefik-htdigest
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c  /scripts/traefik-htdigest.sh
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c  /scripts/traefik-htdigest.sh
 
   # |--------------------------------------------------------------------------
   # | orbit run script-graylog-secrets
@@ -91,4 +89,4 @@ commands:
 
   - use: script-graylog-secrets
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c /scripts/graylog-secrets.sh
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c /scripts/graylog-secrets.sh

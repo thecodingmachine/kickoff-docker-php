@@ -1,4 +1,4 @@
-{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
+{{- $virtualhost := index (pick .Orbit.Project.virtualhost .Orbit.EnvFile.ENV) .Orbit.EnvFile.ENV -}}
 version: '3.3'
 
 
@@ -8,8 +8,8 @@ services:
   proxy:
     image: traefik:1.5.1-alpine
     container_name: kickoff-proxy
-    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
-    command: --docker --logLevel={{ .EnvFiles.Config.TRAEFIK_LOG_LEVEL }}
+    restart: {{ if and (ne "local" .Orbit.EnvFile.ENV) (eq false .Orbit.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    command: --docker --logLevel={{ .Orbit.EnvFile.TRAEFIK_LOG_LEVEL }}
     networks:
       - proxy
     ports:
@@ -21,11 +21,11 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik.toml:/traefik.toml:ro
-      {{- if eq "local" .EnvFiles.Config.ENV }}
+      {{- if eq "local" .Orbit.EnvFile.ENV }}
       - ../toolbox/generated/traefik/certs:/certs:ro
       {{- else }}
-      - {{ .EnvFiles.Config.TRAEFIK_CERT_FILE_PATH }}:/certs/{{ $virtualhost }}.crt:ro
-      - {{ .EnvFiles.Config.TRAEFIK_KEY_FILE_PATH }}:/certs/{{ $virtualhost }}.key:ro
+      - {{ .Orbit.EnvFile.TRAEFIK_CERT_FILE_PATH }}:/certs/{{ $virtualhost }}.crt:ro
+      - {{ .Orbit.EnvFile.TRAEFIK_KEY_FILE_PATH }}:/certs/{{ $virtualhost }}.key:ro
       - ../toolbox/generated/traefik/auth/:/auth/:ro
       {{ end }}
 

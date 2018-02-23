@@ -1,4 +1,4 @@
-{{- $virtualhost := index (pick .Values.Project.virtualhost .EnvFiles.Config.ENV) .EnvFiles.Config.ENV -}}
+{{- $virtualhost := index (pick .Orbit.Project.virtualhost .Orbit.EnvFile.ENV) .Orbit.EnvFile.ENV -}}
 version: '3.3'
 
 
@@ -7,16 +7,16 @@ services:
 
   toolbox:
     image: gulnap/kickoff-docker-php-images:toolbox-3.7-v2.4.0
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-toolbox
+    container_name: {{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-toolbox
     networks:
       - backend
     environment:
       - VIRTUAL_HOST={{ $virtualhost }}
-      - ENV={{ .EnvFiles.Config.ENV }}
-      - TRAEFIK_USER={{ .Values.Modules.traefik.user }}
-      - TRAEFIK_PASSWORD={{ .EnvFiles.Config.TRAEFIK_PASSWORD }}
-      - GRAYLOG_ROOT_PASSWORD_SHA2={{ .EnvFiles.Config.GRAYLOG_PASSWORD }}
-      - GRAYLOG_ENABLED={{ .Values.Modules.graylog.enable }}
+      - ENV={{ .Orbit.EnvFile.ENV }}
+      - TRAEFIK_USER={{ .Orbit.Modules.traefik.user }}
+      - TRAEFIK_PASSWORD={{ .Orbit.EnvFile.TRAEFIK_PASSWORD }}
+      - GRAYLOG_ROOT_PASSWORD_SHA2={{ .Orbit.EnvFile.GRAYLOG_PASSWORD }}
+      - GRAYLOG_ENABLED={{ .Orbit.Modules.graylog.enable }}
     labels:
       - traefik.enable=false
     volumes:

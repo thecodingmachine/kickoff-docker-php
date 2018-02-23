@@ -6,47 +6,47 @@ services:
 
   php-fpm:
     image: gulnap/kickoff-docker-php-images:php-fpm-7.2.1-v2.4.0
-    container_name: {{ .EnvFiles.Config.ENV }}-{{ .Values.Project.name }}-php-fpm
-    restart: {{ if and (ne "local" .EnvFiles.Config.ENV) (eq false .Values.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
+    container_name: {{ .Orbit.EnvFile.ENV }}-{{ .Orbit.Project.name }}-php-fpm
+    restart: {{ if and (ne "local" .Orbit.EnvFile.ENV) (eq false .Orbit.Modules.graylog.enable) }}unless-stopped{{ else }}"no"{{ end }}
     entrypoint: /usr/local/bin/docker-entrypoint.sh
     networks:
       - backend
     environment:
       - UID={{ if ne "windows" os }}${UID}{{ else }}82{{ end }}
-      - XDEBUG_ENABLED={{ .EnvFiles.Config.XDEBUG_ENABLED }}
-      {{- if eq "true" .EnvFiles.Config.XDEBUG_ENABLED }}
-      - XDEBUG_REMOTE_HOST={{ .EnvFiles.Config.XDEBUG_REMOTE_HOST }}
+      - XDEBUG_ENABLED={{ .Orbit.EnvFile.XDEBUG_ENABLED }}
+      {{- if eq "true" .Orbit.EnvFile.XDEBUG_ENABLED }}
+      - XDEBUG_REMOTE_HOST={{ .Orbit.EnvFile.XDEBUG_REMOTE_HOST }}
       {{- end }}
     labels:
       - traefik.enable=false
     volumes:
-      {{- if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
-      - {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:/var/www/html:nocopy
+      {{- if eq "true" .Orbit.EnvFile.ENABLE_DOCKER_SYNC }}
+      - {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}_sync_app:/var/www/html:nocopy
       {{- else }}
-      - ../../{{ .EnvFiles.Config.DIR }}:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}rw{{ end }}
+      - ../../{{ .Orbit.EnvFile.DIR }}:/var/www/html:{{ if eq "darwin" os }}cached{{ else }}rw{{ end }}
       {{- end }}
       - ./docker-entrypoint.sh:/usr/local/bin/docker-entrypoint.sh:ro
       - ./conf.d/memory-limit.ini:/usr/local/etc/php/conf.d/memory-limit.ini:ro
       - ./php-fpm.d/memory-limit.conf:/usr/local/etc/php-fpm.d/memory-limit.conf:ro
       - ./php-fpm.d/security.conf:/usr/local/etc/php-fpm.d/security.conf:ro
       - ./php-fpm.d/uploads.conf:/usr/local/etc/php-fpm.d/uploads.conf:ro
-    {{- if eq true .Values.Modules.graylog.enable }}
+    {{- if eq true .Orbit.Modules.graylog.enable }}
     logging:
       driver: gelf
       options:
-        gelf-address: udp://localhost:{{ .EnvFiles.Config.GRAYLOG_PORT }}
+        gelf-address: udp://localhost:{{ .Orbit.EnvFile.GRAYLOG_PORT }}
     {{ end }}
 
 networks:
 
   backend:
     external:
-      name: {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_backend
+      name: {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}_backend
 
-{{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+{{ if eq "true" .Orbit.EnvFile.ENABLE_DOCKER_SYNC }}
 volumes:
 
 
-  {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }}_sync_app:
+  {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }}_sync_app:
     external: true
 {{- end }}

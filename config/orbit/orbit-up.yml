@@ -1,14 +1,14 @@
 # |--------------------------------------------------------------------------
-# | Orbit up commands
+# | Up tasks
 # |--------------------------------------------------------------------------
 # |
-# | This file describes the up commands of your project.
-# | Feel free to add your own commands!
+# | This file describes the up tasks of your project.
+# | Feel free to add your own tasks!
 # |
 # | https://github.com/gulien/orbit/
 # |
 
-commands:
+tasks:
 
   # |--------------------------------------------------------------------------
   # | orbit run docker-sync-up
@@ -19,10 +19,8 @@ commands:
 
   - use: docker-sync-up
     run:
-      {{ if eq "true" .EnvFiles.Config.ENABLE_DOCKER_SYNC }}
+      {{ if eq "true" .Orbit.EnvFile.ENABLE_DOCKER_SYNC }}
       - docker-sync start
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Docker Sync startup ...
       {{ else }}
       - echo Skipping Docker Sync startup ...
       {{ end }}
@@ -51,11 +49,9 @@ commands:
 
   - use: graylog-up
     run:
-      {{ if eq true .Values.Modules.graylog.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/graylog/docker-compose.yml up -d
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh Graylog graylog-server 9000"
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Graylog containers startup ...
+      {{ if eq true .Orbit.Modules.graylog.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/graylog/docker-compose.yml up -d
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh Graylog graylog-server 9000"
       {{ else }}
       - echo Skipping Graylog containers startup ...
       {{ end }}
@@ -71,8 +67,8 @@ commands:
 
   - use: php-fpm-up
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/php-fpm/docker-compose.yml up -d
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh PHP-FPM php-fpm 9000"
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/php-fpm/docker-compose.yml up -d
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh PHP-FPM php-fpm 9000"
 
 
   # |--------------------------------------------------------------------------
@@ -86,8 +82,8 @@ commands:
 
   - use: nginx-up
     run:
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/nginx/docker-compose.yml up -d
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh NGINX nginx 80"
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/nginx/docker-compose.yml up -d
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh NGINX nginx 80"
 
   # |--------------------------------------------------------------------------
   # | orbit run mysql-up
@@ -102,14 +98,12 @@ commands:
 
   - use: mysql-up
     run:
-      {{ if eq true .Values.Modules.mysql.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/mysql/docker-compose.yml up -d
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh MySQL mysql 3306"
-      {{ if eq "local" .EnvFiles.Config.ENV }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh phpMyAdmin phpmyadmin 80"
+      {{ if eq true .Orbit.Modules.mysql.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/mysql/docker-compose.yml up -d
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh MySQL mysql 3306"
+      {{ if eq "local" .Orbit.EnvFile.ENV }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh phpMyAdmin phpmyadmin 80"
       {{ end }}
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping MySQL container startup ...
       {{ else }}
       - echo Skipping MySQL container startup ...
       {{ end }}
@@ -125,11 +119,9 @@ commands:
 
   - use: redis-up
     run:
-      {{ if eq true .Values.Modules.redis.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/redis/docker-compose.yml up -d
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh Redis redis 6379"
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping Redis container startup ...
+      {{ if eq true .Orbit.Modules.redis.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/redis/docker-compose.yml up -d
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh Redis redis 6379"
       {{ else }}
       - echo Skipping Redis container startup ...
       {{ end }}
@@ -145,11 +137,9 @@ commands:
 
   - use: rabbitmq-up
     run:
-      {{ if eq true .Values.Modules.rabbitmq.enable }}
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/rabbitmq/docker-compose.yml up -d
-      - docker-compose -p {{ .EnvFiles.Config.ENV }}{{ .Values.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh RabbitMQ rabbitmq 15672"
-      {{ else if eq "windows" os }}
-      - cmd.exe /c echo Skipping RabbitMQ container startup ...
+      {{ if eq true .Orbit.Modules.rabbitmq.enable }}
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/rabbitmq/docker-compose.yml up -d
+      - docker-compose -p {{ .Orbit.EnvFile.ENV }}{{ .Orbit.Project.name }} -f modules/toolbox/docker-compose.yml run --rm toolbox /bin/sh -c "/scripts/health-check.sh RabbitMQ rabbitmq 15672"
       {{ else }}
       - echo Skipping RabbitMQ container startup ...
       {{ end }}

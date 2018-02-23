@@ -1,0 +1,10 @@
+payload:
+
+  - key: EnvFile
+    value: config/.env
+
+  - key: Modules
+    value: config/modules.yml
+
+  - key: Project
+    value: config/project.yml
