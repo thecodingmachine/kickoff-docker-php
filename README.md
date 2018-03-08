@@ -4,7 +4,7 @@
 <h3 align="center">kickoff-docker-php</h3>
 <p align="center">A complete stack for your PHP project powered by Docker</p>
 <p align="center">
-    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.5.0"><img src="https://img.shields.io/badge/stable-v2.5.0-green.svg" alt="Stable release: v2.5.0"></a>
+    <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/v2.5.1"><img src="https://img.shields.io/badge/stable-v2.5.1-green.svg" alt="Stable release: v2.5.1"></a>
     <a href="https://github.com/thecodingmachine/kickoff-docker-php/tree/master"><img src="https://img.shields.io/badge/unstable-master-orange.svg" alt="Unstable release: master"></a>
     <a href="https://travis-ci.org/thecodingmachine/kickoff-docker-php"><img src="https://img.shields.io/travis/thecodingmachine/kickoff-docker-php.svg?label=Travis+CI" alt="Travis CI"></a>
 </p>
